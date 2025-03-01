@@ -84,7 +84,7 @@ function setupAudio() {
       setTimeout(() => returnToGallery(), 5000);
     });
   }
-  audioElement.src = `audios/${currentStory.folder}/recording.mp3`;
+  audioElement.src = `./audios/${currentStory.folder}/recording.mp3`;
   audioElement.load();
 }
 
@@ -279,8 +279,19 @@ function returnToGallery() {
     audioElement.currentTime = 0;
   }
   unloadStoryImages();
-  document.getElementById("gallery").classList.remove("hidden");
-  document.getElementById("gameContainer").classList.add("hidden");
+  
+  // Make sure the gallery is fully visible and the game container is hidden
+  const galleryElement = document.getElementById("gallery");
+  const gameContainerElement = document.getElementById("gameContainer");
+  
+  galleryElement.classList.remove("hidden");
+  galleryElement.style.display = "flex";
+  galleryElement.style.visibility = "visible";
+  
+  gameContainerElement.classList.add("hidden");
+  gameContainerElement.style.display = "none";
+  gameContainerElement.style.visibility = "hidden";
+  
   document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
   updateBackgroundEffects(); // Apply zoom and blur settings
 }
@@ -293,8 +304,21 @@ function loadStoryData(storyData, folder) {
   currentStory.folder = folder;
   currentSceneIndex = 0;
   preloadStoryImages(currentStory, folder);
-  document.getElementById("gallery").classList.add("hidden");
-  document.getElementById("gameContainer").classList.remove("hidden");
+  
+  // Ensure the gallery is completely hidden and the game container is visible
+  const galleryElement = document.getElementById("gallery");
+  const gameContainerElement = document.getElementById("gameContainer");
+  
+  // Force the gallery to be hidden with both display:none and visibility:hidden
+  galleryElement.classList.add("hidden");
+  galleryElement.style.display = "none";
+  galleryElement.style.visibility = "hidden";
+  
+  // Make sure the game container is visible
+  gameContainerElement.classList.remove("hidden");
+  gameContainerElement.style.display = "block";
+  gameContainerElement.style.visibility = "visible";
+  
   showScene(0);
   setupAudio();
   setupAudioPlayerControls();
@@ -313,6 +337,18 @@ function setupGallery() {
   
   // Set global background to gallery image with a romantic gradient overlay
   document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
+  
+  // Make sure the gallery is fully visible and the game container is hidden
+  const galleryElement = document.getElementById("gallery");
+  const gameContainerElement = document.getElementById("gameContainer");
+  
+  galleryElement.classList.remove("hidden");
+  galleryElement.style.display = "flex";
+  galleryElement.style.visibility = "visible";
+  
+  gameContainerElement.classList.add("hidden");
+  gameContainerElement.style.display = "none";
+  gameContainerElement.style.visibility = "hidden";
   
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
