@@ -7,31 +7,31 @@
   {
     "order": 2,
     "image": "scene1.jpg",
-    "timestamp": 5,
+    "timestamp": 24.5,
     "content": "<p>In a land where the sun burned hot during the day and the moon cast silver light at night, there lived a lion. He was not just any lion—he was the strongest animal in history. His mane was thick like storm clouds, his muscles were carved by battles long forgotten, and his roar could shake the very trees. Every beast in the land knew his name, whispered in fear and awe.</p>"
   },
   {
     "order": 3,
     "image": "scene2.jpg",
-    "timestamp": 8.5,
+    "timestamp": 43.6,
     "content": "<p>But time had passed, and the world had changed. The lion no longer had battles to fight. The land was quiet now. The creatures who once bowed to him had moved on, living without fear. And so, the lion sat beneath an ancient tree, watching the world pass by, still powerful, yet alone.</p>"
   },
   {
     "order": 4,
     "image": "scene3.jpg",
-    "timestamp": 12.7,
+    "timestamp": 68.4,
     "content": "<p>One day, from far beyond the savanna, a new presence arrived. Her coat shimmered like polished silver, her legs moved with the speed of the wind itself. She was a horse—the strongest animal of today. She did not fight wars, did not roar to make her presence known. Yet wherever she ran, the world moved with her. She was speed, freedom, and strength of a different kind.</p>"
   },
   {
     "order": 5,
     "image": "scene4.jpg",
-    "timestamp": 80,
+    "timestamp": 86.2,
     "content": "<p>The lion watched as she approached, her hooves barely touching the ground. He expected her to stop, to bow her head as others had before. But she did not. Instead, she simply met his gaze, her eyes filled with something he had never seen before—curiosity, not fear.</p>"
   },
   {
     "order": 6,
     "image": "scene5.jpg",
-    "timestamp": 100,
+    "timestamp": 107.4,
     "content": "<p>\"You are strange,\" the lion said, his voice deep like thunder. \"You do not fear me?\"</p><p>The horse snorted, flicking her tail. \"Why should I?\"</p><p>\"Because I am the strongest animal in history,\" the lion declared. \"My roar alone has sent armies running.\"</p><p>The horse tilted her head. \"Maybe. But your roar does not move me.\"</p>"
   },
   {
@@ -80,7 +80,7 @@
     "order": 14,
     "image": "scene13.jpg",
     "timestamp": 260,
-    "content": "<p>Something inside the lion stirred—pride, excitement, frustration. With a powerful leap, he pushed himself forward. His paws thundered against the ground. His muscles burned in a way they had not in years.</p><p>And for the first time in a long time… he chased.</p><p>The horse laughed as she galloped, weaving through the trees, feeling the wind rush past her mane. The lion roared, but this time it was not a sound of dominance. It was something different—something alive.</p><p>Click the \"Run\" button repeatedly to help the lion chase the horse!</p><div id=\"chaseCounter\">0</div><button id=\"runBtn\">Run!</button><div id=\"chaseMessage\" style=\"display:none; margin-top:10px;\">Chase complete!</div>"
+    "content": "<p>Something inside the lion stirred—pride, excitement, frustration. With a powerful leap, he pushed himself forward. His paws thundered against the ground. His muscles burned in a way they had not in years.</p><p>And for the first time in a long time… he chased.</p><p>The horse laughed as she galloped, weaving through the trees, feeling the wind rush past her mane. The lion roared, but this time it was not a sound of dominance. It was something different—something alive.</p>"
   },
   {
     "order": 15,
