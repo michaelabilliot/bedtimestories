@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* Base reset and font */
+/* Base reset and Merriweather font */
 html, body {
   margin: 0;
   padding: 0;
@@ -46,7 +46,7 @@ html, body {
   position: fixed;
   top: 10px;
   right: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255,255,255,0.9);
   border-radius: 10px;
   padding: 10px;
   cursor: pointer;
@@ -65,8 +65,8 @@ html, body {
   left: 50%;
   transform: translate(-50%, -50%);
   backdrop-filter: blur(95px);
-  background-color: rgba(255, 182, 193, 0.24);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  background-color: rgba(255,182,193,0.24);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
   border-radius: 10px;
   padding: 20px;
   z-index: 1100;
@@ -91,12 +91,11 @@ html, body {
 }
 #settingsPanel button {
   padding: 8px 12px;
-  background: #ffb6c1;
+  background: rgba(255,182,193,0.24);
+  backdrop-filter: blur(95px);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
   border: none;
   border-radius: 10px;
-  backdrop-filter: blur(95px);
-  background-color: rgba(255, 182, 193, 0.24);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
   color: rgb(255,225,230);
   cursor: pointer;
   transition: background 0.3s;
@@ -123,11 +122,11 @@ html, body {
   gap: 20px;
 }
 .story-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255,255,255,0.9);
   border-radius: 10px;
   backdrop-filter: blur(95px);
-  background-color: rgba(255, 182, 193, 0.24);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  background-color: rgba(255,182,193,0.24);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
   overflow: hidden;
   cursor: pointer;
   width: 200px;
@@ -164,10 +163,10 @@ html, body {
   z-index: 1;
 }
 
-/* Scene container (using your manual edits) */
+/* Scene container using your manual edits */
 .scene {
   backdrop-filter: blur(95px);
-  background-color: rgba(255, 182, 193, 0.24);
+  background-color: rgba(255,182,193,0.24);
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -175,8 +174,8 @@ html, body {
   min-height: 80vh;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
-  color: rgb(255, 225, 230);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
+  color: rgb(255,225,230);
   overflow: auto;
   z-index: 2;
 }
@@ -215,7 +214,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
 }
 .nav-buttons button:hover:not(:disabled) {
   background-color: #ff9aa2;
@@ -224,22 +223,29 @@ html, body {
   background-color: #fcd5ce;
   cursor: not-allowed;
 }
+.nav-buttons svg {
+  width: 24px;
+  height: 24px;
+  /* Removed stroke */
+}
 
-/* Audio Player (now bound to the bottom of .scene) */
+/* Audio Player bound to bottom of .scene */
 #audioPlayer {
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
   backdrop-filter: blur(95px);
-  background-color: rgba(255, 182, 193, 0.24);
+  background-color: rgba(255,182,193,0.24);
   position: relative;
   margin-top: 10px;
   border-radius: 10px;
   padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
   z-index: 1000;
 }
 #audioProgress {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255,255,255,0.3);
   border-radius: 4px;
   overflow: hidden;
   position: relative;
@@ -272,6 +278,7 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 10px;
+  margin-top: 10px;
 }
 #audioControls button {
   border: none;
@@ -283,7 +290,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
 }
 #audioControls button:hover {
   background: #ff9aa2;
@@ -296,10 +303,10 @@ html, body {
   position: absolute;
   bottom: 50px;
   right: 0;
-  background: rgba(255, 182, 193, 0.24);
+  background: rgba(255,182,193,0.24);
   backdrop-filter: blur(95px);
   border-radius: 10px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
   padding: 10px;
 }
 #volumeControl.hidden {
@@ -317,6 +324,7 @@ html, body {
 
 /* Media queries for mobile (portrait) */
 @media screen and (max-width: 600px) {
+  /* Adjust gallery */
   #gallery h1 {
     font-size: 1.6rem;
   }
@@ -326,17 +334,28 @@ html, body {
   .story-card .story-title {
     font-size: 1rem;
   }
+  /* Adjust scene container to fit mobile screen */
   .scene {
-    padding: 15px;
+    padding: 10px;
     min-height: 70vh;
+    max-width: 100%;
+    border-radius: 0;
   }
   .scene-content {
     font-size: 1rem;
+  }
+  .scene-img {
+    border-radius: 0;
   }
   .nav-buttons button {
     padding: 8px;
     font-size: 0.9rem;
   }
+  /* Force the global background to cover on mobile */
+  #globalBackground {
+    background-size: cover;
+  }
+  /* Audio Player: reduce padding and scale down fonts */
   #audioPlayer {
     padding: 8px 10px;
   }
