@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Story Game</title>
+  <title>Sweet Dreams - Bedtime Stories</title>
   <!-- Mobile-friendly scaling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Merriweather font and Material Icons from Google -->
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -17,7 +17,8 @@
 
   <!-- Gallery -->
   <div id="gallery">
-    <h1>Choose a Story</h1>
+    <h1>Sweet Dreams <span class="heart-icon">♥</span> Bedtime Stories</h1>
+    <p class="subtitle">Choose a story to drift away into dreamland together</p>
     <div id="storyCards">
       <!-- "Today's Story" and "Other Stories" cards will be inserted here -->
     </div>
@@ -32,14 +33,30 @@
   <div id="settingsIcon">
     <span class="material-icons">settings</span>
   </div>
+  
   <!-- Settings Panel -->
   <div id="settingsPanel" class="hidden">
     <div class="settings-content">
-      <h2>Settings</h2>
-      <label>Zoom: <input type="range" id="zoomSlider" min="0.5" max="2" step="0.01" value="2"></label>
-      <label>Blur: <input type="range" id="blurSlider" min="0" max="30" step="0.1" value="25"></label>
-      <button id="closeSettings">Close</button>
+      <h2>Customize Your Experience</h2>
+      <label>Background Zoom: <input type="range" id="zoomSlider" min="0.5" max="2" step="0.01" value="2"></label>
+      <label>Background Blur: <input type="range" id="blurSlider" min="0" max="30" step="0.1" value="25"></label>
+      <button id="closeSettings">Save Changes</button>
     </div>
+  </div>
+
+  <!-- Love Note -->
+  <div id="loveNote" class="hidden">
+    <div class="love-note-content">
+      <h2>A Little Note For You</h2>
+      <p>I hope these stories bring you sweet dreams and peaceful sleep. I love sharing these moments with you.</p>
+      <p class="signature">With all my love ♥</p>
+      <button id="closeLoveNote">Close</button>
+    </div>
+  </div>
+
+  <!-- Love Note Button -->
+  <div id="loveNoteButton">
+    <span class="material-icons">favorite</span>
   </div>
 
   <!-- Scripts -->

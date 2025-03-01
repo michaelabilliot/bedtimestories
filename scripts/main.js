@@ -48,8 +48,20 @@ document.getElementById('blurSlider').addEventListener('input', updateBackground
 document.getElementById('settingsIcon').addEventListener('click', () => {
   document.getElementById('settingsPanel').classList.toggle('hidden');
 });
+
+/* Close settings panel */
 document.getElementById('closeSettings').addEventListener('click', () => {
   document.getElementById('settingsPanel').classList.add('hidden');
+});
+
+/* Toggle love note panel */
+document.getElementById('loveNoteButton').addEventListener('click', () => {
+  document.getElementById('loveNote').classList.toggle('hidden');
+});
+
+/* Close love note panel */
+document.getElementById('closeLoveNote').addEventListener('click', () => {
+  document.getElementById('loveNote').classList.add('hidden');
 });
 
 /**
@@ -168,30 +180,43 @@ function setupAudioPlayerControls() {
 }
 
 /**
- * Renders a scene by index.
+ * Displays a scene by index.
  */
 function showScene(index) {
+  if (index < 0 || index >= currentStory.length) return;
   currentSceneIndex = index;
+  
+  // Update background image if the scene has one.
+  if (currentStory[index].image) {
+    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[index].image}')`;
+  }
+  
+  // Build the scene HTML.
   const gameDiv = document.getElementById("game");
-  const sceneObj = currentStory[index];
-
-  // Update global background to current scene's image.
-  document.getElementById('globalBackground').style.backgroundImage =
-    `url('images/${currentStory.folder}/${sceneObj.image}')`;
-
   let html = `<div class="scene">`;
-  html += `<img src="images/${currentStory.folder}/${sceneObj.image}" class="scene-img" alt="Scene Image">`;
-  html += `<div class="scene-content">${sceneObj.content}</div>`;
-
+  
+  // Scene image.
+  if (currentStory[index].image) {
+    html += `<img class="scene-img" src="images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">`;
+  }
+  
+  // Scene content with a romantic frame
+  html += `<div class="scene-content">
+    <div class="content-frame">
+      ${currentStory[index].content}
+      ${index === currentStory.length - 1 ? '<p class="ending-message">The End <span class="heart-icon">♥</span></p>' : ''}
+    </div>
+  </div>`;
+  
   // Navigation buttons.
   html += `<div class="nav-buttons">`;
   if (index > 0) {
-    html += `<button id="prevBtn"><span class="material-icons">arrow_back</span></button>`;
+    html += `<button id="prevBtn"><span class="material-icons">arrow_back</span>Previous</button>`;
   }
   if (index < currentStory.length - 1) {
-    html += `<button id="nextBtn"><span class="material-icons">arrow_forward</span></button>`;
+    html += `<button id="nextBtn">Next<span class="material-icons">arrow_forward</span></button>`;
   } else {
-    html += `<button id="restartBtn">Back to Gallery</button>`;
+    html += `<button id="restartBtn"><span class="material-icons">home</span>Back to Gallery</button>`;
   }
   html += `</div>`; // End nav-buttons
 
@@ -227,6 +252,14 @@ function showScene(index) {
 
   setupAudioPlayerControls();
   updateBackgroundEffects();
+  
+  // Add a subtle animation to the scene content
+  setTimeout(() => {
+    const contentFrame = document.querySelector('.content-frame');
+    if (contentFrame) {
+      contentFrame.classList.add('animate-in');
+    }
+  }, 100);
 }
 
 /**
@@ -264,13 +297,13 @@ function loadStoryData(storyData, folder) {
  */
 function setupGallery() {
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1 },
-    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true }
+    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
+    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
-  // Set global background to gallery image.
-  document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
+  // Set global background to gallery image with a romantic gradient overlay
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
   
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
@@ -282,7 +315,7 @@ function setupGallery() {
   if (todaysStories.length > 0) {
     const todaysSection = document.createElement("div");
     todaysSection.className = "todays-story-section";
-    todaysSection.innerHTML = "<h2>Today's Story</h2>";
+    todaysSection.innerHTML = "<h2>Tonight's Special <span class='heart-icon'>♥</span></h2>";
     todaysStories.forEach(story => {
       const card = document.createElement("div");
       card.className = "story-card todays-story";
@@ -296,6 +329,14 @@ function setupGallery() {
           .catch(err => { console.error("Error loading story:", err); });
       });
       todaysSection.appendChild(card);
+      
+      // Add description below the card
+      if (story.description) {
+        const descriptionEl = document.createElement("p");
+        descriptionEl.className = "story-description";
+        descriptionEl.textContent = story.description;
+        todaysSection.appendChild(descriptionEl);
+      }
     });
     storyCardsContainer.appendChild(todaysSection);
   }
@@ -303,7 +344,12 @@ function setupGallery() {
   if (otherStories.length > 0) {
     const otherSection = document.createElement("div");
     otherSection.className = "other-stories-section";
-    otherSection.innerHTML = "<h2>Other Stories</h2>";
+    otherSection.innerHTML = "<h2>More Sweet Dreams</h2>";
+    
+    // Create a container for the cards to display them in a row
+    const cardsContainer = document.createElement("div");
+    cardsContainer.className = "story-cards-row";
+    
     otherStories.forEach(story => {
       const card = document.createElement("div");
       card.className = "story-card";
@@ -316,10 +362,18 @@ function setupGallery() {
           .then(data => { loadStoryData(data, story.file); })
           .catch(err => { console.error("Error loading story:", err); });
       });
-      otherSection.appendChild(card);
+      cardsContainer.appendChild(card);
     });
+    
+    otherSection.appendChild(cardsContainer);
     storyCardsContainer.appendChild(otherSection);
   }
+  
+  // Add a special message at the bottom
+  const specialMessage = document.createElement("div");
+  specialMessage.className = "special-message";
+  specialMessage.innerHTML = `<p>Sweet dreams, my love <span class='heart-icon'>♥</span></p>`;
+  storyCardsContainer.appendChild(specialMessage);
 }
 
 /* Keyboard shortcuts:
