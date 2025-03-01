@@ -6,7 +6,9 @@ let chaseComplete = false; // For chase minigame
 let audioElement = null;
 let volumeTimeout = null;
 
-// Update global background effects (zoom and blur)
+/**
+ * Updates the global background's zoom and blur from the sliders.
+ */
 function updateBackgroundEffects() {
   const zoomVal = document.getElementById('zoomSlider').value;
   const blurVal = document.getElementById('blurSlider').value;
@@ -15,7 +17,7 @@ function updateBackgroundEffects() {
   globalBg.style.filter = `blur(${blurVal}px)`;
 }
 
-// Attach event listeners for zoom and blur sliders
+// Attach event listeners for zoom/blur
 document.getElementById('zoomSlider').addEventListener('input', updateBackgroundEffects);
 document.getElementById('blurSlider').addEventListener('input', updateBackgroundEffects);
 
@@ -27,24 +29,30 @@ document.getElementById('closeSettings').addEventListener('click', () => {
   document.getElementById('settingsPanel').classList.add('hidden');
 });
 
-// Set up the audio element (or update its source)
+/**
+ * Creates or updates the HTML5 Audio element (if needed),
+ * loading from `audios/<storyFolder>/recording.mp3`.
+ */
 function setupAudio() {
   if (!audioElement) {
     audioElement = new Audio();
     audioElement.preload = "auto";
-    // Update progress bar as audio plays
+
+    // Update progress bar and scene indicators as time changes
     audioElement.addEventListener("timeupdate", updateAudioProgress);
-    // When audio ends, after 5 seconds, return to gallery
+
+    // When the audio ends, wait 5 seconds, then return to gallery
     audioElement.addEventListener("ended", () => {
       setTimeout(() => returnToGallery(), 5000);
     });
   }
-  // Set the source from the current story folder.
   audioElement.src = `audios/${currentStory.folder}/recording.mp3`;
   audioElement.load();
 }
 
-// Update the audio progress bar and add scene indicators
+/**
+ * Updates the audio progress bar width and checks if it's time to auto‑advance the scene.
+ */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
   if (audioElement && audioElement.duration) {
@@ -52,25 +60,28 @@ function updateAudioProgress() {
     progressBar.style.width = percent + "%";
     updateSceneIndicators();
   }
-  // Auto-advance if the current scene (other than scene0) has a timestamp
+
+  // Auto-advance if the current scene has a timestamp (and is not scene0)
   const sceneTimestamp = currentStory[currentSceneIndex].timestamp;
   if (sceneTimestamp !== undefined && audioElement.currentTime >= sceneTimestamp) {
-    // If not the last scene and not interactive, advance
+    // If not the last scene and not interactive, auto-advance
     if (currentSceneIndex < currentStory.length - 1 && !currentStory[currentSceneIndex].interactive) {
       showScene(currentSceneIndex + 1);
     } else if (audioElement.currentTime >= audioElement.duration) {
+      // If last scene, wait 5 seconds then go back to gallery
       setTimeout(() => returnToGallery(), 5000);
     }
   }
 }
 
-// Create scene indicator markers (triangles) on the progress bar
+/**
+ * Creates triangle markers for each scene's timestamp (except scene0).
+ */
 function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
   if (!indicatorsContainer) return;
-  indicatorsContainer.innerHTML = ""; // Clear existing indicators
+  indicatorsContainer.innerHTML = "";
   if (audioElement && audioElement.duration) {
-    // For each scene beyond scene0 (which has no timestamp)
     currentStory.forEach((scene, idx) => {
       if (idx > 0 && scene.timestamp !== undefined) {
         const posPercent = (scene.timestamp / audioElement.duration) * 100;
@@ -84,7 +95,9 @@ function updateSceneIndicators() {
   }
 }
 
-// Set up audio player controls (combined play/pause, etc.)
+/**
+ * Sets up the audio player controls (play/pause toggle, volume, etc.)
+ */
 function setupAudioPlayerControls() {
   const playPauseBtn = document.getElementById("playPauseBtn");
   const goStartBtn = document.getElementById("goStart");
@@ -95,13 +108,13 @@ function setupAudioPlayerControls() {
   // Toggle play/pause
   playPauseBtn.addEventListener("click", () => {
     if (audioElement.paused) {
-      audioElement.play();
-      playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
-      // If we're currently on scene0 (which has no timestamp),
-      // jump to scene1 right away.
+      // If on scene0 (which has no timestamp), skip to scene1 and play from the start
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
       }
+      audioElement.currentTime = 0;  // Start from the beginning
+      audioElement.play();
+      playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
     } else {
       audioElement.pause();
       playPauseBtn.innerHTML = `<span class="material-icons">play_arrow</span>`;
@@ -116,11 +129,10 @@ function setupAudioPlayerControls() {
     audioElement.currentTime = audioElement.duration;
   });
 
-  // Volume control toggle
+  // Volume toggle
   volumeToggle.addEventListener("click", () => {
     const volCtrl = document.getElementById("volumeControl");
     volCtrl.classList.toggle("hidden");
-    // Reset auto-hide timer if visible
     if (!volCtrl.classList.contains("hidden")) {
       if (volumeTimeout) clearTimeout(volumeTimeout);
       volumeTimeout = setTimeout(() => {
@@ -139,13 +151,15 @@ function setupAudioPlayerControls() {
   });
 }
 
-// Render a scene from the current story.
+/**
+ * Renders a given scene by index.
+ */
 function showScene(index) {
   currentSceneIndex = index;
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // Update global background image to current scene's image
+  // Update background to current scene's image
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 
@@ -156,8 +170,8 @@ function showScene(index) {
   let html = `<div class="scene">`;
   html += `<img src="images/${currentStory.folder}/${sceneObj.image}" class="scene-img" alt="Scene Image">`;
   html += `<div class="scene-content">${sceneObj.content}</div>`;
-  
-  // Navigation buttons
+
+  // Nav buttons
   html += `<div class="nav-buttons">`;
   if (index > 0) {
     html += `<button id="prevBtn"><span class="material-icons">arrow_back</span></button>`;
@@ -195,7 +209,7 @@ function showScene(index) {
   html += `</div>`; // close .scene
   gameDiv.innerHTML = html;
   
-  // Attach navigation events
+  // Nav event listeners
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -209,7 +223,7 @@ function showScene(index) {
     restartBtn.addEventListener("click", () => returnToGallery());
   }
 
-  // Interactive scene (e.g. chase) handling
+  // If this scene is interactive (e.g. chase), attach custom logic
   if (sceneObj.interactive === "chase") {
     let chaseClicks = 0;
     const threshold = 20;
@@ -227,12 +241,14 @@ function showScene(index) {
     }
   }
 
-  // Set up audio controls
+  // Set up audio controls for this scene
   setupAudioPlayerControls();
   updateBackgroundEffects();
 }
 
-// Return to gallery
+/**
+ * Returns user to gallery view
+ */
 function returnToGallery() {
   if (audioElement) {
     audioElement.pause();
@@ -243,7 +259,9 @@ function returnToGallery() {
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
 }
 
-// When a story is loaded, store it, set up audio, etc.
+/**
+ * Loads the story data (JSON), sorts by "order", sets up audio, etc.
+ */
 function loadStoryData(storyData, folder) {
   currentStory = storyData.sort((a, b) => a.order - b.order);
   currentStory.folder = folder;
@@ -255,7 +273,9 @@ function loadStoryData(storyData, folder) {
   setupAudioPlayerControls();
 }
 
-// Build the gallery with multiple stories
+/**
+ * Builds the gallery with multiple stories
+ */
 function setupGallery() {
   const availableStories = [
     { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/cover.jpg", order: 1 },
