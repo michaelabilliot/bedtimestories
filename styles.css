@@ -202,7 +202,7 @@ html, body {
   z-index: 3;
 }
 
-/* Navigation buttons */
+/* Navigation buttons container */
 .nav-buttons {
   margin-top: auto;
   display: flex;
@@ -233,10 +233,10 @@ html, body {
 .nav-buttons svg {
   width: 24px;
   height: 24px;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
 }
 
-/* Audio Player */
+/* Audio Player bound to bottom of .scene */
 #audioPlayer {
   box-shadow: 0 2px 15px rgba(0,0,0,0.5);
   backdrop-filter: blur(95px);
@@ -257,14 +257,13 @@ html, body {
   overflow: hidden;
   position: relative;
   margin-bottom: 10px;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
 }
 #audioProgressBar {
   height: 100%;
   width: 0%;
   background: #ffb6c1;
   transition: width 0.1s;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 #sceneIndicators {
   position: absolute;
@@ -282,10 +281,10 @@ html, body {
 }
 .scene-indicator svg {
   fill: #ffb6c1;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
 }
 
-/* Audio controls (in one row) */
+/* Audio Controls: arranged in one row, centered */
 #audioControls {
   display: flex;
   align-items: center;
@@ -311,7 +310,7 @@ html, body {
 #audioControls .material-icons {
   font-size: 20px;
   color: rgb(255,225,230);
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
 }
 #volumeControl {
   position: absolute;
@@ -331,7 +330,7 @@ html, body {
   width: 100%;
 }
 
-/* Utility class */
+/* Utility */
 .hidden {
   display: none;
 }
