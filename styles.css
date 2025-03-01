@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* Base reset and Merriweather font */
+/* Base reset and font */
 html, body {
   margin: 0;
   padding: 0;
@@ -19,6 +19,8 @@ html, body {
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
+  /* By default, the zoom slider changes background-size.
+     We override it on mobile to force cover. */
   background-size: 100%;
   filter: blur(10px);
   z-index: -2;
@@ -51,7 +53,7 @@ html, body {
   padding: 10px;
   cursor: pointer;
   z-index: 1100;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
 }
 #settingsIcon .material-icons {
   font-size: 24px;
@@ -169,8 +171,9 @@ html, body {
   background-color: rgba(255,182,193,0.24);
   display: flex;
   flex-direction: column;
-  width: 100%;
+  /* On desktop, max-width can be 900px. For mobile, override below. */
   max-width: 900px;
+  width: 100%;
   min-height: 80vh;
   border-radius: 10px;
   padding: 20px;
@@ -188,6 +191,7 @@ html, body {
 }
 .scene-img {
   width: 100%;
+  /* aspect-ratio: 16 / 9 is fine, but on small screens we override */
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 10px;
@@ -322,9 +326,14 @@ html, body {
   display: none;
 }
 
-/* Media queries for mobile (portrait) */
+/* Mobile (portrait) adjustments */
 @media screen and (max-width: 600px) {
-  /* Adjust gallery */
+  /* Force the global background to fill screen (cover) on phones,
+     ignoring the zoom slider's background-size. */
+  #globalBackground {
+    background-size: cover !important;
+  }
+
   #gallery h1 {
     font-size: 1.6rem;
   }
@@ -334,28 +343,25 @@ html, body {
   .story-card .story-title {
     font-size: 1rem;
   }
-  /* Adjust scene container to fit mobile screen */
+
+  /* Scene container: remove max-width and reduce padding on phones */
   .scene {
+    max-width: 100%;
+    border-radius: 0;
     padding: 10px;
     min-height: 70vh;
-    max-width: 100%;
+  }
+  .scene-img {
+    aspect-ratio: auto; /* let it scale freely */
     border-radius: 0;
   }
   .scene-content {
     font-size: 1rem;
   }
-  .scene-img {
-    border-radius: 0;
-  }
   .nav-buttons button {
     padding: 8px;
     font-size: 0.9rem;
   }
-  /* Force the global background to cover on mobile */
-  #globalBackground {
-    background-size: cover;
-  }
-  /* Audio Player: reduce padding and scale down fonts */
   #audioPlayer {
     padding: 8px 10px;
   }

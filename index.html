@@ -3,27 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Story Game</title>
-  <!-- Ensure mobile-friendly scaling -->
+  <!-- Mobile-friendly scaling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Merriweather font and Material Icons from Google -->
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Global background elements (will show scene image or gallery.jpg) -->
+  <!-- Global background elements -->
   <div id="globalBackground"></div>
   <div id="globalNoise"></div>
 
-  <!-- Gallery for selecting stories -->
+  <!-- Gallery -->
   <div id="gallery">
     <h1>Choose a Story</h1>
-    <div id="storyCards">
-      <!-- Story cards loaded dynamically by main.js -->
-    </div>
+    <div id="storyCards"></div>
   </div>
 
-  <!-- Game container (hidden until a story is selected) -->
+  <!-- Game container (hidden until story is selected) -->
   <div id="gameContainer" class="hidden">
     <div id="game"></div>
   </div>
@@ -32,7 +30,7 @@
   <div id="settingsIcon">
     <span class="material-icons">settings</span>
   </div>
-  <!-- Settings Panel (for zoom and blur) -->
+  <!-- Settings Panel (zoom & blur) -->
   <div id="settingsPanel" class="hidden">
     <div class="settings-content">
       <h2>Settings</h2>
