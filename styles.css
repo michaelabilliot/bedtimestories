@@ -42,7 +42,7 @@ html, body {
   transition: opacity 0.3s;
 }
 
-/* Settings Icon */
+/* Settings Icon (top right) */
 #settingsIcon {
   position: fixed;
   top: 10px;
@@ -233,7 +233,7 @@ html, body {
 .nav-buttons svg {
   width: 24px;
   height: 24px;
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 
 /* Audio Player bound to bottom of .scene */
@@ -257,12 +257,14 @@ html, body {
   overflow: hidden;
   position: relative;
   margin-bottom: 10px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 #audioProgressBar {
   height: 100%;
   width: 0%;
   background: #ffb6c1;
   transition: width 0.1s;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 #sceneIndicators {
   position: absolute;
@@ -270,16 +272,20 @@ html, body {
   left: 0;
   width: 100%;
   height: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 .scene-indicator {
   position: absolute;
   transform: translateX(-50%);
   top: 0;
+  cursor: pointer;
 }
 .scene-indicator svg {
   fill: #ffb6c1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
+
+/* Audio controls in one row */
 #audioControls {
   display: flex;
   align-items: center;
@@ -305,7 +311,7 @@ html, body {
 #audioControls .material-icons {
   font-size: 20px;
   color: rgb(255,225,230);
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 #volumeControl {
   position: absolute;
@@ -330,7 +336,7 @@ html, body {
   display: none;
 }
 
-/* Mobile (portrait) adjustments */
+/* Mobile adjustments */
 @media screen and (max-width: 600px) {
   #globalBackground {
     background-size: cover !important;
