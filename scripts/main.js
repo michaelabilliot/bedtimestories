@@ -70,7 +70,7 @@ function setupAudio() {
 
 /**
  * Updates the audio progress bar and auto-advances scenes.
- * It uses the current scene's "end" property as the threshold.
+ * Uses the current scene's "end" property.
  */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
@@ -127,7 +127,7 @@ function setupAudioPlayerControls() {
 
   playPauseBtn.addEventListener("click", () => {
     if (audioElement.paused) {
-      // If on scene0, skip to scene1 and seek to its "start" (if defined)
+      // If on scene0, skip to scene1 and seek to its "start" if defined
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
         if (currentStory[1].start !== undefined) {
@@ -175,32 +175,27 @@ function showScene(index) {
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // Update global background to current scene image.
+  // Update global background to current scene's image.
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 
-  // For scenes other than scene0, if a "start" exists, that will be used on play.
   let html = `<div class="scene">`;
   html += `<img src="images/${currentStory.folder}/${sceneObj.image}" class="scene-img" alt="Scene Image">`;
   html += `<div class="scene-content">${sceneObj.content}</div>`;
 
-  // Navigation buttons
+  // Navigation buttons.
   html += `<div class="nav-buttons">`;
   if (index > 0) {
     html += `<button id="prevBtn"><span class="material-icons">arrow_back</span></button>`;
   }
   if (index < currentStory.length - 1) {
-    if (sceneObj.interactive && sceneObj.interactive === "chase" && !chaseComplete) {
-      html += `<button id="nextBtn" disabled><span class="material-icons">arrow_forward</span></button>`;
-    } else {
-      html += `<button id="nextBtn"><span class="material-icons">arrow_forward</span></button>`;
-    }
+    html += `<button id="nextBtn"><span class="material-icons">arrow_forward</span></button>`;
   } else {
     html += `<button id="restartBtn">Back to Gallery</button>`;
   }
-  html += `</div>`; // end nav-buttons
+  html += `</div>`; // End nav-buttons
 
-  // Audio Player UI
+  // Audio Player UI.
   html += `
     <div id="audioPlayer">
       <div id="audioProgress">
@@ -219,10 +214,10 @@ function showScene(index) {
     </div>
   `;
   
-  html += `</div>`; // end .scene
+  html += `</div>`; // End .scene
   gameDiv.innerHTML = html;
 
-  // Attach navigation event listeners.
+  // Attach navigation events.
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -249,7 +244,7 @@ function returnToGallery() {
 }
 
 /**
- * Loads story data from JSON, preloads images, sets up audio, etc.
+ * Loads story data (JSON), preloads images, and sets up audio.
  */
 function loadStoryData(storyData, folder) {
   currentStory = storyData.sort((a, b) => a.order - b.order);
@@ -265,7 +260,7 @@ function loadStoryData(storyData, folder) {
 
 /**
  * Builds the gallery with available stories.
- * Also creates a "Today's Story" section if a story is marked with "today: true".
+ * If a story has "today: true", it is displayed in a separate "Today's Story" section.
  */
 function setupGallery() {
   const availableStories = [
@@ -280,7 +275,7 @@ function setupGallery() {
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
   
-  // Separate Today's Story from others.
+  // Create container for Today's Story (if any)
   const todaysStories = availableStories.filter(story => story.today);
   const otherStories = availableStories.filter(story => !story.today);
   
@@ -328,9 +323,8 @@ function setupGallery() {
 }
 
 /* Keyboard shortcuts:
-   - Space: toggle play/pause
-   - Left arrow: previous scene
-   - Right arrow: next scene
+   Space: Toggle play/pause.
+   Left/Right Arrow: Previous/Next scene.
 */
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {

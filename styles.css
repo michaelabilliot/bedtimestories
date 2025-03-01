@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* Base reset and Merriweather font */
+/* Base reset and font */
 html, body {
   margin: 0;
   padding: 0;
@@ -120,12 +120,20 @@ html, body {
   color: #fff;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
+
+/* Wrap the story cards in a container that centers them */
 #storyCards {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: center;
 }
 .todays-story-section, .other-stories-section {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 30px;
 }
 .todays-story-section h2,
@@ -145,6 +153,7 @@ html, body {
   cursor: pointer;
   width: 200px;
   transition: transform 0.2s;
+  margin: 0 auto;
 }
 .story-card:hover {
   transform: scale(1.05);
@@ -344,9 +353,8 @@ html, body {
   display: none;
 }
 
-/* "Today's Story" card aspect-ratio override */
+/* "Today's Story" card override to force a 16:9 ratio */
 .todays-story {
-  /* Force a 16:9 ratio */
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
@@ -364,6 +372,17 @@ html, body {
   }
   .story-card .story-title {
     font-size: 1rem;
+  }
+  /* Center the gallery sections */
+  .todays-story-section, .other-stories-section {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 30px auto;
+    align-items: center;
+  }
+  #gallery #storyCards {
+    flex-direction: column;
+    align-items: center;
   }
   .scene {
     max-width: 100%;
