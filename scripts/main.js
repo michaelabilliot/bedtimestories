@@ -264,8 +264,8 @@ function loadStoryData(storyData, folder) {
  */
 function setupGallery() {
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/cover.jpg", order: 1, today: true },
-    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/cover.jpg", order: 2 }
+    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1 },
+    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true }
   ];
   availableStories.sort((a, b) => a.order - b.order);
   

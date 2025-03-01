@@ -355,6 +355,7 @@ html, body {
 
 /* "Today's Story" card override to force a 16:9 ratio */
 .todays-story {
+  width: 512px;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
