@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* Base reset and font */
+/* Base reset and Merriweather font */
 body {
   margin: 0;
   padding: 0;
@@ -8,7 +8,10 @@ body {
   font-family: 'Merriweather', serif;
 }
 
-/* Global background element */
+/* Global background element that covers the viewport.
+   Its image is set dynamically (to a scene image or to gallery.jpg).
+   The clip-path ensures no white edges appear when blurred.
+*/
 #globalBackground {
   position: fixed;
   top: 0;
@@ -44,19 +47,16 @@ body {
   position: fixed;
   top: 10px;
   right: 10px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   padding: 10px;
   cursor: pointer;
   z-index: 1100;
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-#settingsIcon svg {
-  width: 24px;
-  height: 24px;
-  stroke: #333;
-  stroke-width: 2;
-  fill: none;
+#settingsIcon .material-icons {
+  font-size: 24px;
+  color: #333;
 }
 
 /* Settings Panel */
@@ -151,8 +151,10 @@ body {
   z-index: 1;
 }
 
-/* Scene container */
+/* Updated Scene container (using your manual edits) */
 .scene {
+  backdrop-filter: blur(95px);
+  background-color: rgba(255, 182, 193, 0.24);
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -160,12 +162,13 @@ body {
   min-height: 80vh;
   border-radius: 10px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  color: #333;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  color: rgb(255, 225, 230);
   overflow: auto;
   z-index: 2;
 }
+
+/* Scene content area */
 .scene-content {
   flex: 1;
   font-size: 1.1rem;
@@ -173,6 +176,8 @@ body {
   margin-bottom: 20px;
   z-index: 3;
 }
+
+/* Scene image */
 .scene-img {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -181,6 +186,8 @@ body {
   margin-bottom: 20px;
   z-index: 3;
 }
+
+/* Navigation buttons container (locked to the bottom) */
 .nav-buttons {
   margin-top: auto;
   display: flex;
@@ -208,25 +215,20 @@ body {
   background-color: #fcd5ce;
   cursor: not-allowed;
 }
-.nav-buttons svg {
-  width: 24px;
-  height: 24px;
-  stroke: #fff;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+/* Remove stroke properties from icons */
+.nav-buttons svg,
+#audioPlayer svg {
+  /* Removed stroke styling */
 }
 
-/* Audio Player styles */
+/* Audio Player bound to the bottom of .scene */
 #audioPlayer {
-  position: fixed;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(95px);
+  background-color: rgba(255, 182, 193, 0.24);
+  position: relative;
+  margin-top: 10px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   padding: 10px 20px;
   display: flex;
   align-items: center;
@@ -243,19 +245,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 #audioPlayer button:hover {
   background: #ff9aa2;
 }
-#audioPlayer svg {
-  width: 20px;
-  height: 20px;
-  stroke: #fff;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+#audioPlayer .material-icons {
+  font-size: 20px;
+  /* No stroke here */
 }
 #audioPlayer input[type="range"] {
   width: 100px;

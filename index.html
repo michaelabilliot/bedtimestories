@@ -3,60 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <title>Story Game</title>
-  <!-- Fancier book-style font from Google Fonts -->
+  <!-- Use Merriweather font and Google Material Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Global background and noise elements -->
+  <!-- Global background elements; these will show the current scene or the gallery background -->
   <div id="globalBackground"></div>
   <div id="globalNoise"></div>
 
-  <!-- Settings Icon (top right) -->
-  <div id="settingsIcon">
-    <!-- Simple gear icon SVG -->
-    <svg viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1z"/>
-    </svg>
-  </div>
-
-  <!-- Settings Panel (hidden by default) -->
-  <div id="settingsPanel" class="hidden">
-    <div class="settings-content">
-      <h2>Settings</h2>
-      <label>Zoom: <input type="range" id="zoomSlider" min="0.5" max="2" step="0.01" value="1"></label>
-      <label>Blur: <input type="range" id="blurSlider" min="0" max="30" step="1" value="10"></label>
-      <button id="closeSettings">Close</button>
-    </div>
-  </div>
+  <!-- Gallery background: when the gallery is active, the global background will be set to images/gallery.jpg -->
 
   <!-- Gallery for selecting stories -->
   <div id="gallery">
     <h1>Choose a Story</h1>
     <div id="storyCards">
-      <!-- Story cards will be loaded dynamically -->
+      <!-- Story cards will be loaded dynamically by main.js -->
     </div>
   </div>
 
   <!-- Game Container (hidden until a story is selected) -->
   <div id="gameContainer" class="hidden">
     <div id="game"></div>
-    <!-- Cosmetic Audio Player -->
-    <div id="audioPlayer">
-      <button id="goStart">
-        <svg viewBox="0 0 24 24"><polyline points="11 18 5 12 11 6"/><polyline points="18 18 12 12 18 6"/></svg>
-      </button>
-      <button id="playBtn">
-        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-      </button>
-      <button id="pauseBtn">
-        <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-      </button>
-      <button id="goEnd">
-        <svg viewBox="0 0 24 24"><polyline points="13 18 19 12 13 6"/><polyline points="6 18 12 12 6 6"/></svg>
-      </button>
-      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+  </div>
+
+  <!-- Settings Icon (top right) -->
+  <div id="settingsIcon">
+    <span class="material-icons">settings</span>
+  </div>
+  <!-- Settings Panel for Zoom and Blur (initially hidden) -->
+  <div id="settingsPanel" class="hidden">
+    <div class="settings-content">
+      <h2>Settings</h2>
+      <label>Zoom: <input type="range" id="zoomSlider" min="0.5" max="2" step="0.01" value="1"></label>
+      <label>Blur: <input type="range" id="blurSlider" min="0" max="30" step="1" value="10"></label>
+      <button id="closeSettings">Close</button>
     </div>
   </div>
 
