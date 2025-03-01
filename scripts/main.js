@@ -2,47 +2,36 @@
 
 let currentStory = [];
 let currentSceneIndex = 0;
-let chaseComplete = false; // For chase minigame
+let chaseComplete = false; // For chase minigame (if used)
 let audioElement = null;
 let volumeTimeout = null;
-
-// We'll store the preloaded image objects here
 let preloadedImages = [];
 
 /**
- * Preloads all scene images for a given story so that scene transitions are instant.
- * We'll store references in `preloadedImages`.
+ * Preloads all scene images for the chosen story.
  */
 function preloadStoryImages(storyData, folder) {
-  // Clear any existing references
-  preloadedImages.forEach(img => {
-    img.src = "";
-  });
+  preloadedImages.forEach(img => { img.src = ""; });
   preloadedImages = [];
-
-  // Create <img> objects for each scene image
   storyData.forEach(scene => {
     if (scene.image) {
-      const imageUrl = `images/${folder}/${scene.image}`;
       const imageObj = new Image();
-      imageObj.src = imageUrl;
+      imageObj.src = `images/${folder}/${scene.image}`;
       preloadedImages.push(imageObj);
     }
   });
 }
 
 /**
- * Unloads the preloaded images by clearing references and setting src = ""
+ * Unloads preloaded images.
  */
 function unloadStoryImages() {
-  preloadedImages.forEach(img => {
-    img.src = "";
-  });
+  preloadedImages.forEach(img => { img.src = ""; });
   preloadedImages = [];
 }
 
 /**
- * Updates the global background's zoom and blur from the sliders.
+ * Updates the global background's zoom and blur.
  */
 function updateBackgroundEffects() {
   const zoomVal = document.getElementById('zoomSlider').value;
@@ -52,11 +41,11 @@ function updateBackgroundEffects() {
   globalBg.style.filter = `blur(${blurVal}px)`;
 }
 
-// Attach event listeners for zoom & blur
+/* Attach slider events */
 document.getElementById('zoomSlider').addEventListener('input', updateBackgroundEffects);
 document.getElementById('blurSlider').addEventListener('input', updateBackgroundEffects);
 
-// Toggle the settings panel
+/* Toggle settings panel */
 document.getElementById('settingsIcon').addEventListener('click', () => {
   document.getElementById('settingsPanel').classList.toggle('hidden');
 });
@@ -65,17 +54,13 @@ document.getElementById('closeSettings').addEventListener('click', () => {
 });
 
 /**
- * Creates or updates the Audio element from audios/<storyFolder>/recording.mp3.
+ * Sets up the Audio element.
  */
 function setupAudio() {
   if (!audioElement) {
     audioElement = new Audio();
     audioElement.preload = "auto";
-
-    // Update progress & scene indicators
     audioElement.addEventListener("timeupdate", updateAudioProgress);
-
-    // After audio ends, wait 5s then return to gallery
     audioElement.addEventListener("ended", () => {
       setTimeout(() => returnToGallery(), 5000);
     });
@@ -85,7 +70,7 @@ function setupAudio() {
 }
 
 /**
- * Updates the audio progress bar and checks if it's time to auto-advance.
+ * Updates the audio progress bar and auto-advances scenes.
  */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
@@ -94,8 +79,6 @@ function updateAudioProgress() {
     progressBar.style.width = percent + "%";
     updateSceneIndicators();
   }
-  
-  // Auto-advance if current scene has a timestamp
   const sceneTimestamp = currentStory[currentSceneIndex].timestamp;
   if (sceneTimestamp !== undefined && audioElement.currentTime >= sceneTimestamp) {
     if (currentSceneIndex < currentStory.length - 1 && !currentStory[currentSceneIndex].interactive) {
@@ -107,7 +90,7 @@ function updateAudioProgress() {
 }
 
 /**
- * Creates triangle markers for each scene's timestamp (except scene0).
+ * Creates triangle indicators for scene timestamps.
  */
 function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
@@ -115,7 +98,6 @@ function updateSceneIndicators() {
   indicatorsContainer.innerHTML = "";
   if (audioElement && audioElement.duration) {
     currentStory.forEach((scene, idx) => {
-      // Skip scene0 or any scene w/o timestamp
       if (idx > 0 && scene.timestamp !== undefined) {
         const posPercent = (scene.timestamp / audioElement.duration) * 100;
         const indicator = document.createElement("div");
@@ -129,7 +111,7 @@ function updateSceneIndicators() {
 }
 
 /**
- * Sets up the audio player controls: combined play/pause, volume toggle, etc.
+ * Sets up the audio player controls.
  */
 function setupAudioPlayerControls() {
   const playPauseBtn = document.getElementById("playPauseBtn");
@@ -138,10 +120,8 @@ function setupAudioPlayerControls() {
   const volumeToggle = document.getElementById("volumeToggle");
   const volumeSlider = document.getElementById("volumeSlider");
 
-  // Toggle play/pause
   playPauseBtn.addEventListener("click", () => {
     if (audioElement.paused) {
-      // If on scene0, skip to scene1
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
       }
@@ -154,62 +134,62 @@ function setupAudioPlayerControls() {
     }
   });
 
-  // Go to start/end
-  goStartBtn.addEventListener("click", () => {
-    audioElement.currentTime = 0;
-  });
-  goEndBtn.addEventListener("click", () => {
-    audioElement.currentTime = audioElement.duration;
-  });
+  goStartBtn.addEventListener("click", () => { audioElement.currentTime = 0; });
+  goEndBtn.addEventListener("click", () => { audioElement.currentTime = audioElement.duration; });
 
-  // Volume toggle
   volumeToggle.addEventListener("click", () => {
     const volCtrl = document.getElementById("volumeControl");
     volCtrl.classList.toggle("hidden");
     if (!volCtrl.classList.contains("hidden")) {
       if (volumeTimeout) clearTimeout(volumeTimeout);
-      volumeTimeout = setTimeout(() => {
-        volCtrl.classList.add("hidden");
-      }, 3000);
+      volumeTimeout = setTimeout(() => { volCtrl.classList.add("hidden"); }, 3000);
     }
   });
   volumeSlider.addEventListener("input", (e) => {
     audioElement.volume = e.target.value;
     const volCtrl = document.getElementById("volumeControl");
     if (volumeTimeout) clearTimeout(volumeTimeout);
-    volumeTimeout = setTimeout(() => {
-      volCtrl.classList.add("hidden");
-    }, 3000);
+    volumeTimeout = setTimeout(() => { volCtrl.classList.add("hidden"); }, 3000);
   });
 }
 
 /**
- * Renders a scene by index from the current story.
+ * Renders a scene by index.
  */
 function showScene(index) {
   currentSceneIndex = index;
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // Update global background
+  // For the "sleepy-star" story, force two minigames:
+  if (currentStory.folder === "sleepy-star") {
+    if (index === 5) {
+      sceneObj.interactive = "minigame1"; // Tap game
+    } else if (index === 12) {
+      sceneObj.interactive = "minigame2"; // Slider game
+    } else {
+      delete sceneObj.interactive;
+    }
+  }
+
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 
-  if (sceneObj.interactive !== "chase") {
+  if (sceneObj.interactive !== "chase" && sceneObj.interactive !== "minigame1" && sceneObj.interactive !== "minigame2") {
     chaseComplete = false;
   }
 
   let html = `<div class="scene">`;
   html += `<img src="images/${currentStory.folder}/${sceneObj.image}" class="scene-img" alt="Scene Image">`;
   html += `<div class="scene-content">${sceneObj.content}</div>`;
-  
+
   // Navigation buttons
   html += `<div class="nav-buttons">`;
   if (index > 0) {
     html += `<button id="prevBtn"><span class="material-icons">arrow_back</span></button>`;
   }
   if (index < currentStory.length - 1) {
-    if (sceneObj.interactive === "chase" && !chaseComplete) {
+    if (sceneObj.interactive && (sceneObj.interactive === "chase" || sceneObj.interactive === "minigame1" || sceneObj.interactive === "minigame2") && !chaseComplete) {
       html += `<button id="nextBtn" disabled><span class="material-icons">arrow_forward</span></button>`;
     } else {
       html += `<button id="nextBtn"><span class="material-icons">arrow_forward</span></button>`;
@@ -219,7 +199,7 @@ function showScene(index) {
   }
   html += `</div>`; // close nav-buttons
 
-  // Audio player UI
+  // Audio Player UI
   html += `
     <div id="audioPlayer">
       <div id="audioProgress">
@@ -237,11 +217,32 @@ function showScene(index) {
       </div>
     </div>
   `;
-
+  
+  // For minigames, add additional UI elements:
+  if (sceneObj.interactive === "minigame1") {
+    // Tap game: show a "Tap Me!" button and a counter.
+    html += `
+      <div id="minigame1" class="minigame">
+        <button id="tapButton">Tap Me!</button>
+        <p>Taps: <span id="tapCount">0</span></p>
+      </div>
+    `;
+  } else if (sceneObj.interactive === "minigame2") {
+    // Slider game: show a slider; target value is 0.5.
+    html += `
+      <div id="minigame2" class="minigame">
+        <p>Adjust the cosmic dial to 50%</p>
+        <input type="range" id="cosmicSlider" min="0" max="1" step="0.01" value="0.5">
+        <p id="minigame2Status"></p>
+      </div>
+    `;
+  }
+  
   html += `</div>`; // close .scene
+
   gameDiv.innerHTML = html;
 
-  // Attach nav events
+  // Attach navigation event listeners.
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -255,22 +256,35 @@ function showScene(index) {
     restartBtn.addEventListener("click", () => returnToGallery());
   }
 
-  // Interactive scene logic
-  if (sceneObj.interactive === "chase") {
-    let chaseClicks = 0;
-    const threshold = 20;
-    const runBtn = document.getElementById("runBtn");
-    if (runBtn) {
-      runBtn.addEventListener("click", () => {
-        chaseClicks++;
-        document.getElementById("chaseCounter").innerText = chaseClicks;
-        if (chaseClicks >= threshold) {
-          document.getElementById("chaseMessage").style.display = "block";
-          chaseComplete = true;
-          if (nextBtn) nextBtn.disabled = false;
-        }
-      });
-    }
+  // Set up minigame interactions.
+  if (sceneObj.interactive === "minigame1") {
+    let tapCount = 0;
+    const tapButton = document.getElementById("tapButton");
+    tapButton.addEventListener("click", () => {
+      tapCount++;
+      document.getElementById("tapCount").innerText = tapCount;
+      if (tapCount >= 10) {  // threshold for minigame1
+        // Enable next scene button if minigame is complete
+        if (nextBtn) nextBtn.disabled = false;
+      }
+    });
+  } else if (sceneObj.interactive === "minigame2") {
+    const cosmicSlider = document.getElementById("cosmicSlider");
+    const statusText = document.getElementById("minigame2Status");
+    cosmicSlider.addEventListener("input", () => {
+      const value = parseFloat(cosmicSlider.value);
+      if (value >= 0.45 && value <= 0.55) {
+        statusText.innerText = "Perfect!";
+        // After 2 seconds in the target zone, enable next scene.
+        setTimeout(() => {
+          if (cosmicSlider.value >= 0.45 && cosmicSlider.value <= 0.55) {
+            if (nextBtn) nextBtn.disabled = false;
+          }
+        }, 2000);
+      } else {
+        statusText.innerText = "";
+      }
+    });
   }
 
   setupAudioPlayerControls();
@@ -278,43 +292,36 @@ function showScene(index) {
 }
 
 /**
- * Returns to the gallery view, unloads the preloaded images,
- * and resets the audio.
+ * Returns to gallery and unloads preloaded images.
  */
 function returnToGallery() {
   if (audioElement) {
     audioElement.pause();
     audioElement.currentTime = 0;
   }
-  // Unload images to free memory
   unloadStoryImages();
-
   document.getElementById("gallery").classList.remove("hidden");
   document.getElementById("gameContainer").classList.add("hidden");
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
 }
 
 /**
- * Loads the story data from JSON, sorts by "order", preloads images, sets up audio, etc.
+ * Loads story data (JSON), preloads images, and sets up audio.
  */
 function loadStoryData(storyData, folder) {
   currentStory = storyData.sort((a, b) => a.order - b.order);
   currentStory.folder = folder;
   currentSceneIndex = 0;
-
-  // Preload all scene images so transitions are instant
   preloadStoryImages(currentStory, folder);
-
   document.getElementById("gallery").classList.add("hidden");
   document.getElementById("gameContainer").classList.remove("hidden");
-
   showScene(0);
   setupAudio();
   setupAudioPlayerControls();
 }
 
 /**
- * Sets up the gallery with available stories.
+ * Builds the gallery with available stories.
  */
 function setupGallery() {
   const availableStories = [
@@ -322,10 +329,10 @@ function setupGallery() {
     { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/cover.jpg", order: 2 }
   ];
   availableStories.sort((a, b) => a.order - b.order);
-
-  // On gallery view, use gallery background
+  
+  // Set global background to gallery image.
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
-
+  
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
   availableStories.forEach(story => {
@@ -337,12 +344,8 @@ function setupGallery() {
     `;
     card.addEventListener("click", () => {
       loadStory(story.file)
-        .then(data => {
-          loadStoryData(data, story.file);
-        })
-        .catch(err => {
-          console.error("Error loading story:", err);
-        });
+        .then(data => { loadStoryData(data, story.file); })
+        .catch(err => { console.error("Error loading story:", err); });
     });
     storyCardsContainer.appendChild(card);
   });
