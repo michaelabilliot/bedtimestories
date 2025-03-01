@@ -21,7 +21,7 @@ html, body {
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: 110%; /* Start slightly zoomed in to avoid white edges */
   filter: blur(10px);
   z-index: -2;
   clip-path: inset(0);
@@ -258,11 +258,12 @@ html, body {
 .story-description {
   font-size: 1.1rem;
   color: rgba(255,255,255,0.9);
-  margin: 15px 0 30px;
+  margin: 15px 0 20px; /* Reduced bottom margin */
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   max-width: 600px;
   line-height: 1.6;
   animation: fadeIn 1.5s ease;
+  text-align: center; /* Center the description text */
 }
 
 /* Story cards row for horizontal display */
@@ -317,7 +318,7 @@ html, body {
 #storyCards {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px; /* Reduced gap between sections */
   align-items: center;
   width: 100%;
   max-width: 1200px;
@@ -329,7 +330,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 50px;
+  margin-bottom: 20px; /* Reduced bottom margin */
 }
 .todays-story-section h2,
 .other-stories-section h2 {
@@ -339,6 +340,7 @@ html, body {
   margin-bottom: 25px;
   font-weight: normal;
   letter-spacing: 0.5px;
+  text-align: center; /* Ensure heading is centered */
 }
 .story-card {
   background: rgba(255,255,255,0.1);
@@ -351,6 +353,7 @@ html, body {
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   position: relative;
+  margin: 0 auto; /* Center the card */
 }
 .story-card:hover {
   transform: translateY(-10px) scale(1.03);
@@ -387,6 +390,7 @@ html, body {
   text-shadow: 0 2px 4px rgba(0,0,0,0.8);
   z-index: 1;
   text-align: center;
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 /* Game container */
@@ -694,13 +698,13 @@ html, body {
   .todays-story-section, .other-stories-section {
     width: 100%;
     max-width: 500px;
-    margin: 0 auto 30px auto;
+    margin: 0 auto 20px auto; /* Reduced bottom margin */
     align-items: center;
   }
   #gallery #storyCards {
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 20px; /* Reduced gap */
   }
   .scene {
     max-width: 100%;
@@ -751,16 +755,11 @@ html, body {
   }
   .story-description {
     font-size: 1rem;
-    margin: 10px 0 25px;
+    margin: 10px 0 15px; /* Reduced bottom margin */
   }
   
   .story-cards-row {
     gap: 20px;
-  }
-  
-  .special-message {
-    font-size: 1.5rem;
-    margin-top: 40px;
   }
   
   .content-frame {
@@ -800,10 +799,6 @@ html, body {
   }
   .story-description {
     font-size: 0.9rem;
-  }
-  
-  .special-message {
-    font-size: 1.3rem;
   }
   
   .content-frame {

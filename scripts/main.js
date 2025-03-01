@@ -31,12 +31,20 @@ function unloadStoryImages() {
 
 /**
  * Updates the global background's zoom and blur.
+ * Automatically increases zoom slightly as blur increases to avoid white edges.
  */
 function updateBackgroundEffects() {
-  const zoomVal = document.getElementById('zoomSlider').value;
-  const blurVal = document.getElementById('blurSlider').value;
+  const zoomSlider = document.getElementById('zoomSlider');
+  const blurSlider = document.getElementById('blurSlider');
+  const zoomVal = zoomSlider.value;
+  const blurVal = blurSlider.value;
+  
+  // Calculate additional zoom based on blur value (higher blur = more zoom)
+  // This helps prevent white edges from appearing
+  const blurZoomCompensation = 1 + (blurVal / 100);
+  
   const globalBg = document.getElementById('globalBackground');
-  globalBg.style.backgroundSize = (zoomVal * 100) + "%";
+  globalBg.style.backgroundSize = (zoomVal * 100 * blurZoomCompensation) + "%";
   globalBg.style.filter = `blur(${blurVal}px)`;
 }
 
@@ -273,7 +281,8 @@ function returnToGallery() {
   unloadStoryImages();
   document.getElementById("gallery").classList.remove("hidden");
   document.getElementById("gameContainer").classList.add("hidden");
-  document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+  updateBackgroundEffects(); // Apply zoom and blur settings
 }
 
 /**
@@ -315,7 +324,7 @@ function setupGallery() {
   if (todaysStories.length > 0) {
     const todaysSection = document.createElement("div");
     todaysSection.className = "todays-story-section";
-    todaysSection.innerHTML = "<h2>Tonight's Special <span class='heart-icon'>♥</span></h2>";
+    todaysSection.innerHTML = "<h2>Tonight's Special</h2>";
     todaysStories.forEach(story => {
       const card = document.createElement("div");
       card.className = "story-card todays-story";
@@ -368,12 +377,6 @@ function setupGallery() {
     otherSection.appendChild(cardsContainer);
     storyCardsContainer.appendChild(otherSection);
   }
-  
-  // Add a special message at the bottom
-  const specialMessage = document.createElement("div");
-  specialMessage.className = "special-message";
-  specialMessage.innerHTML = `<p>Sweet dreams, my love <span class='heart-icon'>♥</span></p>`;
-  storyCardsContainer.appendChild(specialMessage);
 }
 
 /* Keyboard shortcuts:
