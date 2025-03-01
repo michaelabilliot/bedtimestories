@@ -44,7 +44,7 @@ function updateBackgroundEffects() {
 document.getElementById('zoomSlider').addEventListener('input', updateBackgroundEffects);
 document.getElementById('blurSlider').addEventListener('input', updateBackgroundEffects);
 
-/* Toggle settings panel */
+/* Toggle the settings panel */
 document.getElementById('settingsIcon').addEventListener('click', () => {
   document.getElementById('settingsPanel').classList.toggle('hidden');
 });
@@ -70,6 +70,7 @@ function setupAudio() {
 
 /**
  * Updates the audio progress bar and auto-advances scenes.
+ * Auto-advance now only happens if the scene timestamp is > 0.
  */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
@@ -80,9 +81,8 @@ function updateAudioProgress() {
   }
   
   const sceneTimestamp = currentStory[currentSceneIndex].timestamp;
-  if (sceneTimestamp !== undefined && audioElement.currentTime >= sceneTimestamp) {
-    // Only auto-advance if not manually overridden (i.e. if the user hasn't paused, etc.)
-    if (currentSceneIndex < currentStory.length - 1 && !currentStory[currentSceneIndex].interactive) {
+  if (sceneTimestamp > 0 && audioElement.currentTime >= sceneTimestamp) {
+    if (currentSceneIndex < currentStory.length - 1) {
       showScene(currentSceneIndex + 1);
     } else if (audioElement.currentTime >= audioElement.duration) {
       setTimeout(() => returnToGallery(), 5000);
@@ -91,8 +91,7 @@ function updateAudioProgress() {
 }
 
 /**
- * Creates triangle markers for each scene's timestamp.
- * Also, attaches click events to allow jumping to that scene.
+ * Creates clickable triangle markers for each scene's timestamp.
  */
 function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
@@ -100,13 +99,12 @@ function updateSceneIndicators() {
   indicatorsContainer.innerHTML = "";
   if (audioElement && audioElement.duration) {
     currentStory.forEach((scene, idx) => {
-      if (idx > 0 && scene.timestamp !== undefined) {
+      if (idx > 0 && scene.timestamp > 0) {
         const posPercent = (scene.timestamp / audioElement.duration) * 100;
         const indicator = document.createElement("div");
         indicator.className = "scene-indicator";
         indicator.innerHTML = `<svg viewBox="0 0 10 10" width="10" height="10"><polygon points="5,0 10,10 0,10"/></svg>`;
         indicator.style.left = posPercent + "%";
-        // Clicking an indicator jumps to that scene.
         indicator.addEventListener("click", () => {
           audioElement.currentTime = scene.timestamp;
           showScene(idx);
@@ -118,7 +116,7 @@ function updateSceneIndicators() {
 }
 
 /**
- * Sets up the audio player controls and keyboard events.
+ * Sets up the audio player controls and keyboard shortcuts.
  */
 function setupAudioPlayerControls() {
   const playPauseBtn = document.getElementById("playPauseBtn");
@@ -128,9 +126,8 @@ function setupAudioPlayerControls() {
   const volumeSlider = document.getElementById("volumeSlider");
 
   playPauseBtn.addEventListener("click", () => {
-    // For scene0, do not reset; simply play/pause
     if (audioElement.paused) {
-      // If on scene0 and there's more than one scene, jump to scene1
+      // Do not reset if already in a scene other than scene0.
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
       }
@@ -143,17 +140,12 @@ function setupAudioPlayerControls() {
   });
 
   goStartBtn.addEventListener("click", () => {
-    // Jump to current scene's timestamp
-    if (currentStory[currentSceneIndex].timestamp !== undefined) {
-      audioElement.currentTime = currentStory[currentSceneIndex].timestamp;
-    } else {
-      audioElement.currentTime = 0;
-    }
+    const ts = currentStory[currentSceneIndex].timestamp;
+    audioElement.currentTime = ts > 0 ? ts : 0;
   });
   goEndBtn.addEventListener("click", () => {
-    // Jump to next scene's timestamp if available; otherwise, end audio.
-    if (currentSceneIndex < currentStory.length - 1 && currentStory[currentSceneIndex + 1].timestamp !== undefined) {
-      audioElement.currentTime = currentStory[currentSceneIndex + 1].timestamp;
+    if (currentSceneIndex < currentStory.length - 1 && currentStory[currentSceneIndex+1].timestamp > 0) {
+      audioElement.currentTime = currentStory[currentSceneIndex+1].timestamp;
     } else {
       audioElement.currentTime = audioElement.duration;
     }
@@ -164,52 +156,26 @@ function setupAudioPlayerControls() {
     volCtrl.classList.toggle("hidden");
     if (!volCtrl.classList.contains("hidden")) {
       if (volumeTimeout) clearTimeout(volumeTimeout);
-      volumeTimeout = setTimeout(() => {
-        volCtrl.classList.add("hidden");
-      }, 3000);
+      volumeTimeout = setTimeout(() => { volCtrl.classList.add("hidden"); }, 3000);
     }
   });
   volumeSlider.addEventListener("input", (e) => {
     audioElement.volume = e.target.value;
     const volCtrl = document.getElementById("volumeControl");
     if (volumeTimeout) clearTimeout(volumeTimeout);
-    volumeTimeout = setTimeout(() => {
-      volCtrl.classList.add("hidden");
-    }, 3000);
+    volumeTimeout = setTimeout(() => { volCtrl.classList.add("hidden"); }, 3000);
   });
 }
 
 /**
- * Adds keyboard shortcuts: space toggles play/pause, left/right arrows navigate scenes.
- */
-document.addEventListener("keydown", (e) => {
-  // Prevent scrolling on space
-  if (e.key === " ") {
-    e.preventDefault();
-    document.getElementById("playPauseBtn").click();
-  } else if (e.key === "ArrowLeft") {
-    // Navigate to previous scene if exists
-    if (currentSceneIndex > 0) {
-      showScene(currentSceneIndex - 1);
-    }
-  } else if (e.key === "ArrowRight") {
-    // Navigate to next scene if exists
-    if (currentSceneIndex < currentStory.length - 1) {
-      showScene(currentSceneIndex + 1);
-    }
-  }
-});
-
-/**
  * Renders a scene by index.
- * If the scene's JSON has a timestamp, it syncs the audio to that time.
+ * If the scene has a timestamp (> 0), audio is synced to that time.
  */
 function showScene(index) {
   currentSceneIndex = index;
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // Set global background to current scene's image.
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 
@@ -227,7 +193,7 @@ function showScene(index) {
   } else {
     html += `<button id="restartBtn">Back to Gallery</button>`;
   }
-  html += `</div>`; // end nav-buttons
+  html += `</div>`;
 
   // Audio Player UI
   html += `
@@ -248,15 +214,15 @@ function showScene(index) {
     </div>
   `;
 
-  html += `</div>`; // close .scene
+  html += `</div>`;
   gameDiv.innerHTML = html;
   
-  // Sync audio to scene timestamp if defined.
-  if (sceneObj.timestamp !== undefined) {
+  // If the scene's JSON has a nonzero timestamp, sync the audio.
+  if (sceneObj.timestamp > 0) {
     audioElement.currentTime = sceneObj.timestamp;
   }
   
-  // Attach nav event listeners.
+  // Attach navigation events.
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -269,7 +235,7 @@ function showScene(index) {
 }
 
 /**
- * Returns the user to the gallery view and unloads images.
+ * Returns to gallery view and unloads images.
  */
 function returnToGallery() {
   if (audioElement) {
@@ -326,7 +292,7 @@ function setupGallery() {
   });
 }
 
-/* Keyboard controls: space for play/pause, left/right arrows for scene navigation */
+/* Keyboard controls: space toggles play/pause, left/right arrows navigate scenes */
 document.addEventListener("keydown", (e) => {
   if (e.key === " ") {
     e.preventDefault();
