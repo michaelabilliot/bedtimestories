@@ -15,7 +15,7 @@ function preloadStoryImages(storyData, folder) {
   storyData.forEach(scene => {
     if (scene.image) {
       const img = new Image();
-      img.src = `images/${folder}/${scene.image}`;
+      img.src = `./images/${folder}/${scene.image}`;
       preloadedImages.push(img);
     }
   });
@@ -196,7 +196,7 @@ function showScene(index) {
   
   // Update background image if the scene has one.
   if (currentStory[index].image) {
-    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[index].image}')`;
+    document.getElementById('globalBackground').style.backgroundImage = `url('./images/${currentStory.folder}/${currentStory[index].image}')`;
   }
   
   // Build the scene HTML.
@@ -205,7 +205,7 @@ function showScene(index) {
   
   // Scene image.
   if (currentStory[index].image) {
-    html += `<img class="scene-img" src="images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">`;
+    html += `<img class="scene-img" src="./images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">`;
   }
   
   // Scene content with a romantic frame
@@ -281,7 +281,7 @@ function returnToGallery() {
   unloadStoryImages();
   document.getElementById("gallery").classList.remove("hidden");
   document.getElementById("gameContainer").classList.add("hidden");
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
   updateBackgroundEffects(); // Apply zoom and blur settings
 }
 
@@ -306,13 +306,13 @@ function loadStoryData(storyData, folder) {
  */
 function setupGallery() {
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
-    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
+    { title: "Friends Tale", file: "friends-tale", cover: "./images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
+    { title: "Little Sleepy Star", file: "sleepy-star", cover: "./images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
   // Set global background to gallery image with a romantic gradient overlay
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
   
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
@@ -329,7 +329,7 @@ function setupGallery() {
       const card = document.createElement("div");
       card.className = "story-card todays-story";
       card.innerHTML = `
-        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <img src="${story.cover ? story.cover : './images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
@@ -363,7 +363,7 @@ function setupGallery() {
       const card = document.createElement("div");
       card.className = "story-card";
       card.innerHTML = `
-        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <img src="${story.cover ? story.cover : './images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {

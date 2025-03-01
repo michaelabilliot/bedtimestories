@@ -22,9 +22,12 @@ html, body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 110%; /* Start slightly zoomed in to avoid white edges */
+  -webkit-filter: blur(10px);
   filter: blur(10px);
   z-index: -2;
+  -webkit-clip-path: inset(0);
   clip-path: inset(0);
+  -webkit-transition: background-size 0.5s ease, filter 0.5s ease;
   transition: background-size 0.5s ease, filter 0.5s ease;
 }
 
@@ -40,6 +43,7 @@ html, body {
   opacity: 0.3;
   mix-blend-mode: overlay;
   z-index: -1;
+  -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
 
@@ -199,6 +203,15 @@ html, body {
   appearance: none;
   width: 18px;
   height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+#settingsPanel input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
@@ -614,6 +627,15 @@ html, body {
   appearance: none;
   width: 18px;
   height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+#volumeSlider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);

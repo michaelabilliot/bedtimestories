@@ -1,7 +1,7 @@
 // storyLoader.js
 
 function loadStory(storyFile) {
-  const path = `stories/${storyFile}.json`;
+  const path = `./stories/${storyFile}.json`;
   return fetch(path)
     .then(response => {
       if (!response.ok) {
