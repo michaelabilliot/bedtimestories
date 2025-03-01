@@ -122,9 +122,18 @@ html, body {
 }
 #storyCards {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   gap: 20px;
+}
+.todays-story-section, .other-stories-section {
+  margin-bottom: 30px;
+}
+.todays-story-section h2,
+.other-stories-section h2 {
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  margin-bottom: 10px;
 }
 .story-card {
   background: rgba(255,255,255,0.9);
@@ -236,7 +245,7 @@ html, body {
   filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
 }
 
-/* Audio Player bound to bottom of .scene */
+/* Audio Player */
 #audioPlayer {
   box-shadow: 0 2px 15px rgba(0,0,0,0.5);
   backdrop-filter: blur(95px);
@@ -284,7 +293,7 @@ html, body {
   filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
 }
 
-/* Audio Controls: arranged in one row, centered */
+/* Audio Controls: arranged in one centered row */
 #audioControls {
   display: flex;
   align-items: center;
@@ -330,9 +339,16 @@ html, body {
   width: 100%;
 }
 
-/* Utility */
+/* Utility class */
 .hidden {
   display: none;
+}
+
+/* "Today's Story" card aspect-ratio override */
+.todays-story {
+  /* Force a 16:9 ratio */
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 /* Mobile (portrait) adjustments */

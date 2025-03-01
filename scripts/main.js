@@ -2,7 +2,6 @@
 
 let currentStory = [];
 let currentSceneIndex = 0;
-let chaseComplete = false;
 let audioElement = null;
 let volumeTimeout = null;
 let preloadedImages = [];
@@ -71,7 +70,7 @@ function setupAudio() {
 
 /**
  * Updates the audio progress bar and auto-advances scenes.
- * Uses currentStory[currentSceneIndex].end as the auto-advance threshold.
+ * It uses the current scene's "end" property as the threshold.
  */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
@@ -81,7 +80,6 @@ function updateAudioProgress() {
     updateSceneIndicators();
   }
   
-  // If the current scene has an "end" timestamp, auto-advance when reached.
   const sceneEnd = currentStory[currentSceneIndex].end;
   if (sceneEnd !== undefined && audioElement.currentTime >= sceneEnd) {
     if (currentSceneIndex < currentStory.length - 1) {
@@ -93,7 +91,7 @@ function updateAudioProgress() {
 }
 
 /**
- * Creates clickable triangle markers for each scene's "start" timestamp (except scene0).
+ * Creates clickable triangle markers for each scene's "start" time (except scene0).
  */
 function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
@@ -107,7 +105,6 @@ function updateSceneIndicators() {
         indicator.className = "scene-indicator";
         indicator.innerHTML = `<svg viewBox="0 0 10 10" width="10" height="10"><polygon points="5,0 10,10 0,10"/></svg>`;
         indicator.style.left = posPercent + "%";
-        // Make it clickable to skip to that scene
         indicator.addEventListener("click", () => {
           showScene(idx);
           audioElement.currentTime = scene.start;
@@ -120,7 +117,6 @@ function updateSceneIndicators() {
 
 /**
  * Sets up the audio player controls.
- * The play/pause button toggles without resetting audio on non‑scene0.
  */
 function setupAudioPlayerControls() {
   const playPauseBtn = document.getElementById("playPauseBtn");
@@ -131,10 +127,9 @@ function setupAudioPlayerControls() {
 
   playPauseBtn.addEventListener("click", () => {
     if (audioElement.paused) {
-      // On scene0, skip to scene1 if applicable and set audio to the scene's start time.
+      // If on scene0, skip to scene1 and seek to its "start" (if defined)
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
-        // Set audio to scene1 start if available.
         if (currentStory[1].start !== undefined) {
           audioElement.currentTime = currentStory[1].start;
         }
@@ -148,12 +143,10 @@ function setupAudioPlayerControls() {
   });
 
   goStartBtn.addEventListener("click", () => {
-    // Go to the current scene's start time (if defined) or 0
     const sceneStart = currentStory[currentSceneIndex].start;
     audioElement.currentTime = sceneStart !== undefined ? sceneStart : 0;
   });
   goEndBtn.addEventListener("click", () => {
-    // Go to the current scene's end time (if defined) or audio duration
     const sceneEnd = currentStory[currentSceneIndex].end;
     audioElement.currentTime = sceneEnd !== undefined ? sceneEnd : audioElement.duration;
   });
@@ -175,42 +168,18 @@ function setupAudioPlayerControls() {
 }
 
 /**
- * Adds keyboard controls:
- * - Space: Toggle play/pause.
- * - Left arrow: Previous scene.
- * - Right arrow: Next scene.
- */
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") {
-    // Prevent scrolling
-    e.preventDefault();
-    const playPauseBtn = document.getElementById("playPauseBtn");
-    if (playPauseBtn) playPauseBtn.click();
-  } else if (e.code === "ArrowLeft") {
-    if (currentSceneIndex > 0) showScene(currentSceneIndex - 1);
-  } else if (e.code === "ArrowRight") {
-    if (currentSceneIndex < currentStory.length - 1) showScene(currentSceneIndex + 1);
-  }
-});
-
-/**
- * Renders a scene by index from the current story.
- * If the scene has a "start" property, on play the audio will seek to that time.
+ * Renders a scene by index.
  */
 function showScene(index) {
   currentSceneIndex = index;
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // For scenes (except scene0) if a "start" exists, set audio currentTime when play is pressed.
-  // (This will be handled in the play/pause event, so here we just update background.)
+  // Update global background to current scene image.
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 
-  if (sceneObj.interactive !== "chase") {
-    chaseComplete = false;
-  }
-
+  // For scenes other than scene0, if a "start" exists, that will be used on play.
   let html = `<div class="scene">`;
   html += `<img src="images/${currentStory.folder}/${sceneObj.image}" class="scene-img" alt="Scene Image">`;
   html += `<div class="scene-content">${sceneObj.content}</div>`;
@@ -221,7 +190,7 @@ function showScene(index) {
     html += `<button id="prevBtn"><span class="material-icons">arrow_back</span></button>`;
   }
   if (index < currentStory.length - 1) {
-    if (sceneObj.interactive && (sceneObj.interactive === "chase") && !chaseComplete) {
+    if (sceneObj.interactive && sceneObj.interactive === "chase" && !chaseComplete) {
       html += `<button id="nextBtn" disabled><span class="material-icons">arrow_forward</span></button>`;
     } else {
       html += `<button id="nextBtn"><span class="material-icons">arrow_forward</span></button>`;
@@ -229,9 +198,9 @@ function showScene(index) {
   } else {
     html += `<button id="restartBtn">Back to Gallery</button>`;
   }
-  html += `</div>`; // close nav-buttons
+  html += `</div>`; // end nav-buttons
 
-  // Audio player UI
+  // Audio Player UI
   html += `
     <div id="audioPlayer">
       <div id="audioProgress">
@@ -249,8 +218,8 @@ function showScene(index) {
       </div>
     </div>
   `;
-
-  html += `</div>`; // close .scene
+  
+  html += `</div>`; // end .scene
   gameDiv.innerHTML = html;
 
   // Attach navigation event listeners.
@@ -261,7 +230,6 @@ function showScene(index) {
   if (nextBtn) { nextBtn.addEventListener("click", () => showScene(index + 1)); }
   if (restartBtn) { restartBtn.addEventListener("click", () => returnToGallery()); }
 
-  // Set up audio player controls.
   setupAudioPlayerControls();
   updateBackgroundEffects();
 }
@@ -281,7 +249,7 @@ function returnToGallery() {
 }
 
 /**
- * Loads the story data from JSON, preloads images, sets up audio, etc.
+ * Loads story data from JSON, preloads images, sets up audio, etc.
  */
 function loadStoryData(storyData, folder) {
   currentStory = storyData.sort((a, b) => a.order - b.order);
@@ -297,36 +265,73 @@ function loadStoryData(storyData, folder) {
 
 /**
  * Builds the gallery with available stories.
+ * Also creates a "Today's Story" section if a story is marked with "today: true".
  */
 function setupGallery() {
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/cover.jpg", order: 1 },
+    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/cover.jpg", order: 1, today: true },
     { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/cover.jpg", order: 2 }
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
-  // In gallery view, set global background to gallery image.
+  // Set global background to gallery image.
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
   
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
-  availableStories.forEach(story => {
-    const card = document.createElement("div");
-    card.className = "story-card";
-    card.innerHTML = `
-      <img src="${story.cover}" alt="${story.title} Cover">
-      <div class="story-title">${story.title}</div>
-    `;
-    card.addEventListener("click", () => {
-      loadStory(story.file)
-        .then(data => { loadStoryData(data, story.file); })
-        .catch(err => { console.error("Error loading story:", err); });
+  
+  // Separate Today's Story from others.
+  const todaysStories = availableStories.filter(story => story.today);
+  const otherStories = availableStories.filter(story => !story.today);
+  
+  if (todaysStories.length > 0) {
+    const todaysSection = document.createElement("div");
+    todaysSection.className = "todays-story-section";
+    todaysSection.innerHTML = "<h2>Today's Story</h2>";
+    todaysStories.forEach(story => {
+      const card = document.createElement("div");
+      card.className = "story-card todays-story";
+      card.innerHTML = `
+        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <div class="story-title">${story.title}</div>
+      `;
+      card.addEventListener("click", () => {
+        loadStory(story.file)
+          .then(data => { loadStoryData(data, story.file); })
+          .catch(err => { console.error("Error loading story:", err); });
+      });
+      todaysSection.appendChild(card);
     });
-    storyCardsContainer.appendChild(card);
-  });
+    storyCardsContainer.appendChild(todaysSection);
+  }
+  
+  if (otherStories.length > 0) {
+    const otherSection = document.createElement("div");
+    otherSection.className = "other-stories-section";
+    otherSection.innerHTML = "<h2>Other Stories</h2>";
+    otherStories.forEach(story => {
+      const card = document.createElement("div");
+      card.className = "story-card";
+      card.innerHTML = `
+        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <div class="story-title">${story.title}</div>
+      `;
+      card.addEventListener("click", () => {
+        loadStory(story.file)
+          .then(data => { loadStoryData(data, story.file); })
+          .catch(err => { console.error("Error loading story:", err); });
+      });
+      otherSection.appendChild(card);
+    });
+    storyCardsContainer.appendChild(otherSection);
+  }
 }
 
-/* Keyboard shortcuts */
+/* Keyboard shortcuts:
+   - Space: toggle play/pause
+   - Left arrow: previous scene
+   - Right arrow: next scene
+*/
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     e.preventDefault();
