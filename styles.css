@@ -1,11 +1,13 @@
 /* styles.css */
 
 /* Base reset and font */
-body {
+html, body {
   margin: 0;
   padding: 0;
   background: transparent;
   font-family: 'Merriweather', serif;
+  height: 100%;
+  width: 100%;
 }
 
 /* Global background element */
@@ -68,6 +70,8 @@ body {
   border-radius: 10px;
   padding: 20px;
   z-index: 1100;
+  max-width: 300px;
+  width: 90%;
 }
 #settingsPanel.hidden {
   display: none;
@@ -145,6 +149,10 @@ body {
 }
 
 /* Game container */
+#gameContainer {
+  width: 100%;
+  height: 100%;
+}
 #game {
   position: relative;
   width: 100%;
@@ -216,11 +224,6 @@ body {
   background-color: #fcd5ce;
   cursor: not-allowed;
 }
-.nav-buttons svg {
-  width: 24px;
-  height: 24px;
-  /* Removed stroke styling */
-}
 
 /* Audio Player (now bound to the bottom of .scene) */
 #audioPlayer {
@@ -231,12 +234,46 @@ body {
   margin-top: 10px;
   border-radius: 10px;
   padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   z-index: 1000;
 }
-#audioPlayer button {
+#audioProgress {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 10px;
+}
+#audioProgressBar {
+  height: 100%;
+  width: 0%;
+  background: #ffb6c1;
+  transition: width 0.1s;
+}
+#sceneIndicators {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+}
+.scene-indicator {
+  position: absolute;
+  transform: translateX(-50%);
+  top: 0;
+}
+.scene-indicator svg {
+  fill: #ffb6c1;
+}
+#audioControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+#audioControls button {
   border: none;
   background: #ffb6c1;
   padding: 8px;
@@ -248,41 +285,62 @@ body {
   justify-content: center;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
 }
-#audioPlayer button:hover {
+#audioControls button:hover {
   background: #ff9aa2;
 }
-#audioPlayer .material-icons {
+#audioControls .material-icons {
   font-size: 20px;
   color: rgb(255,225,230);
 }
-#audioPlayer input[type="range"] {
-  width: 100px;
+#volumeControl {
+  position: absolute;
+  bottom: 50px;
+  right: 0;
+  background: rgba(255, 182, 193, 0.24);
+  backdrop-filter: blur(95px);
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  padding: 10px;
 }
-/* Audio Progress Bar */
-#audioProgress {
+#volumeControl.hidden {
+  display: none;
+}
+#volumeSlider {
+  display: block;
   width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 5px;
-}
-#audioProgressBar {
-  height: 100%;
-  width: 0%;
-  background: #ffb6c1;
-  transition: width 0.1s;
-}
-
-#audioControls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
 }
 
 /* Utility class for hiding elements */
 .hidden {
   display: none;
+}
+
+/* Media queries for mobile (portrait) */
+@media screen and (max-width: 600px) {
+  #gallery h1 {
+    font-size: 1.6rem;
+  }
+  .story-card {
+    width: 150px;
+  }
+  .story-card .story-title {
+    font-size: 1rem;
+  }
+  .scene {
+    padding: 15px;
+    min-height: 70vh;
+  }
+  .scene-content {
+    font-size: 1rem;
+  }
+  .nav-buttons button {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  #audioPlayer {
+    padding: 8px 10px;
+  }
+  #audioControls .material-icons {
+    font-size: 18px;
+  }
 }

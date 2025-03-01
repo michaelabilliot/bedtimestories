@@ -83,6 +83,7 @@ function updateSceneIndicators() {
   indicatorsContainer.innerHTML = "";
   if (audioElement && audioElement.duration) {
     currentStory.forEach((scene, idx) => {
+      // Skip scene0 or any scene without a timestamp
       if (idx > 0 && scene.timestamp !== undefined) {
         const posPercent = (scene.timestamp / audioElement.duration) * 100;
         const indicator = document.createElement("div");
@@ -112,7 +113,7 @@ function setupAudioPlayerControls() {
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
       }
-      audioElement.currentTime = 0;  // Start from the beginning
+      audioElement.currentTime = 0;
       audioElement.play();
       playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
     } else {
