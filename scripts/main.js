@@ -6,9 +6,43 @@ let chaseComplete = false; // For chase minigame
 let audioElement = null;
 let volumeTimeout = null;
 
+// We'll store the preloaded image objects here
+let preloadedImages = [];
+
+/**
+ * Preloads all scene images for a given story so that scene transitions are instant.
+ * We'll store references in `preloadedImages`.
+ */
+function preloadStoryImages(storyData, folder) {
+  // Clear any existing references
+  preloadedImages.forEach(img => {
+    img.src = "";
+  });
+  preloadedImages = [];
+
+  // Create <img> objects for each scene image
+  storyData.forEach(scene => {
+    if (scene.image) {
+      const imageUrl = `images/${folder}/${scene.image}`;
+      const imageObj = new Image();
+      imageObj.src = imageUrl;
+      preloadedImages.push(imageObj);
+    }
+  });
+}
+
+/**
+ * Unloads the preloaded images by clearing references and setting src = ""
+ */
+function unloadStoryImages() {
+  preloadedImages.forEach(img => {
+    img.src = "";
+  });
+  preloadedImages = [];
+}
+
 /**
  * Updates the global background's zoom and blur from the sliders.
- * (On mobile, we override background-size with cover, so the slider won't affect it.)
  */
 function updateBackgroundEffects() {
   const zoomVal = document.getElementById('zoomSlider').value;
@@ -31,7 +65,7 @@ document.getElementById('closeSettings').addEventListener('click', () => {
 });
 
 /**
- * Creates/updates the Audio element from audios/<storyFolder>/recording.mp3.
+ * Creates or updates the Audio element from audios/<storyFolder>/recording.mp3.
  */
 function setupAudio() {
   if (!audioElement) {
@@ -60,7 +94,8 @@ function updateAudioProgress() {
     progressBar.style.width = percent + "%";
     updateSceneIndicators();
   }
-  // Auto-advance if scene has timestamp
+  
+  // Auto-advance if current scene has a timestamp
   const sceneTimestamp = currentStory[currentSceneIndex].timestamp;
   if (sceneTimestamp !== undefined && audioElement.currentTime >= sceneTimestamp) {
     if (currentSceneIndex < currentStory.length - 1 && !currentStory[currentSceneIndex].interactive) {
@@ -80,6 +115,7 @@ function updateSceneIndicators() {
   indicatorsContainer.innerHTML = "";
   if (audioElement && audioElement.duration) {
     currentStory.forEach((scene, idx) => {
+      // Skip scene0 or any scene w/o timestamp
       if (idx > 0 && scene.timestamp !== undefined) {
         const posPercent = (scene.timestamp / audioElement.duration) * 100;
         const indicator = document.createElement("div");
@@ -105,7 +141,7 @@ function setupAudioPlayerControls() {
   // Toggle play/pause
   playPauseBtn.addEventListener("click", () => {
     if (audioElement.paused) {
-      // If on scene0, skip to scene1 and start from 0
+      // If on scene0, skip to scene1
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
       }
@@ -148,14 +184,14 @@ function setupAudioPlayerControls() {
 }
 
 /**
- * Renders a scene by index from the currentStory.
+ * Renders a scene by index from the current story.
  */
 function showScene(index) {
   currentSceneIndex = index;
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // Update global background image
+  // Update global background
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 
@@ -166,7 +202,7 @@ function showScene(index) {
   let html = `<div class="scene">`;
   html += `<img src="images/${currentStory.folder}/${sceneObj.image}" class="scene-img" alt="Scene Image">`;
   html += `<div class="scene-content">${sceneObj.content}</div>`;
-
+  
   // Navigation buttons
   html += `<div class="nav-buttons">`;
   if (index > 0) {
@@ -205,7 +241,7 @@ function showScene(index) {
   html += `</div>`; // close .scene
   gameDiv.innerHTML = html;
 
-  // Nav event listeners
+  // Attach nav events
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -219,7 +255,7 @@ function showScene(index) {
     restartBtn.addEventListener("click", () => returnToGallery());
   }
 
-  // Interactive scene logic (e.g. chase)
+  // Interactive scene logic
   if (sceneObj.interactive === "chase") {
     let chaseClicks = 0;
     const threshold = 20;
@@ -242,34 +278,43 @@ function showScene(index) {
 }
 
 /**
- * Returns user to the gallery view
+ * Returns to the gallery view, unloads the preloaded images,
+ * and resets the audio.
  */
 function returnToGallery() {
   if (audioElement) {
     audioElement.pause();
     audioElement.currentTime = 0;
   }
+  // Unload images to free memory
+  unloadStoryImages();
+
   document.getElementById("gallery").classList.remove("hidden");
   document.getElementById("gameContainer").classList.add("hidden");
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
 }
 
 /**
- * Loads the story data from JSON, sorts by "order", sets up audio, etc.
+ * Loads the story data from JSON, sorts by "order", preloads images, sets up audio, etc.
  */
 function loadStoryData(storyData, folder) {
   currentStory = storyData.sort((a, b) => a.order - b.order);
   currentStory.folder = folder;
   currentSceneIndex = 0;
+
+  // Preload all scene images so transitions are instant
+  preloadStoryImages(currentStory, folder);
+
   document.getElementById("gallery").classList.add("hidden");
   document.getElementById("gameContainer").classList.remove("hidden");
+
   showScene(0);
   setupAudio();
   setupAudioPlayerControls();
 }
 
 /**
- * Builds the gallery with available stories.
+ * Sets up the gallery with available stories.
  */
 function setupGallery() {
   const availableStories = [
