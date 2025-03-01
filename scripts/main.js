@@ -52,9 +52,10 @@ function updateAudioProgress() {
     progressBar.style.width = percent + "%";
     updateSceneIndicators();
   }
-  // Auto-advance if the current scene (except scene0) has a timestamp.
+  // Auto-advance if the current scene (other than scene0) has a timestamp
   const sceneTimestamp = currentStory[currentSceneIndex].timestamp;
   if (sceneTimestamp !== undefined && audioElement.currentTime >= sceneTimestamp) {
+    // If not the last scene and not interactive, advance
     if (currentSceneIndex < currentStory.length - 1 && !currentStory[currentSceneIndex].interactive) {
       showScene(currentSceneIndex + 1);
     } else if (audioElement.currentTime >= audioElement.duration) {
@@ -66,6 +67,7 @@ function updateAudioProgress() {
 // Create scene indicator markers (triangles) on the progress bar
 function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
+  if (!indicatorsContainer) return;
   indicatorsContainer.innerHTML = ""; // Clear existing indicators
   if (audioElement && audioElement.duration) {
     // For each scene beyond scene0 (which has no timestamp)
@@ -74,7 +76,6 @@ function updateSceneIndicators() {
         const posPercent = (scene.timestamp / audioElement.duration) * 100;
         const indicator = document.createElement("div");
         indicator.className = "scene-indicator";
-        // Use an inline SVG triangle or a CSS-made triangle
         indicator.innerHTML = `<svg viewBox="0 0 10 10" width="10" height="10"><polygon points="5,0 10,10 0,10"/></svg>`;
         indicator.style.left = posPercent + "%";
         indicatorsContainer.appendChild(indicator);
@@ -96,6 +97,11 @@ function setupAudioPlayerControls() {
     if (audioElement.paused) {
       audioElement.play();
       playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
+      // If we're currently on scene0 (which has no timestamp),
+      // jump to scene1 right away.
+      if (currentSceneIndex === 0 && currentStory.length > 1) {
+        showScene(1);
+      }
     } else {
       audioElement.pause();
       playPauseBtn.innerHTML = `<span class="material-icons">play_arrow</span>`;
@@ -110,7 +116,7 @@ function setupAudioPlayerControls() {
     audioElement.currentTime = audioElement.duration;
   });
 
-  // Volume control toggle: clicking shows the volume slider above the progress bar.
+  // Volume control toggle
   volumeToggle.addEventListener("click", () => {
     const volCtrl = document.getElementById("volumeControl");
     volCtrl.classList.toggle("hidden");
@@ -139,7 +145,7 @@ function showScene(index) {
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // Update global background image to current scene's image.
+  // Update global background image to current scene's image
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 
@@ -150,7 +156,8 @@ function showScene(index) {
   let html = `<div class="scene">`;
   html += `<img src="images/${currentStory.folder}/${sceneObj.image}" class="scene-img" alt="Scene Image">`;
   html += `<div class="scene-content">${sceneObj.content}</div>`;
-  // Navigation buttons container.
+  
+  // Navigation buttons
   html += `<div class="nav-buttons">`;
   if (index > 0) {
     html += `<button id="prevBtn"><span class="material-icons">arrow_back</span></button>`;
@@ -164,9 +171,9 @@ function showScene(index) {
   } else {
     html += `<button id="restartBtn">Back to Gallery</button>`;
   }
-  html += `</div>`;
-  
-  // Audio Player UI inserted AFTER nav-buttons.
+  html += `</div>`; // close nav-buttons
+
+  // Audio Player UI
   html += `
     <div id="audioPlayer">
       <div id="audioProgress">
@@ -184,11 +191,11 @@ function showScene(index) {
       </div>
     </div>
   `;
-  
+
   html += `</div>`; // close .scene
   gameDiv.innerHTML = html;
   
-  // Attach navigation events.
+  // Attach navigation events
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -201,15 +208,31 @@ function showScene(index) {
   if (restartBtn) {
     restartBtn.addEventListener("click", () => returnToGallery());
   }
-  
-  // (If this scene is interactive, attach its events – omitted here.)
-  
-  // Set up audio player controls for this scene.
+
+  // Interactive scene (e.g. chase) handling
+  if (sceneObj.interactive === "chase") {
+    let chaseClicks = 0;
+    const threshold = 20;
+    const runBtn = document.getElementById("runBtn");
+    if (runBtn) {
+      runBtn.addEventListener("click", () => {
+        chaseClicks++;
+        document.getElementById("chaseCounter").innerText = chaseClicks;
+        if (chaseClicks >= threshold) {
+          document.getElementById("chaseMessage").style.display = "block";
+          chaseComplete = true;
+          if (nextBtn) nextBtn.disabled = false;
+        }
+      });
+    }
+  }
+
+  // Set up audio controls
   setupAudioPlayerControls();
   updateBackgroundEffects();
 }
 
-// Return to gallery view.
+// Return to gallery
 function returnToGallery() {
   if (audioElement) {
     audioElement.pause();
@@ -220,16 +243,8 @@ function returnToGallery() {
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
 }
 
-// Monitor audio progress and auto-advance scenes based on timestamps.
-function monitorAudioProgress() {
-  if (audioElement) {
-    audioElement.addEventListener("timeupdate", updateAudioProgress);
-  }
-}
-
-// When a story is loaded, store it and initialize audio and game view.
+// When a story is loaded, store it, set up audio, etc.
 function loadStoryData(storyData, folder) {
-  // Sort scenes by "order"
   currentStory = storyData.sort((a, b) => a.order - b.order);
   currentStory.folder = folder;
   currentSceneIndex = 0;
@@ -238,10 +253,9 @@ function loadStoryData(storyData, folder) {
   showScene(0);
   setupAudio();
   setupAudioPlayerControls();
-  monitorAudioProgress();
 }
 
-// Set up the gallery with available stories.
+// Build the gallery with multiple stories
 function setupGallery() {
   const availableStories = [
     { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/cover.jpg", order: 1 },
@@ -249,10 +263,11 @@ function setupGallery() {
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
-  // In gallery view, set global background to gallery.jpg.
+  // In gallery view, set global background to gallery.jpg
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
   
   const storyCardsContainer = document.getElementById("storyCards");
+  storyCardsContainer.innerHTML = "";
   availableStories.forEach(story => {
     const card = document.createElement("div");
     card.className = "story-card";
