@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* Base reset and Merriweather font */
+/* Base reset and font */
 body {
   margin: 0;
   padding: 0;
@@ -8,10 +8,7 @@ body {
   font-family: 'Merriweather', serif;
 }
 
-/* Global background element that covers the viewport.
-   Its image is set dynamically (to a scene image or to gallery.jpg).
-   The clip-path ensures no white edges appear when blurred.
-*/
+/* Global background element */
 #globalBackground {
   position: fixed;
   top: 0;
@@ -48,11 +45,11 @@ body {
   top: 10px;
   right: 10px;
   background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
+  border-radius: 10px;
   padding: 10px;
   cursor: pointer;
   z-index: 1100;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
 }
 #settingsIcon .material-icons {
   font-size: 24px;
@@ -65,10 +62,11 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 20px;
+  backdrop-filter: blur(95px);
+  background-color: rgba(255, 182, 193, 0.24);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  padding: 20px;
   z-index: 1100;
 }
 #settingsPanel.hidden {
@@ -76,10 +74,12 @@ body {
 }
 #settingsPanel h2 {
   margin-bottom: 10px;
+  color: rgb(255,225,230);
 }
 #settingsPanel label {
   display: block;
   margin-bottom: 10px;
+  color: rgb(255,225,230);
 }
 #settingsPanel input {
   width: 100%;
@@ -89,8 +89,11 @@ body {
   padding: 8px 12px;
   background: #ffb6c1;
   border: none;
-  border-radius: 5px;
-  color: #fff;
+  border-radius: 10px;
+  backdrop-filter: blur(95px);
+  background-color: rgba(255, 182, 193, 0.24);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+  color: rgb(255,225,230);
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -118,7 +121,9 @@ body {
 .story-card {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  backdrop-filter: blur(95px);
+  background-color: rgba(255, 182, 193, 0.24);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   cursor: pointer;
   width: 200px;
@@ -136,7 +141,7 @@ body {
 .story-card .story-title {
   padding: 10px;
   font-size: 1.1rem;
-  color: #333;
+  color: rgb(255,225,230);
 }
 
 /* Game container */
@@ -151,7 +156,7 @@ body {
   z-index: 1;
 }
 
-/* Updated Scene container (using your manual edits) */
+/* Scene container (using your manual edits) */
 .scene {
   backdrop-filter: blur(95px);
   background-color: rgba(255, 182, 193, 0.24);
@@ -167,8 +172,6 @@ body {
   overflow: auto;
   z-index: 2;
 }
-
-/* Scene content area */
 .scene-content {
   flex: 1;
   font-size: 1.1rem;
@@ -176,18 +179,16 @@ body {
   margin-bottom: 20px;
   z-index: 3;
 }
-
-/* Scene image */
 .scene-img {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 10px;
   margin-bottom: 20px;
   z-index: 3;
 }
 
-/* Navigation buttons container (locked to the bottom) */
+/* Navigation buttons container (locked to bottom) */
 .nav-buttons {
   margin-top: auto;
   display: flex;
@@ -198,15 +199,15 @@ body {
   flex: 1;
   padding: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: #ffb6c1;
-  color: #fff;
+  color: rgb(255,225,230);
   cursor: pointer;
   transition: background 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
 }
 .nav-buttons button:hover:not(:disabled) {
   background-color: #ff9aa2;
@@ -215,13 +216,13 @@ body {
   background-color: #fcd5ce;
   cursor: not-allowed;
 }
-/* Remove stroke properties from icons */
-.nav-buttons svg,
-#audioPlayer svg {
+.nav-buttons svg {
+  width: 24px;
+  height: 24px;
   /* Removed stroke styling */
 }
 
-/* Audio Player bound to the bottom of .scene */
+/* Audio Player (now bound to the bottom of .scene) */
 #audioPlayer {
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(95px);
@@ -239,23 +240,38 @@ body {
   border: none;
   background: #ffb6c1;
   padding: 8px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
 }
 #audioPlayer button:hover {
   background: #ff9aa2;
 }
 #audioPlayer .material-icons {
   font-size: 20px;
-  /* No stroke here */
+  color: rgb(255,225,230);
 }
 #audioPlayer input[type="range"] {
   width: 100px;
+}
+/* Audio Progress Bar */
+#audioProgress {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+#audioProgressBar {
+  height: 100%;
+  width: 0%;
+  background: #ffb6c1;
+  transition: width 0.1s;
 }
 
 /* Utility class for hiding elements */

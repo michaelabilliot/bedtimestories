@@ -1,6 +1,6 @@
 // storyLoader.js
 
-// Loads a story JSON file from /stories folder.
+// Load a story JSON file from /stories folder.
 // Expects the file to be named {storyFile}.json.
 function loadStory(storyFile) {
   const path = `stories/${storyFile}.json`;
