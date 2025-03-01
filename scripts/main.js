@@ -5,6 +5,8 @@ let currentSceneIndex = 0;
 let audioElement = null;
 let volumeTimeout = null;
 let preloadedImages = [];
+// This flag ensures auto-advance for a given scene happens only once.
+let autoAdvanceDone = false;
 
 /**
  * Preloads all scene images for the chosen story.
@@ -70,7 +72,7 @@ function setupAudio() {
 
 /**
  * Updates the audio progress bar and auto-advances scenes.
- * Auto-advance now only happens if the scene timestamp is > 0.
+ * Auto-advance only happens once per scene thanks to the autoAdvanceDone flag.
  */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
@@ -81,7 +83,9 @@ function updateAudioProgress() {
   }
   
   const sceneTimestamp = currentStory[currentSceneIndex].timestamp;
-  if (sceneTimestamp > 0 && audioElement.currentTime >= sceneTimestamp) {
+  // Only auto-advance if the scene's timestamp is greater than 0 and we haven't auto-advanced yet.
+  if (sceneTimestamp > 0 && !autoAdvanceDone && audioElement.currentTime >= sceneTimestamp) {
+    autoAdvanceDone = true;
     if (currentSceneIndex < currentStory.length - 1) {
       showScene(currentSceneIndex + 1);
     } else if (audioElement.currentTime >= audioElement.duration) {
@@ -127,10 +131,11 @@ function setupAudioPlayerControls() {
 
   playPauseBtn.addEventListener("click", () => {
     if (audioElement.paused) {
-      // Do not reset if already in a scene other than scene0.
+      // Only if we are at scene0, jump to scene1.
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
       }
+      // Do not reset currentTime here.
       audioElement.play();
       playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
     } else {
@@ -169,10 +174,12 @@ function setupAudioPlayerControls() {
 
 /**
  * Renders a scene by index.
- * If the scene has a timestamp (> 0), audio is synced to that time.
+ * If the scene has a nonzero timestamp, syncs the audio to that time.
+ * Also resets the autoAdvance flag.
  */
 function showScene(index) {
   currentSceneIndex = index;
+  autoAdvanceDone = false;  // Reset auto-advance for this new scene.
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
@@ -193,7 +200,7 @@ function showScene(index) {
   } else {
     html += `<button id="restartBtn">Back to Gallery</button>`;
   }
-  html += `</div>`;
+  html += `</div>`; // end nav-buttons
 
   // Audio Player UI
   html += `
@@ -214,10 +221,10 @@ function showScene(index) {
     </div>
   `;
 
-  html += `</div>`;
+  html += `</div>`; // close .scene
   gameDiv.innerHTML = html;
   
-  // If the scene's JSON has a nonzero timestamp, sync the audio.
+  // If the scene's JSON has a timestamp greater than 0, sync audio.
   if (sceneObj.timestamp > 0) {
     audioElement.currentTime = sceneObj.timestamp;
   }
@@ -235,7 +242,7 @@ function showScene(index) {
 }
 
 /**
- * Returns to gallery view and unloads images.
+ * Returns to the gallery view and unloads images.
  */
 function returnToGallery() {
   if (audioElement) {
@@ -249,7 +256,7 @@ function returnToGallery() {
 }
 
 /**
- * Loads story data (JSON), preloads images, sets up audio, and shows the game.
+ * Loads the story data (JSON), preloads images, sets up audio, and shows the game.
  */
 function loadStoryData(storyData, folder) {
   currentStory = storyData.sort((a, b) => a.order - b.order);
