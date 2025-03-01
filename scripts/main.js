@@ -161,17 +161,6 @@ function showScene(index) {
   const gameDiv = document.getElementById("game");
   const sceneObj = currentStory[index];
 
-  // For the "sleepy-star" story, force two minigames:
-  if (currentStory.folder === "sleepy-star") {
-    if (index === 5) {
-      sceneObj.interactive = "minigame1"; // Tap game
-    } else if (index === 12) {
-      sceneObj.interactive = "minigame2"; // Slider game
-    } else {
-      delete sceneObj.interactive;
-    }
-  }
-
   document.getElementById('globalBackground').style.backgroundImage =
     `url('images/${currentStory.folder}/${sceneObj.image}')`;
 

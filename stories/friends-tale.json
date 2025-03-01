@@ -79,7 +79,6 @@
   {
     "order": 14,
     "image": "scene13.jpg",
-    "interactive": "chase",
     "timestamp": 260,
     "content": "<p>Something inside the lion stirred—pride, excitement, frustration. With a powerful leap, he pushed himself forward. His paws thundered against the ground. His muscles burned in a way they had not in years.</p><p>And for the first time in a long time… he chased.</p><p>The horse laughed as she galloped, weaving through the trees, feeling the wind rush past her mane. The lion roared, but this time it was not a sound of dominance. It was something different—something alive.</p><p>Click the \"Run\" button repeatedly to help the lion chase the horse!</p><div id=\"chaseCounter\">0</div><button id=\"runBtn\">Run!</button><div id=\"chaseMessage\" style=\"display:none; margin-top:10px;\">Chase complete!</div>"
   },
