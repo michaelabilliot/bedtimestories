@@ -15,9 +15,9 @@ function preloadStoryImages(storyData, folder) {
   preloadedImages = [];
   storyData.forEach(scene => {
     if (scene.image) {
-      const imageObj = new Image();
-      imageObj.src = `images/${folder}/${scene.image}`;
-      preloadedImages.push(imageObj);
+      const img = new Image();
+      img.src = `images/${folder}/${scene.image}`;
+      preloadedImages.push(img);
     }
   });
 }
@@ -54,7 +54,7 @@ document.getElementById('closeSettings').addEventListener('click', () => {
 });
 
 /**
- * Sets up the Audio element.
+ * Sets up the audio element.
  */
 function setupAudio() {
   if (!audioElement) {
@@ -79,6 +79,7 @@ function updateAudioProgress() {
     progressBar.style.width = percent + "%";
     updateSceneIndicators();
   }
+  
   const sceneTimestamp = currentStory[currentSceneIndex].timestamp;
   if (sceneTimestamp !== undefined && audioElement.currentTime >= sceneTimestamp) {
     if (currentSceneIndex < currentStory.length - 1 && !currentStory[currentSceneIndex].interactive) {
@@ -90,7 +91,7 @@ function updateAudioProgress() {
 }
 
 /**
- * Creates triangle indicators for scene timestamps.
+ * Creates triangle markers for each scene's timestamp.
  */
 function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
@@ -112,6 +113,7 @@ function updateSceneIndicators() {
 
 /**
  * Sets up the audio player controls.
+ * Note: The playPause button now does NOT reset the audio for scenes other than scene0.
  */
 function setupAudioPlayerControls() {
   const playPauseBtn = document.getElementById("playPauseBtn");
@@ -124,8 +126,8 @@ function setupAudioPlayerControls() {
     if (audioElement.paused) {
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
+        audioElement.currentTime = 0; // Reset only when skipping scene0
       }
-      audioElement.currentTime = 0;
       audioElement.play();
       playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
     } else {
@@ -134,8 +136,12 @@ function setupAudioPlayerControls() {
     }
   });
 
-  goStartBtn.addEventListener("click", () => { audioElement.currentTime = 0; });
-  goEndBtn.addEventListener("click", () => { audioElement.currentTime = audioElement.duration; });
+  goStartBtn.addEventListener("click", () => {
+    audioElement.currentTime = 0;
+  });
+  goEndBtn.addEventListener("click", () => {
+    audioElement.currentTime = audioElement.duration;
+  });
 
   volumeToggle.addEventListener("click", () => {
     const volCtrl = document.getElementById("volumeControl");
@@ -155,6 +161,9 @@ function setupAudioPlayerControls() {
 
 /**
  * Renders a scene by index.
+ * Also forces two minigames for the "sleepy-star" story:
+ * - At scene 5: a tap minigame ("minigame1").
+ * - At scene 12: a slider minigame ("minigame2").
  */
 function showScene(index) {
   currentSceneIndex = index;
@@ -188,7 +197,7 @@ function showScene(index) {
   }
   html += `</div>`; // close nav-buttons
 
-  // Audio Player UI
+  // Audio player UI (placed below nav-buttons)
   html += `
     <div id="audioPlayer">
       <div id="audioProgress">
@@ -206,10 +215,10 @@ function showScene(index) {
       </div>
     </div>
   `;
-  
-  // For minigames, add additional UI elements:
+
+  // Insert minigame UIs if needed.
   if (sceneObj.interactive === "minigame1") {
-    // Tap game: show a "Tap Me!" button and a counter.
+    // Tap minigame
     html += `
       <div id="minigame1" class="minigame">
         <button id="tapButton">Tap Me!</button>
@@ -217,7 +226,7 @@ function showScene(index) {
       </div>
     `;
   } else if (sceneObj.interactive === "minigame2") {
-    // Slider game: show a slider; target value is 0.5.
+    // Slider minigame: target value 0.5
     html += `
       <div id="minigame2" class="minigame">
         <p>Adjust the cosmic dial to 50%</p>
@@ -226,12 +235,11 @@ function showScene(index) {
       </div>
     `;
   }
-  
-  html += `</div>`; // close .scene
 
+  html += `</div>`; // close .scene
   gameDiv.innerHTML = html;
 
-  // Attach navigation event listeners.
+  // Attach navigation events.
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -252,8 +260,7 @@ function showScene(index) {
     tapButton.addEventListener("click", () => {
       tapCount++;
       document.getElementById("tapCount").innerText = tapCount;
-      if (tapCount >= 10) {  // threshold for minigame1
-        // Enable next scene button if minigame is complete
+      if (tapCount >= 10) {
         if (nextBtn) nextBtn.disabled = false;
       }
     });
@@ -264,7 +271,6 @@ function showScene(index) {
       const value = parseFloat(cosmicSlider.value);
       if (value >= 0.45 && value <= 0.55) {
         statusText.innerText = "Perfect!";
-        // After 2 seconds in the target zone, enable next scene.
         setTimeout(() => {
           if (cosmicSlider.value >= 0.45 && cosmicSlider.value <= 0.55) {
             if (nextBtn) nextBtn.disabled = false;
@@ -281,7 +287,7 @@ function showScene(index) {
 }
 
 /**
- * Returns to gallery and unloads preloaded images.
+ * Returns to the gallery view and unloads images.
  */
 function returnToGallery() {
   if (audioElement) {
@@ -295,7 +301,7 @@ function returnToGallery() {
 }
 
 /**
- * Loads story data (JSON), preloads images, and sets up audio.
+ * Loads the story data (JSON), preloads images, sets up audio, etc.
  */
 function loadStoryData(storyData, folder) {
   currentStory = storyData.sort((a, b) => a.order - b.order);
@@ -319,7 +325,7 @@ function setupGallery() {
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
-  // Set global background to gallery image.
+  // Set global background to gallery.jpg
   document.getElementById('globalBackground').style.backgroundImage = "url('images/gallery.jpg')";
   
   const storyCardsContainer = document.getElementById("storyCards");

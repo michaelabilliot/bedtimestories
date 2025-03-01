@@ -42,7 +42,7 @@ html, body {
   transition: opacity 0.3s;
 }
 
-/* Settings Icon (top right) */
+/* Settings Icon */
 #settingsIcon {
   position: fixed;
   top: 10px;
@@ -57,6 +57,7 @@ html, body {
 #settingsIcon .material-icons {
   font-size: 24px;
   color: #333;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
 }
 
 /* Settings Panel */
@@ -80,11 +81,13 @@ html, body {
 #settingsPanel h2 {
   margin-bottom: 10px;
   color: rgb(255,225,230);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 #settingsPanel label {
   display: block;
   margin-bottom: 10px;
   color: rgb(255,225,230);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 #settingsPanel input {
   width: 100%;
@@ -115,6 +118,7 @@ html, body {
   margin-bottom: 20px;
   font-size: 2rem;
   color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 #storyCards {
   display: flex;
@@ -146,6 +150,7 @@ html, body {
   padding: 10px;
   font-size: 1.1rem;
   color: rgb(255,225,230);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 /* Game container */
@@ -185,6 +190,7 @@ html, body {
   font-size: 1.1rem;
   line-height: 1.6;
   margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   z-index: 3;
 }
 .scene-img {
@@ -196,7 +202,7 @@ html, body {
   z-index: 3;
 }
 
-/* Navigation buttons container (locked to bottom) */
+/* Navigation buttons container */
 .nav-buttons {
   margin-top: auto;
   display: flex;
@@ -227,6 +233,7 @@ html, body {
 .nav-buttons svg {
   width: 24px;
   height: 24px;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
 }
 
 /* Audio Player bound to bottom of .scene */
@@ -298,6 +305,7 @@ html, body {
 #audioControls .material-icons {
   font-size: 20px;
   color: rgb(255,225,230);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
 }
 #volumeControl {
   position: absolute;
@@ -317,7 +325,7 @@ html, body {
   width: 100%;
 }
 
-/* Utility class for hiding elements */
+/* Utility class */
 .hidden {
   display: none;
 }
