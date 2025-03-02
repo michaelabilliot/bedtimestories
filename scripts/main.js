@@ -193,92 +193,67 @@ function setupAudioPlayerControls() {
 function showScene(index) {
   if (index < 0 || index >= currentStory.length) return;
   
-  // Remember the previous scene index for comparison
-  const prevSceneIndex = currentSceneIndex;
+  // Remember the previous scene index
+  const prevIndex = currentSceneIndex;
   currentSceneIndex = index;
   
-  // Update background image if the scene has one.
-  if (currentStory[index].image) {
-    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[index].image}')`;
-  }
+  // Get the scene container element
+  const sceneContainer = document.getElementById('sceneContainer');
   
-  const gameDiv = document.getElementById("game");
+  // Get references to the current elements
+  const currentFrame = document.querySelector('.content-frame');
+  const currentImg = document.querySelector('.scene-img');
   
-  // If this is the first scene (index 0), or we're coming back from the gallery, 
-  // build the entire scene container
-  if (prevSceneIndex === -1 || !gameDiv.querySelector('.scene')) {
-    // Build the complete scene HTML from scratch
-    let html = `<div class="scene">`;
+  // Check if we're building the first scene or transitioning between scenes
+  if (prevIndex === -1 || !currentFrame) {
+    // Build the entire scene container
+    sceneContainer.innerHTML = '';
     
-    // Scene image
+    // Add the image if there is one for this scene
     if (currentStory[index].image) {
-      html += `<img class="scene-img" src="images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">`;
+      const img = document.createElement('img');
+      img.className = 'scene-img';
+      img.src = `images/${currentStory.folder}/${currentStory[index].image}`;
+      img.alt = `Scene ${index + 1}`;
+      sceneContainer.appendChild(img);
     }
     
-    // Scene content with a frame
-    html += `<div class="scene-content">
-      <div class="content-frame">
-        ${currentStory[index].content}
-        ${index === currentStory.length - 1 ? '<p class="ending-message">The End <span class="heart-icon">♥</span></p>' : ''}
-      </div>
-    </div>`;
+    // Create a frame for the text content
+    const contentFrame = document.createElement('div');
+    contentFrame.className = 'content-frame';
     
-    // Navigation buttons
-    html += `<div class="nav-buttons">`;
-    if (index > 0) {
-      html += `<button id="prevBtn"><span class="material-icons">arrow_back</span>Previous</button>`;
+    // Add the title if there is one
+    if (currentStory[index].title) {
+      const title = document.createElement('h1');
+      title.textContent = currentStory[index].title;
+      contentFrame.appendChild(title);
     }
-    if (index < currentStory.length - 1) {
-      html += `<button id="nextBtn">Next<span class="material-icons">arrow_forward</span></button>`;
-    } else {
-      html += `<button id="restartBtn"><span class="material-icons">home</span>Back to Gallery</button>`;
-    }
-    html += `</div>`; // End nav-buttons
-
-    // Audio Player UI
-    html += `
-      <div id="audioPlayer">
-        <div id="audioProgress">
-          <div id="audioProgressBar"></div>
-          <div id="sceneIndicators"></div>
-        </div>
-        <div id="audioControls">
-          <button id="goStart"><span class="material-icons">first_page</span></button>
-          <button id="playPauseBtn"><span class="material-icons">play_arrow</span></button>
-          <button id="goEnd"><span class="material-icons">last_page</span></button>
-          <button id="volumeToggle"><span class="material-icons">volume_up</span></button>
-        </div>
-        <div id="volumeControl" class="hidden">
-          <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
-        </div>
-      </div>
-    `;
     
-    html += `</div>`; // End .scene
-    gameDiv.innerHTML = html;
+    // Add the content
+    const content = document.createElement('p');
+    content.innerHTML = currentStory[index].content;
+    contentFrame.appendChild(content);
+    
+    // Add the frame to the scene container
+    sceneContainer.appendChild(contentFrame);
   } else {
-    // If we're just changing scenes, update only the image and content
-    // First, fade out the current content frame
-    const currentFrame = gameDiv.querySelector('.content-frame');
-    const currentImg = gameDiv.querySelector('.scene-img');
-    
-    // Create a fade out effect for current elements
-    if (currentFrame) {
-      currentFrame.style.opacity = '0';
-      currentFrame.style.transform = 'translateY(10px)';
-    }
+    // Update only the image and content of the existing scene
     
     // Update the image with a smooth transition
     if (currentImg && currentStory[index].image) {
-      // Create a new image element
+      // Create a new image element with absolute positioning
       const newImg = document.createElement('img');
       newImg.className = 'scene-img';
       newImg.src = `images/${currentStory.folder}/${currentStory[index].image}`;
       newImg.alt = `Scene ${index + 1}`;
       newImg.style.opacity = '0';
+      newImg.style.position = 'absolute';
+      newImg.style.top = '0';
+      newImg.style.left = '0';
+      newImg.style.zIndex = '4'; // Ensure new image is on top
       
-      // Insert the new image before the current one
-      currentImg.parentNode.insertBefore(newImg, currentImg);
+      // Insert the new image after the current one
+      currentImg.parentNode.insertBefore(newImg, currentImg.nextSibling);
       
       // Fade in the new image and remove the old one after transition
       setTimeout(() => {
@@ -286,51 +261,45 @@ function showScene(index) {
         currentImg.style.opacity = '0';
         setTimeout(() => {
           currentImg.remove();
-        }, 500);
-      }, 50);
+          newImg.style.position = 'relative';
+          newImg.style.zIndex = '3';
+        }, 300);
+      }, 30);
     }
     
-    // Update navigation buttons
-    const navButtons = gameDiv.querySelector('.nav-buttons');
-    if (navButtons) {
-      let navHtml = '';
-      if (index > 0) {
-        navHtml += `<button id="prevBtn"><span class="material-icons">arrow_back</span>Previous</button>`;
-      }
-      if (index < currentStory.length - 1) {
-        navHtml += `<button id="nextBtn">Next<span class="material-icons">arrow_forward</span></button>`;
-      } else {
-        navHtml += `<button id="restartBtn"><span class="material-icons">home</span>Back to Gallery</button>`;
-      }
-      navButtons.innerHTML = navHtml;
-    }
+    // Fade out the current content frame
+    currentFrame.style.opacity = '0';
+    currentFrame.style.transform = 'translateY(10px)';
     
     // Create and add the new content frame after a short delay
     setTimeout(() => {
-      const sceneContent = gameDiv.querySelector('.scene-content');
-      if (sceneContent) {
-        sceneContent.innerHTML = `
-          <div class="content-frame">
-            ${currentStory[index].content}
-            ${index === currentStory.length - 1 ? '<p class="ending-message">The End <span class="heart-icon">♥</span></p>' : ''}
-          </div>
-        `;
+      // Remove the old content frame
+      currentFrame.remove();
+      
+      // Create a new content frame
+      const newContentFrame = document.createElement('div');
+      newContentFrame.className = 'content-frame';
+      
+      // Add the title if there is one
+      if (currentStory[index].title) {
+        const title = document.createElement('h1');
+        title.textContent = currentStory[index].title;
+        newContentFrame.appendChild(title);
       }
-    }, 300); // Time to wait for the fade out
+      
+      // Add the content
+      const content = document.createElement('p');
+      content.innerHTML = currentStory[index].content;
+      newContentFrame.appendChild(content);
+      
+      // Add the new frame to the scene container
+      sceneContainer.appendChild(newContentFrame);
+    }, 150); // Reduced from 200ms to 150ms for faster transition
   }
-
-  // Attach navigation events
-  setTimeout(() => {
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const restartBtn = document.getElementById("restartBtn");
-    if (prevBtn) { prevBtn.addEventListener("click", () => showScene(index - 1)); }
-    if (nextBtn) { nextBtn.addEventListener("click", () => showScene(index + 1)); }
-    if (restartBtn) { restartBtn.addEventListener("click", () => returnToGallery()); }
-  }, 50);
-
-  setupAudioPlayerControls();
-  updateBackgroundEffects();
+  
+  // Update the navigation buttons
+  document.getElementById('prevButton').disabled = (index === 0);
+  document.getElementById('nextButton').disabled = (index === currentStory.length - 1);
 }
 
 /**
