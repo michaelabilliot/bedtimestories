@@ -64,7 +64,9 @@ document.getElementById('blurSlider').addEventListener('input', updateBackground
 
 /* Toggle settings panel */
 document.getElementById('settingsIcon').addEventListener('click', () => {
-  document.getElementById('settingsPanel').classList.toggle('hidden');
+  const settingsPanel = document.getElementById('settingsPanel');
+  settingsPanel.classList.toggle('hidden');
+  console.log('Settings panel toggled:', !settingsPanel.classList.contains('hidden'));
 });
 
 /* Close settings panel */
@@ -74,7 +76,9 @@ document.getElementById('closeSettings').addEventListener('click', () => {
 
 /* Toggle love note panel */
 document.getElementById('loveNoteButton').addEventListener('click', () => {
-  document.getElementById('loveNote').classList.toggle('hidden');
+  const loveNote = document.getElementById('loveNote');
+  loveNote.classList.toggle('hidden');
+  console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
 });
 
 /* Close love note panel */
@@ -508,8 +512,25 @@ function returnToGallery() {
   gallery.style.display = "flex";
   
   // Set the background back to the gallery image with gradient overlay
+  // Use relative path for GitHub Pages compatibility
   document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
   updateBackgroundEffects(); // Apply zoom and blur settings
+  
+  // Call setupGallery to repopulate the stories
+  setupGallery();
+  
+  // Reinitialize event listeners for UI elements
+  document.getElementById('settingsIcon').addEventListener('click', () => {
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.classList.toggle('hidden');
+    console.log('Settings panel toggled:', !settingsPanel.classList.contains('hidden'));
+  });
+  
+  document.getElementById('loveNoteButton').addEventListener('click', () => {
+    const loveNote = document.getElementById('loveNote');
+    loveNote.classList.toggle('hidden');
+    console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
+  });
 }
 
 /**
