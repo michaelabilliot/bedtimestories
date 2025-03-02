@@ -431,6 +431,50 @@ function showScene(index) {
         showScene(currentSceneIndex + 1);
       }
     };
+    
+    // Add or remove the "Go to Gallery" button based on whether we're on the last scene
+    const navButtonsContainer = document.querySelector('.nav-buttons');
+    const existingGalleryButton = document.getElementById('galleryButton');
+    
+    if (index === currentStory.length - 1) {
+      // We're on the last scene, add the gallery button if it doesn't exist
+      if (!existingGalleryButton && navButtonsContainer) {
+        const galleryButton = document.createElement('button');
+        galleryButton.id = 'galleryButton';
+        galleryButton.className = 'gallery-button';
+        galleryButton.innerHTML = '<span class="material-icons">collections</span>Go to Gallery';
+        galleryButton.onclick = returnToGallery;
+        
+        // Add some styling to make it stand out but be consistent with other buttons
+        galleryButton.style.backgroundColor = 'rgb(147, 112, 219, 0.7)';
+        galleryButton.style.marginLeft = '10px';
+        galleryButton.style.display = 'flex';
+        galleryButton.style.alignItems = 'center';
+        galleryButton.style.justifyContent = 'center';
+        galleryButton.style.gap = '5px';
+        galleryButton.style.padding = '8px 15px';
+        galleryButton.style.borderRadius = '20px';
+        galleryButton.style.border = 'none';
+        galleryButton.style.cursor = 'pointer';
+        galleryButton.style.fontWeight = 'bold';
+        galleryButton.style.transition = 'background-color 0.3s ease';
+        
+        // Add hover effect
+        galleryButton.onmouseover = () => {
+          galleryButton.style.backgroundColor = 'rgba(147, 112, 219, 0.9)';
+        };
+        galleryButton.onmouseout = () => {
+          galleryButton.style.backgroundColor = 'rgba(147, 112, 219, 0.7)';
+        };
+        
+        navButtonsContainer.appendChild(galleryButton);
+      }
+    } else {
+      // Not on the last scene, remove the gallery button if it exists
+      if (existingGalleryButton) {
+        existingGalleryButton.remove();
+      }
+    }
   }
   
   // Update the global background image
@@ -507,6 +551,11 @@ function loadStoryData(storyData, folder) {
   // Add navigation buttons inside the scene container
   const navButtonsContainer = document.createElement('div');
   navButtonsContainer.className = 'nav-buttons';
+  navButtonsContainer.style.display = 'flex';
+  navButtonsContainer.style.justifyContent = 'center';
+  navButtonsContainer.style.flexWrap = 'wrap';
+  navButtonsContainer.style.gap = '10px';
+  navButtonsContainer.style.marginTop = '20px';
   
   const prevButton = document.createElement('button');
   prevButton.id = 'prevButton';

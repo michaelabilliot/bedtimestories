@@ -508,7 +508,7 @@ html, body {
   flex: 1;
   padding: 15px;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
   background-color: rgb(255 182 193 / 65%);
   backdrop-filter: blur(5px);
   color: #fff;
@@ -802,6 +802,7 @@ html, body {
   
   .content-frame {
     padding: 15px;
+    margin: 20px;
   }
   
   .ending-message {
