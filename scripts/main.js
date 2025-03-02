@@ -509,6 +509,24 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+/**
+ * Ensures the story panel maintains proper padding from viewport edges.
+ */
+function adjustStoryPanelSize() {
+  const scene = document.querySelector('.scene');
+  if (scene) {
+    // Reset to default maximum size
+    scene.style.maxWidth = 'calc(100vw - 40px)';
+    scene.style.maxHeight = 'calc(100vh - 40px)';
+  }
+}
+
+// Call on window resize to ensure proper sizing
+window.addEventListener('resize', () => {
+  adjustStoryPanelSize();
+  updateBackgroundEffects(); // Also update background effects on resize
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   // Initialize the gallery and ensure proper visibility
   setupGallery();
@@ -526,4 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial background setup
   document.getElementById('globalBackground').style.opacity = '1';
   updateBackgroundEffects();
+  
+  // Initial size adjustment
+  adjustStoryPanelSize();
 });
