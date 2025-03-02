@@ -649,8 +649,9 @@ function loadStoryData(storyData, folder) {
  */
 function setupGallery() {
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
-    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
+    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, today: false, description: "A heartwarming tale of friendship and love" },
+    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
+    { title: "Whiskers of Forgiveness", file: "cat", cover: "images/cat/scene0.jpg", order: 3, today: false, description: "A story about a cat and a heartwarming tale of friendship and love" }
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
