@@ -197,6 +197,11 @@ function showScene(index) {
   const prevIndex = currentSceneIndex;
   currentSceneIndex = index;
   
+  // Update background image if the scene has one
+  if (currentStory[index].image) {
+    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[index].image}')`;
+  }
+  
   // Get the scene container element
   const sceneContainer = document.getElementById('sceneContainer');
   
@@ -242,6 +247,14 @@ function showScene(index) {
     const content = document.createElement('p');
     content.innerHTML = currentStory[index].content;
     contentFrame.appendChild(content);
+    
+    // Add "The End" message if this is the last scene
+    if (index === currentStory.length - 1) {
+      const endingMessage = document.createElement('p');
+      endingMessage.className = 'ending-message';
+      endingMessage.innerHTML = 'The End <span class="heart-icon">♥</span>';
+      contentFrame.appendChild(endingMessage);
+    }
     
     // Add the frame to the scene container
     sceneContainer.appendChild(contentFrame);
@@ -311,6 +324,14 @@ function showScene(index) {
       content.innerHTML = currentStory[index].content;
       newContentFrame.appendChild(content);
       
+      // Add "The End" message if this is the last scene
+      if (index === currentStory.length - 1) {
+        const endingMessage = document.createElement('p');
+        endingMessage.className = 'ending-message';
+        endingMessage.innerHTML = 'The End <span class="heart-icon">♥</span>';
+        newContentFrame.appendChild(endingMessage);
+      }
+      
       // Add the new frame to the scene container
       sceneContainer.appendChild(newContentFrame);
     }, 150); // Reduced from 200ms to 150ms for faster transition
@@ -319,6 +340,9 @@ function showScene(index) {
   // Update the navigation buttons
   document.getElementById('prevButton').disabled = (index === 0);
   document.getElementById('nextButton').disabled = (index === currentStory.length - 1);
+  
+  // Update the global background image
+  updateBackgroundEffects();
 }
 
 /**
@@ -334,6 +358,10 @@ function returnToGallery() {
   // Force the gallery to be visible
   const gallery = document.getElementById("gallery");
   const gameContainer = document.getElementById("gameContainer");
+  const gameDiv = document.getElementById("game");
+  
+  // Clean up the game container
+  gameDiv.innerHTML = '';
   
   // Make sure the game container is hidden
   gameContainer.classList.add("hidden");
@@ -343,6 +371,7 @@ function returnToGallery() {
   gallery.classList.remove("hidden");
   gallery.style.display = "flex";
   
+  // Set the background back to the gallery image with gradient overlay
   document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
   updateBackgroundEffects(); // Apply zoom and blur settings
 }
@@ -373,12 +402,17 @@ function loadStoryData(storyData, folder) {
   
   // Clear the game div and create a scene container if it doesn't exist
   gameDiv.innerHTML = '';
-  const sceneContainer = document.createElement('div');
-  sceneContainer.id = 'sceneContainer';
-  sceneContainer.className = 'scene';
-  gameDiv.appendChild(sceneContainer);
   
-  // Add navigation buttons
+  // Create the main scene container as a div with class "scene"
+  const sceneContainer = document.createElement('div');
+  sceneContainer.className = 'scene';
+  
+  // Create an inner container for the actual scene content
+  const sceneContentContainer = document.createElement('div');
+  sceneContentContainer.id = 'sceneContainer';
+  sceneContainer.appendChild(sceneContentContainer);
+  
+  // Add navigation buttons inside the scene container
   const navButtonsContainer = document.createElement('div');
   navButtonsContainer.className = 'nav-buttons';
   
@@ -402,7 +436,65 @@ function loadStoryData(storyData, folder) {
   
   navButtonsContainer.appendChild(prevButton);
   navButtonsContainer.appendChild(nextButton);
-  gameDiv.appendChild(navButtonsContainer);
+  sceneContainer.appendChild(navButtonsContainer);
+  
+  // Create and add the audio player
+  const audioPlayer = document.createElement('div');
+  audioPlayer.id = 'audioPlayer';
+  
+  // Audio progress bar with scene indicators
+  const audioProgress = document.createElement('div');
+  audioProgress.id = 'audioProgress';
+  
+  const audioProgressBar = document.createElement('div');
+  audioProgressBar.id = 'audioProgressBar';
+  audioProgress.appendChild(audioProgressBar);
+  
+  const sceneIndicators = document.createElement('div');
+  sceneIndicators.id = 'sceneIndicators';
+  audioProgress.appendChild(sceneIndicators);
+  
+  audioPlayer.appendChild(audioProgress);
+  
+  // Audio controls
+  const audioControls = document.createElement('div');
+  audioControls.id = 'audioControls';
+  
+  audioControls.innerHTML = `
+    <button id="goStart"><span class="material-icons">first_page</span></button>
+    <button id="playPauseBtn"><span class="material-icons">play_arrow</span></button>
+    <button id="goEnd"><span class="material-icons">last_page</span></button>
+    <button id="volumeToggle"><span class="material-icons">volume_up</span></button>
+  `;
+  
+  audioPlayer.appendChild(audioControls);
+  
+  // Volume control
+  const volumeControl = document.createElement('div');
+  volumeControl.id = 'volumeControl';
+  volumeControl.className = 'hidden';
+  
+  const volumeSlider = document.createElement('input');
+  volumeSlider.type = 'range';
+  volumeSlider.id = 'volumeSlider';
+  volumeSlider.min = '0';
+  volumeSlider.max = '1';
+  volumeSlider.step = '0.01';
+  volumeSlider.value = '0.5';
+  
+  volumeControl.appendChild(volumeSlider);
+  audioPlayer.appendChild(volumeControl);
+  
+  // Add the audio player to the scene container
+  sceneContainer.appendChild(audioPlayer);
+  
+  // Add everything to the game div
+  gameDiv.appendChild(sceneContainer);
+  
+  // Make sure the background image is also updated
+  if (currentStory[0].image) {
+    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[0].image}')`;
+  }
   
   // Show the first scene
   showScene(0);
