@@ -1079,87 +1079,28 @@ html, body {
 
 .music-player-content {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 30px;
-  width: 100%;
-  padding: 20px;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.album-cover-container {
-  flex: 0 0 auto;
-  max-width: 300px;
-  margin-bottom: 0;
-}
-
-.album-cover {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.track-info {
-  flex: 1;
-  text-align: left;
-  padding-top: 10px;
-}
-
-.track-title {
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: #fff;
-}
-
-.artist-name {
-  font-size: 18px;
-  margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.album-name {
-  font-size: 16px;
-  margin-bottom: 15px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.description {
-  font-size: 16px;
-  line-height: 1.5;
+.now-playing {
+  display: flex;
+  gap: 20px;
   margin-bottom: 20px;
-  color: rgba(255, 255, 255, 0.8);
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.additional-info {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.4;
-}
-
-.additional-info p {
-  margin-bottom: 5px;
-}
-
-.player-controls {
-  width: 100%;
-  margin-top: 30px;
-}
-
-/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-  .music-player-content {
+  .now-playing {
     flex-direction: column;
-    align-items: center;
   }
   
-  .album-cover-container {
-    max-width: 250px;
+  .album-cover {
+    width: 150px;
+    height: 150px;
     margin-bottom: 20px;
-  }
-  
-  .track-info {
-    text-align: center;
-    width: 100%;
   }
 }
 
