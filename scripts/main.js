@@ -5,6 +5,16 @@ let currentSceneIndex = 0;
 let audioElement = null;
 let volumeTimeout = null;
 let preloadedImages = [];
+let isTransitioning = false; // Flag to prevent multiple transitions at once
+let transitionTimeouts = []; // Array to track active transition timeouts
+
+/**
+ * Helper function to clear all transition timeouts
+ */
+function clearTransitionTimeouts() {
+  transitionTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+  transitionTimeouts = [];
+}
 
 /**
  * Preloads all scene images for the chosen story.
@@ -191,7 +201,16 @@ function setupAudioPlayerControls() {
  * Displays a scene by index.
  */
 function showScene(index) {
+  // Don't allow scene changes if we're already transitioning
+  if (isTransitioning) return;
+  
   if (index < 0 || index >= currentStory.length) return;
+  
+  // Set the transition flag to prevent multiple transitions
+  isTransitioning = true;
+  
+  // Clear any existing transition timeouts
+  clearTransitionTimeouts();
   
   // Remember the previous scene index
   const prevIndex = currentSceneIndex;
@@ -258,6 +277,9 @@ function showScene(index) {
     
     // Add the frame to the scene container
     sceneContainer.appendChild(contentFrame);
+    
+    // Reset the transition flag
+    isTransitioning = false;
   } else {
     // Update only the image and content of the existing scene
     
@@ -282,11 +304,11 @@ function showScene(index) {
       imgContainer.appendChild(newImg);
       
       // Fade in the new image and remove the old one after transition
-      setTimeout(() => {
+      const fadeInTimeout = setTimeout(() => {
         newImg.style.opacity = '1';
         if (currentImg) currentImg.style.opacity = '0';
         
-        setTimeout(() => {
+        const cleanupTimeout = setTimeout(() => {
           // Remove all previous images
           imgContainer.querySelectorAll('.scene-img').forEach(img => {
             if (img !== newImg) img.remove();
@@ -295,8 +317,22 @@ function showScene(index) {
           // Reset the new image to normal display
           newImg.style.position = 'relative';
           newImg.style.zIndex = '3';
+          
+          // Remove this timeout from the tracking array
+          const index = transitionTimeouts.indexOf(cleanupTimeout);
+          if (index > -1) transitionTimeouts.splice(index, 1);
         }, 300);
+        
+        // Track this timeout
+        transitionTimeouts.push(cleanupTimeout);
+        
+        // Remove this timeout from the tracking array
+        const index = transitionTimeouts.indexOf(fadeInTimeout);
+        if (index > -1) transitionTimeouts.splice(index, 1);
       }, 30);
+      
+      // Track this timeout
+      transitionTimeouts.push(fadeInTimeout);
     }
     
     // Fade out the current content frame
@@ -304,7 +340,7 @@ function showScene(index) {
     currentFrame.style.transform = 'translateY(10px)';
     
     // Create and add the new content frame after a short delay
-    setTimeout(() => {
+    const contentTimeout = setTimeout(() => {
       // Remove the old content frame
       currentFrame.remove();
       
@@ -334,7 +370,17 @@ function showScene(index) {
       
       // Add the new frame to the scene container
       sceneContainer.appendChild(newContentFrame);
+      
+      // Reset the transition flag when everything is done
+      isTransitioning = false;
+      
+      // Remove this timeout from the tracking array
+      const index = transitionTimeouts.indexOf(contentTimeout);
+      if (index > -1) transitionTimeouts.splice(index, 1);
     }, 150); // Reduced from 200ms to 150ms for faster transition
+    
+    // Track this timeout
+    transitionTimeouts.push(contentTimeout);
   }
   
   // Update the navigation buttons
@@ -581,19 +627,31 @@ function setupGallery() {
   }
 }
 
-/* Keyboard shortcuts:
+/* Keyboard shortcuts with debounce to prevent rapid firing:
    Space: Toggle play/pause.
    Left/Right Arrow: Previous/Next scene.
 */
+let lastKeyTime = 0;
+const keyDebounceTime = 300; // Minimum time between key presses in ms
+
 document.addEventListener("keydown", (e) => {
+  const now = Date.now();
+  
+  // Debounce key presses to prevent rapid scene changes
+  if (now - lastKeyTime < keyDebounceTime) {
+    return;
+  }
+  
+  lastKeyTime = now;
+  
   if (e.code === "Space") {
     e.preventDefault();
     const playPauseBtn = document.getElementById("playPauseBtn");
     if (playPauseBtn) playPauseBtn.click();
   } else if (e.code === "ArrowLeft") {
-    if (currentSceneIndex > 0) showScene(currentSceneIndex - 1);
+    if (currentSceneIndex > 0 && !isTransitioning) showScene(currentSceneIndex - 1);
   } else if (e.code === "ArrowRight") {
-    if (currentSceneIndex < currentStory.length - 1) showScene(currentSceneIndex + 1);
+    if (currentSceneIndex < currentStory.length - 1 && !isTransitioning) showScene(currentSceneIndex + 1);
   }
 });
 
