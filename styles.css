@@ -317,6 +317,9 @@ html, body {
   transition: all 0.5s ease, opacity 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
+  max-width: 100%; /* Ensure content doesn't overflow */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .content-frame.animate-in {
@@ -424,12 +427,15 @@ html, body {
   z-index: 5;
   background: transparent;
   animation: fadeIn 0.8s ease;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
 }
+
 #game {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -443,15 +449,17 @@ html, body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 900px;
-  min-height: 80vh;
+  max-width: calc(100vw - 40px); /* Account for 20px padding on each side */
+  max-height: calc(100vh - 40px); /* Account for 20px padding on each side */
+  min-height: auto; /* Allow the container to size based on content */
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   color: #fff;
-  overflow: auto;
+  overflow: auto; /* Allow scrolling if content is too large */
   z-index: 2;
   border: 1px solid rgba(255,255,255,0.2);
+  margin: 0 auto; /* Center horizontally */
 }
 
 /* Scene image container for transitions */
@@ -469,6 +477,7 @@ html, body {
   z-index: 3;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   transition: transform 0.5s ease, opacity 0.3s ease;
+  max-width: 100%; /* Ensure image doesn't overflow */
 }
 
 .scene-img:hover {
@@ -482,6 +491,9 @@ html, body {
   margin-bottom: 30px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   z-index: 3;
+  width: 100%;
+  overflow-wrap: break-word; /* Ensure long words break and don't cause horizontal overflow */
+  word-wrap: break-word;
 }
 
 .scene-content h1 {
@@ -501,9 +513,14 @@ html, body {
   display: flex;
   gap: 20px;
   z-index: 3;
+  width: 100%;
+  flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+  justify-content: center;
 }
 .nav-buttons button {
   flex: 1;
+  min-width: 120px; /* Minimum button width */
+  max-width: 200px; /* Maximum button width */
   padding: 15px;
   border: none;
   border-radius: 30px;
@@ -518,6 +535,10 @@ html, body {
   justify-content: center;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.2);
+  text-align: center; /* Ensure text is centered */
+  white-space: nowrap; /* Prevent text wrapping inside buttons */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .nav-buttons button:hover:not(:disabled) {
   background-color: rgba(255,182,193,0.5);
@@ -549,6 +570,8 @@ html, body {
   flex-direction: column;
   z-index: 1000;
   border: 1px solid rgba(255,255,255,0.2);
+  width: 100%;
+  max-width: 100%; /* Ensure audio player doesn't overflow */
 }
 #audioProgress {
   width: 100%;
@@ -743,10 +766,12 @@ html, body {
     gap: 20px; /* Reduced gap */
   }
   .scene {
-    max-width: 100%;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 40px);
+    min-height: auto;
     border-radius: 15px;
     padding: 20px;
-    min-height: 70vh;
+    margin: 0 auto;
   }
   .scene-img {
     aspect-ratio: auto;
@@ -758,9 +783,13 @@ html, body {
   .scene-content h1 {
     font-size: 1.8rem;
   }
+  .nav-buttons {
+    gap: 10px;
+  }
   .nav-buttons button {
     padding: 12px;
     font-size: 1rem;
+    min-width: 100px;
   }
   #audioPlayer {
     padding: 15px;
@@ -844,5 +873,11 @@ html, body {
   .ending-message {
     font-size: 1.4rem;
     margin-top: 15px;
+  }
+  
+  .nav-buttons button {
+    padding: 10px;
+    font-size: 0.9rem;
+    min-width: 80px;
   }
 }
