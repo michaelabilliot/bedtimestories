@@ -495,6 +495,12 @@ function returnToGallery() {
   }
   unloadStoryImages();
   
+  // Show navigation tabs when returning to gallery
+  const navigationTabs = document.getElementById('navigationTabs');
+  if (navigationTabs) {
+    navigationTabs.classList.remove('hidden');
+  }
+  
   // Force the gallery to be visible
   const gallery = document.getElementById("gallery");
   const gameContainer = document.getElementById("gameContainer");
@@ -541,6 +547,12 @@ function loadStoryData(storyData, folder) {
   currentStory.folder = folder;
   currentSceneIndex = -1; // Set to -1 first so the showScene function knows to build the entire scene
   preloadStoryImages(currentStory, folder);
+  
+  // Hide navigation tabs when story is loaded
+  const navigationTabs = document.getElementById('navigationTabs');
+  if (navigationTabs) {
+    navigationTabs.classList.add('hidden');
+  }
   
   // Force the gallery to be hidden before showing game container
   const gallery = document.getElementById("gallery");
@@ -663,128 +675,3 @@ function loadStoryData(storyData, folder) {
   setupAudio();
   setupAudioPlayerControls();
 }
-
-/**
- * Builds the gallery with available stories.
- * If a story has "today: true", it is displayed in a separate "Today's Story" section.
- */
-function setupGallery() {
-  const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
-    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
-  ];
-  availableStories.sort((a, b) => a.order - b.order);
-  
-  // Set global background to gallery image with a romantic gradient overlay
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
-  
-  const storyCardsContainer = document.getElementById("storyCards");
-  storyCardsContainer.innerHTML = "";
-  
-  // Create container for Today's Story (if any)
-  const todaysStories = availableStories.filter(story => story.today);
-  const otherStories = availableStories.filter(story => !story.today);
-  
-  if (todaysStories.length > 0) {
-    const todaysSection = document.createElement("div");
-    todaysSection.className = "todays-story-section";
-    todaysSection.innerHTML = "<h2>Tonight's Special</h2>";
-    todaysStories.forEach(story => {
-      const card = document.createElement("div");
-      card.className = "story-card todays-story";
-      card.innerHTML = `
-        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
-        <div class="story-title">${story.title}</div>
-      `;
-      card.addEventListener("click", () => {
-        loadStory(story.file)
-          .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { console.error("Error loading story:", err); });
-      });
-      todaysSection.appendChild(card);
-      
-      // Add description below the card
-      if (story.description) {
-        const descriptionEl = document.createElement("p");
-        descriptionEl.className = "story-description";
-        descriptionEl.textContent = story.description;
-        todaysSection.appendChild(descriptionEl);
-      }
-    });
-    storyCardsContainer.appendChild(todaysSection);
-  }
-  
-  if (otherStories.length > 0) {
-    const otherSection = document.createElement("div");
-    otherSection.className = "other-stories-section";
-    otherSection.innerHTML = "<h2>More Sweet Dreams</h2>";
-    
-    // Create a container for the cards to display them in a row
-    const cardsContainer = document.createElement("div");
-    cardsContainer.className = "story-cards-row";
-    
-    otherStories.forEach(story => {
-      const card = document.createElement("div");
-      card.className = "story-card";
-      card.innerHTML = `
-        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
-        <div class="story-title">${story.title}</div>
-      `;
-      card.addEventListener("click", () => {
-        loadStory(story.file)
-          .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { console.error("Error loading story:", err); });
-      });
-      cardsContainer.appendChild(card);
-    });
-    
-    otherSection.appendChild(cardsContainer);
-    storyCardsContainer.appendChild(otherSection);
-  }
-}
-
-/* Keyboard shortcuts with debounce to prevent rapid firing:
-   Space: Toggle play/pause.
-   Left/Right Arrow: Previous/Next scene.
-*/
-let lastKeyTime = 0;
-const keyDebounceTime = 300; // Minimum time between key presses in ms
-
-document.addEventListener("keydown", (e) => {
-  const now = Date.now();
-  
-  // Debounce key presses to prevent rapid scene changes
-  if (now - lastKeyTime < keyDebounceTime) {
-    return;
-  }
-  
-  lastKeyTime = now;
-  
-  if (e.code === "Space") {
-    e.preventDefault();
-    const playPauseBtn = document.getElementById("playPauseBtn");
-    if (playPauseBtn) playPauseBtn.click();
-  } else if (e.code === "ArrowLeft") {
-    if (currentSceneIndex > 0 && !isTransitioning) showScene(currentSceneIndex - 1);
-  } else if (e.code === "ArrowRight") {
-    if (currentSceneIndex < currentStory.length - 1 && !isTransitioning) showScene(currentSceneIndex + 1);
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Initialize the background effects
-  updateBackgroundEffects();
-  
-  // Set up event listeners for settings and love note buttons
-  document.getElementById('settingsIcon').addEventListener('click', () => {
-    const settingsPanel = document.getElementById('settingsPanel');
-    settingsPanel.classList.toggle('hidden');
-    console.log('Settings panel toggled:', !settingsPanel.classList.contains('hidden'));
-  });
-  
-  document.getElementById('loveNoteButton').addEventListener('click', () => {
-    const loveNote = document.getElementById('loveNote');
-    loveNote.classList.toggle('hidden');
-    console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
-  });
-});
