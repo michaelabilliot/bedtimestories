@@ -797,6 +797,24 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
+ * Loads a story file from the server
+ * @param {string} storyFolder - The folder name containing the story
+ * @returns {Promise} - Promise that resolves with the story data
+ */
+async function loadStory(storyFolder) {
+  try {
+    const response = await fetch(`stories/${storyFolder}/scenes.json`);
+    if (!response.ok) {
+      throw new Error(`Failed to load story: ${storyFolder}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error loading story ${storyFolder}:`, error);
+    throw error;
+  }
+}
+
+/**
  * Sets up keyboard navigation for stories
  */
 function setupKeyboardNavigation() {

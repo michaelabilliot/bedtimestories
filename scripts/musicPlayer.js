@@ -28,11 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
       // If switching to music tab, load music content
       if (tabId === 'music') {
         loadMusicData();
-        document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(147,112,219,0.3), rgba(255,182,193,0.3)), url('images/music.jpg')";
+        const bgImagePath = "images/music.jpg";
+        console.log(`Setting music tab background to: ${bgImagePath}`);
+        document.getElementById('globalBackground').style.backgroundImage = `linear-gradient(to bottom, rgba(147,112,219,0.3), rgba(255,182,193,0.3)), url('${bgImagePath}')`;
       } else {
         // If switching to stories, reset the background if not in a story
         if (document.getElementById('gameContainer').classList.contains('hidden')) {
-          document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+          const bgImagePath = "images/gallery.jpg";
+          console.log(`Setting stories tab background to: ${bgImagePath}`);
+          document.getElementById('globalBackground').style.backgroundImage = `linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('${bgImagePath}')`;
         }
       }
       
@@ -47,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Available music tracks - using "judas" as the test song folder
 const musicTracks = [
-  { folder: "judas" }
+  { folder: "Judas" }
   // Add more tracks here as needed
 ];
 
@@ -68,13 +72,17 @@ async function loadMusicData() {
   // Only populate if empty
   if (musicCardsContainer.innerHTML === '') {
     try {
+      console.log("Loading music data...");
       // Load each music track data
       loadedMusicData = [];
       
       for (const track of musicTracks) {
+        console.log(`Attempting to load track from folder: ${track.folder}`);
         try {
+          // Check if info.json exists
           const response = await fetch(`music/${track.folder}/info.json`);
           if (response.ok) {
+            console.log(`Successfully loaded info.json for ${track.folder}`);
             const data = await response.json();
             loadedMusicData.push({
               ...data,
@@ -82,7 +90,7 @@ async function loadMusicData() {
               cover: `music/${track.folder}/album.jpg` // Using album.jpg as per user's structure
             });
           } else {
-            console.error(`Failed to load music data for ${track.folder}`);
+            console.warn(`Failed to load music data for ${track.folder}: ${response.status} ${response.statusText}`);
             // Add placeholder data if JSON not available
             loadedMusicData.push({
               title: track.folder.charAt(0).toUpperCase() + track.folder.slice(1),
@@ -105,11 +113,13 @@ async function loadMusicData() {
         }
       }
       
+      console.log("Music data loaded:", loadedMusicData);
       // Now populate the music gallery with the loaded data
       setupMusicGallery();
     } catch (error) {
-      console.error("Error loading music data:", error);
-      musicCardsContainer.innerHTML = `<p class="error">Failed to load music data: ${error.message}</p>`;
+      console.error("Error in loadMusicData:", error);
+      // Display an error message in the music cards container
+      musicCardsContainer.innerHTML = '<div class="error-message">Sorry, there was an error loading the music tracks. Please try again later.</div>';
     }
   }
 }
@@ -123,13 +133,22 @@ function setupMusicGallery() {
   // Clear any existing content
   musicCardsContainer.innerHTML = '';
   
+  console.log(`Setting up music gallery with ${loadedMusicData.length} tracks`);
+  
+  if (loadedMusicData.length === 0) {
+    console.warn("No music tracks found to display");
+    musicCardsContainer.innerHTML = '<div class="error-message">No music tracks available. Please check back later.</div>';
+    return;
+  }
+  
   // Create a card for each track
   loadedMusicData.forEach((track, index) => {
+    console.log(`Creating card for track: ${track.title || track.folder}`);
     const card = document.createElement('div');
     card.className = 'music-card';
     card.innerHTML = `
-      <img src="${track.cover}" alt="${track.title}">
-      <div class="music-title">${track.title}</div>
+      <img src="${track.cover}" alt="${track.title || track.folder}" onerror="this.src='images/placeholder.jpg'">
+      <div class="music-title">${track.title || track.folder}</div>
       <div class="play-button">
         <i class="material-icons">play_arrow</i>
       </div>
@@ -141,6 +160,8 @@ function setupMusicGallery() {
     
     musicCardsContainer.appendChild(card);
   });
+  
+  console.log("Music gallery setup complete");
 }
 
 /**
@@ -209,19 +230,27 @@ function setupMusicPlayer() {
  */
 function playTrack(index) {
   // Validate index
-  if (index < 0 || index >= loadedMusicData.length) return;
+  if (index < 0 || index >= loadedMusicData.length) {
+    console.error(`Invalid track index: ${index}`);
+    return;
+  }
   
   // Update current track index
   currentTrackIndex = index;
   const track = loadedMusicData[index];
+  console.log(`Playing track: ${track.title || track.folder} from folder: ${track.folder}`);
   
   // Show music player
   const musicPlayer = document.getElementById('musicPlayer');
   musicPlayer.classList.add('active');
   
   // Update music player UI
-  document.getElementById('currentMusicTitle').textContent = track.title;
+  document.getElementById('currentMusicTitle').textContent = track.title || track.folder;
   document.getElementById('currentMusicThumbnail').src = track.cover;
+  document.getElementById('currentMusicThumbnail').onerror = function() {
+    console.warn(`Failed to load cover image for ${track.folder}`);
+    this.src = 'images/placeholder.jpg';
+  };
   
   // Reset play/pause button
   document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">pause</i>';
@@ -231,7 +260,9 @@ function playTrack(index) {
     audioElement.pause();
     audioElement.src = `music/${track.folder}/audio.mp3`; // Using audio.mp3 as per user's structure
   } else {
-    audioElement = new Audio(`music/${track.folder}/audio.mp3`); // Using audio.mp3 as per user's structure
+    const audioPath = `music/${track.folder}/audio.mp3`;
+    console.log(`Creating new audio element with source: ${audioPath}`);
+    audioElement = new Audio(audioPath);
     
     // Setup time update event for progress bar
     audioElement.addEventListener('timeupdate', updateProgress);
@@ -245,11 +276,35 @@ function playTrack(index) {
         playTrack(0); // Loop to first track
       }
     });
+    
+    // Setup error handling
+    audioElement.addEventListener('error', (e) => {
+      console.error(`Error loading audio file for ${track.folder}:`, e);
+      document.getElementById('currentMusicTitle').textContent = `Error: Could not load "${track.title || track.folder}"`;
+      document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+      isPlaying = false;
+    });
   }
   
   // Play audio
-  audioElement.play();
-  isPlaying = true;
+  try {
+    const playPromise = audioElement.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.log('Audio playback started successfully');
+        isPlaying = true;
+      }).catch(error => {
+        console.error('Audio playback failed:', error);
+        document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+        isPlaying = false;
+      });
+    }
+  } catch (error) {
+    console.error('Error attempting to play:', error);
+    document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+    isPlaying = false;
+  }
 }
 
 /**
