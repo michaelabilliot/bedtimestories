@@ -1,158 +1,120 @@
 /**
- * Page Handler for Bedtime Stories App
- * Manages navigation between stories and music sections
+ * pageHandler.js
+ * Master handler for managing page navigation between different sections
+ * (stories, music, and future sections)
  */
 
-// Page sections
-const PAGES = {
-  STORIES: 'stories',
-  MUSIC: 'music'
-};
+// Track the current active page
+let currentPage = 'stories'; // Default to stories page
 
-// Current active page
-let currentPage = PAGES.STORIES;
-
-// DOM elements
-let storiesTab;
-let musicTab;
-let storiesSection;
-let musicSection;
-let settingsBtn;
-let settingsPanel;
+// Initialize the page handler when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  setupNavigation();
+  // Default to showing the stories page on initial load
+  showPage('stories');
+});
 
 /**
- * Initialize the page handler
+ * Set up the navigation tabs and their event listeners
  */
-function initPageHandler() {
-  // Get DOM elements
-  storiesTab = document.getElementById('storiesTab');
-  musicTab = document.getElementById('musicTab');
-  storiesSection = document.getElementById('storiesSection');
-  musicSection = document.getElementById('musicSection');
-  settingsBtn = document.getElementById('settingsBtn');
-  settingsPanel = document.getElementById('settingsPanel');
+function setupNavigation() {
+  const navContainer = document.getElementById('navigationTabs');
+  if (!navContainer) {
+    console.error('Navigation container not found');
+    return;
+  }
+
+  // Add click event listeners to all navigation tabs
+  const navTabs = navContainer.querySelectorAll('.nav-tab');
+  navTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetPage = tab.getAttribute('data-page');
+      if (targetPage) {
+        showPage(targetPage);
+      }
+    });
+  });
+}
+
+/**
+ * Show the specified page and hide all others
+ * @param {string} pageName - The name of the page to show ('stories', 'music', etc.)
+ */
+function showPage(pageName) {
+  // Update the current page tracker
+  currentPage = pageName;
   
-  // Set up event listeners
-  storiesTab.addEventListener('click', () => switchPage(PAGES.STORIES));
-  musicTab.addEventListener('click', () => switchPage(PAGES.MUSIC));
-  
-  // Settings button event
-  settingsBtn.addEventListener('click', toggleSettings);
-  
-  // Close settings when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!settingsPanel.classList.contains('hidden') && 
-        !settingsPanel.contains(e.target) && 
-        e.target !== settingsBtn) {
-      settingsPanel.classList.add('hidden');
+  // Update active tab styling
+  const navTabs = document.querySelectorAll('.nav-tab');
+  navTabs.forEach(tab => {
+    if (tab.getAttribute('data-page') === pageName) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
     }
   });
-  
-  // Initialize with stories page
-  switchPage(PAGES.STORIES);
-  
-  // Initialize theme manager
-  initThemeManager();
-}
 
-/**
- * Switch between pages
- * @param {string} page - Page to switch to
- */
-function switchPage(page) {
-  // Update current page
-  currentPage = page;
-  
-  // Update tab active states
-  if (page === PAGES.STORIES) {
-    storiesTab.classList.add('active');
-    musicTab.classList.remove('active');
+  // Hide all page containers
+  const pageContainers = document.querySelectorAll('.page-container');
+  pageContainers.forEach(container => {
+    container.classList.add('hidden');
+    container.style.display = 'none';
+  });
+
+  // Show the selected page container
+  const selectedContainer = document.getElementById(`${pageName}Page`);
+  if (selectedContainer) {
+    selectedContainer.classList.remove('hidden');
+    selectedContainer.style.display = 'flex';
     
-    // Show stories section, hide music section
-    storiesSection.style.display = 'block';
-    musicSection.style.display = 'none';
-    
-    // Set background for stories
-    const storiesTheme = localStorage.getItem('bedtimeStoriesTheme') || 'pink';
-    setPageBackground(storiesTheme, true);
-    
-  } else if (page === PAGES.MUSIC) {
-    musicTab.classList.add('active');
-    storiesTab.classList.remove('active');
-    
-    // Show music section, hide stories section
-    musicSection.style.display = 'block';
-    storiesSection.style.display = 'none';
-    
-    // Set up music gallery if needed
-    if (typeof setupMusicGallery === 'function') {
-      setupMusicGallery();
+    // Call the appropriate setup function based on the page
+    if (pageName === 'stories') {
+      // If we're showing the stories page, make sure the gallery is visible
+      const gallery = document.getElementById('gallery');
+      if (gallery) {
+        gallery.classList.remove('hidden');
+        gallery.style.display = 'flex';
+      }
+      
+      // Hide the game container if it's visible
+      const gameContainer = document.getElementById('gameContainer');
+      if (gameContainer) {
+        gameContainer.classList.add('hidden');
+        gameContainer.style.display = 'none';
+      }
+      
+      // Set the background to the gallery image
+      document.getElementById('globalBackground').style.backgroundImage = 
+        "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+      
+      // Call the setupGallery function from storyLoader.js
+      if (typeof setupGallery === 'function') {
+        setupGallery();
+      }
+    } else if (pageName === 'music') {
+      // If we're showing the music page, call the setupMusicGallery function
+      if (typeof setupMusicGallery === 'function') {
+        setupMusicGallery();
+      }
+      
+      // Set a dark background for the music page
+      document.getElementById('globalBackground').style.backgroundImage = 
+        "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(30,30,30,0.7)), url('images/music-bg.jpg')";
     }
     
-    // Set background for music
-    const musicTheme = localStorage.getItem('bedtimeMusicTheme') || 'gray';
-    setPageBackground(musicTheme, false);
-  }
-  
-  // Update settings button appearance based on current page
-  updateSettingsButton();
-}
-
-/**
- * Set the page background based on theme
- * @param {string} theme - Theme name
- * @param {boolean} isStories - Whether this is for stories section
- */
-function setPageBackground(theme, isStories) {
-  const body = document.body;
-  
-  // Clear any existing background classes
-  body.classList.remove('pink-background', 'blue-background', 'gray-background', 'orange-background');
-  
-  // Apply theme-specific background
-  switch (theme) {
-    case 'pink':
-      body.style.background = 'linear-gradient(135deg, #ffb6c1, #da70d6)';
-      break;
-    case 'blue':
-      body.style.background = 'linear-gradient(135deg, #87ceeb, #4169e1)';
-      break;
-    case 'gray':
-      body.style.background = 'linear-gradient(135deg, #2c2c2c, #1a1a1a)';
-      break;
-    case 'orange':
-      body.style.background = 'linear-gradient(135deg, #ffa500, #ff4500)';
-      break;
-    default:
-      // Use default background based on section
-      if (isStories) {
-        body.style.background = 'linear-gradient(135deg, #ffb6c1, #da70d6)';
-      } else {
-        body.style.background = 'linear-gradient(135deg, #2c2c2c, #1a1a1a)';
-      }
-  }
-}
-
-/**
- * Update settings button appearance based on current page
- */
-function updateSettingsButton() {
-  if (currentPage === PAGES.STORIES) {
-    settingsBtn.classList.add('stories-settings');
-    settingsBtn.classList.remove('music-settings');
+    // Apply background effects
+    if (typeof updateBackgroundEffects === 'function') {
+      updateBackgroundEffects();
+    }
   } else {
-    settingsBtn.classList.add('music-settings');
-    settingsBtn.classList.remove('stories-settings');
+    console.error(`Page container for "${pageName}" not found`);
   }
 }
 
 /**
- * Toggle settings panel visibility
+ * Get the current active page
+ * @returns {string} The name of the current active page
  */
-function toggleSettings() {
-  settingsPanel.classList.toggle('hidden');
-}
-
-// Make functions available globally
-window.initPageHandler = initPageHandler;
-window.switchPage = switchPage; 
+function getCurrentPage() {
+  return currentPage;
+} 
