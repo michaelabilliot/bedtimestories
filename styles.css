@@ -667,14 +667,34 @@ html, body {
 .todays-story {
   width: 600px;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
   border-radius: 20px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   transition: all 0.4s ease;
+  overflow: hidden;
+  position: relative;
 }
 .todays-story:hover {
   transform: translateY(-10px);
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* Special styling for Today's Story image */
+.todays-story img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Changed from cover to contain */
+  background-color: rgba(0, 0, 0, 0.1); /* Slight background to fill empty space */
+  transition: transform 0.5s ease;
+}
+
+.todays-story:hover img {
+  transform: scale(1.05);
+}
+
+/* Ensure the title is visible on the contained image */
+.todays-story .story-title {
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+  padding-top: 40px; /* Extended padding to ensure visibility */
 }
 
 /* Animations */
@@ -778,6 +798,11 @@ html, body {
   }
   .todays-story {
     width: 90%;
+    max-width: 400px; /* Add max-width for better control */
+  }
+  /* Ensure the Today's Story image behaves consistently on mobile */
+  .todays-story img {
+    object-fit: contain;
   }
   #loveNote {
     bottom: 70px;
