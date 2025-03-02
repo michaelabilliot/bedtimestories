@@ -192,82 +192,174 @@ function setupAudioPlayerControls() {
  */
 function showScene(index) {
   if (index < 0 || index >= currentStory.length) return;
+  
+  // Store the previous scene index for transition effects
+  const previousSceneIndex = currentSceneIndex;
   currentSceneIndex = index;
   
   // Update background image if the scene has one.
   if (currentStory[index].image) {
-    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[index].image}')`;
+    // Create a new image element for crossfade
+    const newImage = new Image();
+    newImage.src = `images/${currentStory.folder}/${currentStory[index].image}`;
+    newImage.onload = () => {
+      // Once loaded, update the background with a fade effect
+      document.getElementById('globalBackground').style.opacity = '0.8';
+      setTimeout(() => {
+        document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[index].image}')`;
+        document.getElementById('globalBackground').style.opacity = '1';
+      }, 300);
+    };
   }
   
-  // Build the scene HTML.
+  // Check if the game div already has content
   const gameDiv = document.getElementById("game");
-  let html = `<div class="scene">`;
+  const existingScene = gameDiv.querySelector('.scene');
   
-  // Scene image.
-  if (currentStory[index].image) {
-    html += `<img class="scene-img" src="images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">`;
-  }
-  
-  // Scene content with a romantic frame
-  html += `<div class="scene-content">
-    <div class="content-frame">
-      ${currentStory[index].content}
-      ${index === currentStory.length - 1 ? '<p class="ending-message">The End <span class="heart-icon">♥</span></p>' : ''}
-    </div>
-  </div>`;
-  
-  // Navigation buttons.
-  html += `<div class="nav-buttons">`;
-  if (index > 0) {
-    html += `<button id="prevBtn"><span class="material-icons">arrow_back</span>Previous</button>`;
-  }
-  if (index < currentStory.length - 1) {
-    html += `<button id="nextBtn">Next<span class="material-icons">arrow_forward</span></button>`;
-  } else {
-    html += `<button id="restartBtn"><span class="material-icons">home</span>Back to Gallery</button>`;
-  }
-  html += `</div>`; // End nav-buttons
+  // If this is the first scene, create the entire structure
+  if (!existingScene) {
+    let html = `<div class="scene">`;
+    
+    // Scene image container (will be updated)
+    html += `<div class="scene-img-container">
+      <img class="scene-img" src="images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">
+    </div>`;
+    
+    // Scene content with a romantic frame (will be updated)
+    html += `<div class="scene-content">
+      <div class="content-frame">
+        ${currentStory[index].content}
+        ${index === currentStory.length - 1 ? '<p class="ending-message">The End <span class="heart-icon">♥</span></p>' : ''}
+      </div>
+    </div>`;
+    
+    // Navigation buttons.
+    html += `<div class="nav-buttons">`;
+    if (index > 0) {
+      html += `<button id="prevBtn"><span class="material-icons">arrow_back</span>Previous</button>`;
+    }
+    if (index < currentStory.length - 1) {
+      html += `<button id="nextBtn">Next<span class="material-icons">arrow_forward</span></button>`;
+    } else {
+      html += `<button id="restartBtn"><span class="material-icons">home</span>Back to Gallery</button>`;
+    }
+    html += `</div>`; // End nav-buttons
 
-  // Audio Player UI.
-  html += `
-    <div id="audioPlayer">
-      <div id="audioProgress">
-        <div id="audioProgressBar"></div>
-        <div id="sceneIndicators"></div>
+    // Audio Player UI.
+    html += `
+      <div id="audioPlayer">
+        <div id="audioProgress">
+          <div id="audioProgressBar"></div>
+          <div id="sceneIndicators"></div>
+        </div>
+        <div id="audioControls">
+          <button id="goStart"><span class="material-icons">first_page</span></button>
+          <button id="playPauseBtn"><span class="material-icons">play_arrow</span></button>
+          <button id="goEnd"><span class="material-icons">last_page</span></button>
+          <button id="volumeToggle"><span class="material-icons">volume_up</span></button>
+        </div>
+        <div id="volumeControl" class="hidden">
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+        </div>
       </div>
-      <div id="audioControls">
-        <button id="goStart"><span class="material-icons">first_page</span></button>
-        <button id="playPauseBtn"><span class="material-icons">play_arrow</span></button>
-        <button id="goEnd"><span class="material-icons">last_page</span></button>
-        <button id="volumeToggle"><span class="material-icons">volume_up</span></button>
-      </div>
-      <div id="volumeControl" class="hidden">
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
-      </div>
-    </div>
-  `;
+    `;
+    
+    html += `</div>`; // End .scene
+    gameDiv.innerHTML = html;
+    
+    // Attach navigation events.
+    attachNavigationEvents();
+    setupAudioPlayerControls();
+    
+    // Add a subtle animation to the scene content
+    setTimeout(() => {
+      const contentFrame = document.querySelector('.content-frame');
+      if (contentFrame) {
+        contentFrame.classList.add('animate-in');
+      }
+    }, 100);
+  } 
+  // If we already have a scene, just update the image and content with fade effects
+  else {
+    // Update the image with fade effect
+    const imgContainer = existingScene.querySelector('.scene-img-container');
+    if (imgContainer && currentStory[index].image) {
+      // Fade out current image
+      const currentImg = imgContainer.querySelector('.scene-img');
+      if (currentImg) {
+        currentImg.style.opacity = '0';
+        
+        // After fade out, update the image and fade in
+        setTimeout(() => {
+          currentImg.src = `images/${currentStory.folder}/${currentStory[index].image}`;
+          currentImg.style.opacity = '1';
+        }, 300);
+      }
+    }
+    
+    // Update the content with fade effect
+    const contentFrame = existingScene.querySelector('.content-frame');
+    if (contentFrame) {
+      // Fade out current content
+      contentFrame.style.opacity = '0';
+      
+      // After fade out, update the content and fade in
+      setTimeout(() => {
+        contentFrame.innerHTML = `
+          ${currentStory[index].content}
+          ${index === currentStory.length - 1 ? '<p class="ending-message">The End <span class="heart-icon">♥</span></p>' : ''}
+        `;
+        contentFrame.style.opacity = '1';
+      }, 300);
+    }
+    
+    // Update navigation buttons
+    const navButtons = existingScene.querySelector('.nav-buttons');
+    if (navButtons) {
+      navButtons.innerHTML = '';
+      if (index > 0) {
+        const prevBtn = document.createElement('button');
+        prevBtn.id = 'prevBtn';
+        prevBtn.innerHTML = '<span class="material-icons">arrow_back</span>Previous';
+        navButtons.appendChild(prevBtn);
+      }
+      if (index < currentStory.length - 1) {
+        const nextBtn = document.createElement('button');
+        nextBtn.id = 'nextBtn';
+        nextBtn.innerHTML = 'Next<span class="material-icons">arrow_forward</span>';
+        navButtons.appendChild(nextBtn);
+      } else {
+        const restartBtn = document.createElement('button');
+        restartBtn.id = 'restartBtn';
+        restartBtn.innerHTML = '<span class="material-icons">home</span>Back to Gallery';
+        navButtons.appendChild(restartBtn);
+      }
+      
+      // Reattach navigation events
+      attachNavigationEvents();
+    }
+  }
   
-  html += `</div>`; // End .scene
-  gameDiv.innerHTML = html;
+  updateBackgroundEffects();
+}
 
-  // Attach navigation events.
+/**
+ * Attaches event listeners to navigation buttons.
+ */
+function attachNavigationEvents() {
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const restartBtn = document.getElementById("restartBtn");
-  if (prevBtn) { prevBtn.addEventListener("click", () => showScene(index - 1)); }
-  if (nextBtn) { nextBtn.addEventListener("click", () => showScene(index + 1)); }
-  if (restartBtn) { restartBtn.addEventListener("click", () => returnToGallery()); }
-
-  setupAudioPlayerControls();
-  updateBackgroundEffects();
   
-  // Add a subtle animation to the scene content
-  setTimeout(() => {
-    const contentFrame = document.querySelector('.content-frame');
-    if (contentFrame) {
-      contentFrame.classList.add('animate-in');
-    }
-  }, 100);
+  if (prevBtn) { 
+    prevBtn.addEventListener("click", () => showScene(currentSceneIndex - 1)); 
+  }
+  if (nextBtn) { 
+    nextBtn.addEventListener("click", () => showScene(currentSceneIndex + 1)); 
+  }
+  if (restartBtn) { 
+    restartBtn.addEventListener("click", () => returnToGallery()); 
+  }
 }
 
 /**
@@ -432,5 +524,6 @@ document.addEventListener("DOMContentLoaded", () => {
   gameContainer.style.display = "none";
   
   // Initial background setup
+  document.getElementById('globalBackground').style.opacity = '1';
   updateBackgroundEffects();
 });

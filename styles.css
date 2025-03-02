@@ -25,7 +25,20 @@ html, body {
   filter: blur(10px);
   z-index: -2;
   clip-path: inset(0);
-  transition: background-size 0.5s ease, filter 0.5s ease;
+  transition: background-size 0.5s ease, filter 0.5s ease, opacity 0.3s ease;
+}
+
+/* Pink overlay for background */
+#globalBackground::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(255 182 193 / 15%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Global noise overlay */
@@ -48,9 +61,13 @@ html, body {
   position: fixed;
   top: 15px;
   right: 15px;
-  background: rgba(255,255,255,0.15);
+  background: rgb(255 182 193 / 65%);
   border-radius: 50%;
-  padding: 12px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 1100;
   box-shadow: 0 2px 15px rgba(0,0,0,0.3);
@@ -71,9 +88,13 @@ html, body {
   position: fixed;
   bottom: 15px;
   right: 15px;
-  background: rgba(255,182,193,0.3);
+  background: rgb(255 182 193 / 65%);
   border-radius: 50%;
-  padding: 12px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 1100;
   box-shadow: 0 2px 15px rgba(0,0,0,0.3);
@@ -81,7 +102,7 @@ html, body {
   animation: pulse 2s infinite;
 }
 #loveNoteButton:hover {
-  background: rgba(255,182,193,0.5);
+  background: rgba(255,182,193,0.8);
 }
 #loveNoteButton .material-icons {
   font-size: 24px;
@@ -293,7 +314,7 @@ html, body {
   background-color: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.2);
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  transition: all 0.5s ease;
+  transition: all 0.5s ease, opacity 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
 }
@@ -418,7 +439,7 @@ html, body {
 /* Scene container */
 .scene {
   backdrop-filter: blur(15px);
-  background-color: rgba(255,182,193,0.15);
+  background-color: rgb(255 182 193 / 65%);
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -431,8 +452,29 @@ html, body {
   overflow: auto;
   z-index: 2;
   border: 1px solid rgba(255,255,255,0.2);
-  animation: fadeIn 0.8s ease;
 }
+
+/* Scene image container for transitions */
+.scene-img-container {
+  width: 100%;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.scene-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 15px;
+  z-index: 3;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+.scene-img:hover {
+  transform: scale(1.02);
+}
+
 .scene-content {
   flex: 1;
   font-size: 1.2rem;
@@ -441,27 +483,16 @@ html, body {
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   z-index: 3;
 }
+
 .scene-content h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
   font-weight: normal;
   letter-spacing: 1px;
 }
+
 .scene-content p {
   margin-bottom: 20px;
-}
-.scene-img {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: 15px;
-  margin-bottom: 30px;
-  z-index: 3;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  transition: transform 0.5s ease;
-}
-.scene-img:hover {
-  transform: scale(1.02);
 }
 
 /* Navigation buttons container */
@@ -476,7 +507,7 @@ html, body {
   padding: 15px;
   border: none;
   border-radius: 30px;
-  background-color: rgba(255,182,193,0.3);
+  background-color: rgba(255, 182, 193, 0);
   backdrop-filter: blur(5px);
   color: #fff;
   font-size: 1.1rem;
@@ -509,7 +540,7 @@ html, body {
 #audioPlayer {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   backdrop-filter: blur(15px);
-  background-color: rgba(255,182,193,0.2);
+  background-color: rgba(255, 182, 193, 0);
   position: relative;
   margin-top: 20px;
   border-radius: 20px;
