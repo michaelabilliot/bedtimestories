@@ -470,14 +470,23 @@ html, body {
   margin-bottom: 20px;
 }
 
+/* Image container to properly handle transitions */
+.image-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+  aspect-ratio: 16 / 9;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
 .scene-img {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
   object-fit: cover;
   border-radius: 15px;
-  margin-bottom: 30px;
   z-index: 3;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   transition: opacity 0.3s ease, transform 0.3s ease;
   animation: fadeIn 0.3s ease;
 }

@@ -203,11 +203,20 @@ function showScene(index) {
   // Get references to the current elements
   const currentFrame = document.querySelector('.content-frame');
   const currentImg = document.querySelector('.scene-img');
+  const imgContainer = document.querySelector('.image-container');
   
   // Check if we're building the first scene or transitioning between scenes
   if (prevIndex === -1 || !currentFrame) {
     // Build the entire scene container
     sceneContainer.innerHTML = '';
+    
+    // Create an image container div
+    const newImgContainer = document.createElement('div');
+    newImgContainer.className = 'image-container';
+    newImgContainer.style.position = 'relative';
+    newImgContainer.style.width = '100%';
+    newImgContainer.style.marginBottom = '30px';
+    sceneContainer.appendChild(newImgContainer);
     
     // Add the image if there is one for this scene
     if (currentStory[index].image) {
@@ -215,7 +224,7 @@ function showScene(index) {
       img.className = 'scene-img';
       img.src = `images/${currentStory.folder}/${currentStory[index].image}`;
       img.alt = `Scene ${index + 1}`;
-      sceneContainer.appendChild(img);
+      newImgContainer.appendChild(img);
     }
     
     // Create a frame for the text content
@@ -240,7 +249,7 @@ function showScene(index) {
     // Update only the image and content of the existing scene
     
     // Update the image with a smooth transition
-    if (currentImg && currentStory[index].image) {
+    if (imgContainer && currentStory[index].image) {
       // Create a new image element with absolute positioning
       const newImg = document.createElement('img');
       newImg.className = 'scene-img';
@@ -250,17 +259,27 @@ function showScene(index) {
       newImg.style.position = 'absolute';
       newImg.style.top = '0';
       newImg.style.left = '0';
+      newImg.style.width = '100%';
+      newImg.style.height = '100%';
+      newImg.style.objectFit = 'cover';
+      newImg.style.borderRadius = '15px';
       newImg.style.zIndex = '4'; // Ensure new image is on top
       
-      // Insert the new image after the current one
-      currentImg.parentNode.insertBefore(newImg, currentImg.nextSibling);
+      // Append the new image to the container (on top of current image)
+      imgContainer.appendChild(newImg);
       
       // Fade in the new image and remove the old one after transition
       setTimeout(() => {
         newImg.style.opacity = '1';
-        currentImg.style.opacity = '0';
+        if (currentImg) currentImg.style.opacity = '0';
+        
         setTimeout(() => {
-          currentImg.remove();
+          // Remove all previous images
+          imgContainer.querySelectorAll('.scene-img').forEach(img => {
+            if (img !== newImg) img.remove();
+          });
+          
+          // Reset the new image to normal display
           newImg.style.position = 'relative';
           newImg.style.zIndex = '3';
         }, 300);
@@ -349,6 +368,43 @@ function loadStoryData(storyData, folder) {
   gameContainer.classList.remove("hidden");
   gameContainer.style.display = "flex";
   
+  // Make sure the game div has the necessary structure
+  const gameDiv = document.getElementById("game");
+  
+  // Clear the game div and create a scene container if it doesn't exist
+  gameDiv.innerHTML = '';
+  const sceneContainer = document.createElement('div');
+  sceneContainer.id = 'sceneContainer';
+  sceneContainer.className = 'scene';
+  gameDiv.appendChild(sceneContainer);
+  
+  // Add navigation buttons
+  const navButtonsContainer = document.createElement('div');
+  navButtonsContainer.className = 'nav-buttons';
+  
+  const prevButton = document.createElement('button');
+  prevButton.id = 'prevButton';
+  prevButton.innerHTML = '<span class="material-icons">arrow_back</span>Previous';
+  prevButton.addEventListener('click', () => {
+    if (currentSceneIndex > 0) {
+      showScene(currentSceneIndex - 1);
+    }
+  });
+  
+  const nextButton = document.createElement('button');
+  nextButton.id = 'nextButton';
+  nextButton.innerHTML = 'Next<span class="material-icons">arrow_forward</span>';
+  nextButton.addEventListener('click', () => {
+    if (currentSceneIndex < currentStory.length - 1) {
+      showScene(currentSceneIndex + 1);
+    }
+  });
+  
+  navButtonsContainer.appendChild(prevButton);
+  navButtonsContainer.appendChild(nextButton);
+  gameDiv.appendChild(navButtonsContainer);
+  
+  // Show the first scene
   showScene(0);
   setupAudio();
   setupAudioPlayerControls();
