@@ -533,6 +533,15 @@ function returnToGallery() {
   
   // FIXED: Call setupGallery to repopulate the stories
   setupGallery();
+  
+  // Reinitialize event listeners for UI elements
+  document.getElementById('settingsIcon').addEventListener('click', () => {
+    document.getElementById('settingsPanel').classList.toggle('hidden');
+  });
+  
+  document.getElementById('loveNoteButton').addEventListener('click', () => {
+    document.getElementById('loveNote').classList.toggle('hidden');
+  });
 }
 
 /**
