@@ -254,21 +254,60 @@ function playTrack(index) {
   
   // Show music player
   const musicPlayer = document.getElementById('musicPlayer');
+  if (!musicPlayer) {
+    console.error('Music player element not found');
+    return;
+  }
   musicPlayer.classList.add('active');
   
   // Update music player UI
-  document.getElementById('currentMusicTitle').textContent = track.title || track.folder;
+  const titleElement = document.getElementById('currentMusicTitle');
+  if (titleElement) {
+    titleElement.textContent = track.title || track.folder;
+  }
   
   // FIXED: Better error handling for album art
   const thumbnail = document.getElementById('currentMusicThumbnail');
-  thumbnail.src = track.cover;
-  thumbnail.onerror = function() {
-    console.warn(`Failed to load cover image for ${track.folder}`);
-    this.src = 'images/placeholder.jpg';
-  };
+  if (thumbnail) {
+    thumbnail.src = track.cover;
+    thumbnail.onerror = function() {
+      console.warn(`Failed to load cover image for ${track.folder}`);
+      this.src = 'images/placeholder.jpg';
+    };
+  }
+  
+  // Add a back to gallery button if it doesn't exist
+  if (!document.getElementById('backToMusicGallery')) {
+    const backButton = document.createElement('button');
+    backButton.id = 'backToMusicGallery';
+    backButton.innerHTML = '<i class="material-icons">arrow_back</i> Back to Gallery';
+    backButton.className = 'back-to-gallery-btn';
+    backButton.addEventListener('click', () => {
+      // Hide the music player
+      if (audioElement) {
+        audioElement.pause();
+      }
+      musicPlayer.classList.remove('active');
+      
+      // Show the music gallery
+      const musicGallery = document.getElementById('musicGallery');
+      if (musicGallery) {
+        musicGallery.style.display = 'block';
+      }
+    });
+    
+    // Add the button to the music player
+    const musicInfo = document.querySelector('.music-info');
+    if (musicInfo) {
+      musicInfo.insertBefore(backButton, musicInfo.firstChild);
+    }
+  }
   
   // Reset play/pause button
-  document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">pause</i>';
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  if (playPauseBtn) {
+    playPauseBtn.innerHTML = '<i class="material-icons">pause</i>';
+  }
   
   // Create or update audio element
   if (audioElement) {
@@ -296,8 +335,12 @@ function playTrack(index) {
     // Setup error handling
     audioElement.addEventListener('error', (e) => {
       console.error(`Error loading audio file for ${track.folder}:`, e);
-      document.getElementById('currentMusicTitle').textContent = `Error: Could not load "${track.title || track.folder}"`;
-      document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+      if (document.getElementById('currentMusicTitle')) {
+        document.getElementById('currentMusicTitle').textContent = `Error: Could not load "${track.title || track.folder}"`;
+      }
+      if (document.getElementById('playPauseBtn')) {
+        document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+      }
       isPlaying = false;
       
       // FIXED: Show a user-friendly error message
@@ -315,7 +358,9 @@ function playTrack(index) {
         isPlaying = true;
       }).catch(error => {
         console.error('Audio playback failed:', error);
-        document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+        if (document.getElementById('playPauseBtn')) {
+          document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+        }
         isPlaying = false;
         
         // FIXED: Show detailed error for user
@@ -324,7 +369,9 @@ function playTrack(index) {
     }
   } catch (error) {
     console.error('Error attempting to play:', error);
-    document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+    if (document.getElementById('playPauseBtn')) {
+      document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
+    }
     isPlaying = false;
     
     // FIXED: Show detailed error for user
@@ -343,11 +390,19 @@ function updateProgress() {
     
     // Calculate progress percentage
     const percent = (audioElement.currentTime / audioElement.duration) * 100;
-    progressBar.style.width = percent + '%';
     
-    // Update time display
-    currentTimeEl.textContent = formatTime(audioElement.currentTime);
-    totalTimeEl.textContent = formatTime(audioElement.duration);
+    // Update progress bar if it exists
+    if (progressBar) {
+      progressBar.style.width = percent + '%';
+    }
+    
+    // Update time display if elements exist
+    if (currentTimeEl) {
+      currentTimeEl.textContent = formatTime(audioElement.currentTime);
+    }
+    if (totalTimeEl) {
+      totalTimeEl.textContent = formatTime(audioElement.duration);
+    }
   }
 }
 

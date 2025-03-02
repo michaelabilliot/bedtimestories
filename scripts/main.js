@@ -525,10 +525,14 @@ function returnToGallery() {
   
   // Show gallery and hide game container
   gallery.classList.remove("hidden");
+  gallery.style.display = "flex"; // Ensure display is set back to flex
   gameContainer.classList.add("hidden");
   
   // Update background effects
   updateBackgroundEffects();
+  
+  // FIXED: Call setupGallery to repopulate the stories
+  setupGallery();
 }
 
 /**
