@@ -1,4 +1,90 @@
-// main.js
+/**
+ * Main JavaScript file for Bedtime Stories App
+ */
+
+// Initialize the application when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  // Set up event listeners for settings
+  setupSettingsListeners();
+  
+  // Initialize the gallery
+  if (typeof setupGallery === 'function') {
+    setupGallery();
+  }
+});
+
+/**
+ * Set up event listeners for settings panel
+ */
+function setupSettingsListeners() {
+  // Settings icon click event
+  const settingsIcon = document.getElementById('settingsIcon');
+  if (settingsIcon) {
+    settingsIcon.addEventListener('click', () => {
+      const settingsPanel = document.getElementById('settingsPanel');
+      if (settingsPanel) {
+        settingsPanel.classList.remove('hidden');
+      }
+    });
+  }
+  
+  // Close settings button
+  const closeSettingsBtn = document.getElementById('closeSettings');
+  if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener('click', () => {
+      const settingsPanel = document.getElementById('settingsPanel');
+      if (settingsPanel) {
+        settingsPanel.classList.add('hidden');
+      }
+    });
+  }
+  
+  // Background zoom slider
+  const zoomSlider = document.getElementById('zoomSlider');
+  if (zoomSlider) {
+    zoomSlider.addEventListener('input', (e) => {
+      const zoom = e.target.value;
+      const background = document.getElementById('globalBackground');
+      if (background) {
+        background.style.transform = `scale(${zoom})`;
+      }
+    });
+  }
+  
+  // Background blur slider
+  const blurSlider = document.getElementById('blurSlider');
+  if (blurSlider) {
+    blurSlider.addEventListener('input', (e) => {
+      const blur = e.target.value;
+      const background = document.getElementById('globalBackground');
+      if (background) {
+        background.style.filter = `blur(${blur}px)`;
+      }
+    });
+  }
+  
+  // Love note button
+  const loveNoteBtn = document.getElementById('loveNoteButton');
+  if (loveNoteBtn) {
+    loveNoteBtn.addEventListener('click', () => {
+      const loveNote = document.getElementById('loveNote');
+      if (loveNote) {
+        loveNote.classList.remove('hidden');
+      }
+    });
+  }
+  
+  // Close love note button
+  const closeLoveNoteBtn = document.getElementById('closeLoveNote');
+  if (closeLoveNoteBtn) {
+    closeLoveNoteBtn.addEventListener('click', () => {
+      const loveNote = document.getElementById('loveNote');
+      if (loveNote) {
+        loveNote.classList.add('hidden');
+      }
+    });
+  }
+}
 
 let currentStory = [];
 let currentSceneIndex = 0;
