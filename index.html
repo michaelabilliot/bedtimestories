@@ -17,18 +17,66 @@
   <div id="globalBackground"></div>
   <div id="globalNoise"></div>
 
-  <!-- Gallery -->
-  <div id="gallery">
-    <h1>Bedtime Stories</h1>
-    <p class="subtitle">Choose a story to drift away into dreamland together</p>
-    <div id="storyCards">
-      <!-- "Today's Story" and "Other Stories" cards will be inserted here -->
+  <!-- Tab Navigation -->
+  <div id="tabNavigation">
+    <button class="tab-button active" data-tab="stories">Stories</button>
+    <button class="tab-button" data-tab="music">Music</button>
+  </div>
+
+  <!-- Stories Tab Content -->
+  <div id="storiesTab" class="tab-content active">
+    <!-- Gallery -->
+    <div id="gallery">
+      <h1>Bedtime Stories</h1>
+      <p class="subtitle">Choose a story to drift away into dreamland together</p>
+      <div id="storyCards">
+        <!-- "Today's Story" and "Other Stories" cards will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Game container (hidden until a story is selected) -->
+    <div id="gameContainer" class="hidden">
+      <div id="game"></div>
     </div>
   </div>
 
-  <!-- Game container (hidden until a story is selected) -->
-  <div id="gameContainer" class="hidden">
-    <div id="game"></div>
+  <!-- Music Tab Content -->
+  <div id="musicTab" class="tab-content">
+    <div id="musicGallery">
+      <h1>Relaxing Melodies</h1>
+      <p class="subtitle">Select a track to unwind and drift into peaceful sleep</p>
+      
+      <div class="music-cards-container" id="musicCards">
+        <!-- Music cards will be inserted here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Music Player (Fixed at bottom, hidden by default) -->
+    <div id="musicPlayer">
+      <div class="music-info">
+        <img src="images/music/placeholder.jpg" alt="Album Art" class="music-thumbnail" id="currentMusicThumbnail">
+        <div class="music-details">
+          <div class="title" id="currentMusicTitle">No track selected</div>
+        </div>
+      </div>
+      
+      <div class="music-progress">
+        <div class="progress-container" id="musicProgressContainer">
+          <div class="progress-bar" id="musicProgressBar"></div>
+        </div>
+        <div class="time-display">
+          <span id="currentTime">0:00</span>
+          <span id="totalTime">0:00</span>
+        </div>
+      </div>
+      
+      <div class="music-controls">
+        <button id="prevTrackBtn"><i class="material-icons">skip_previous</i></button>
+        <button id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
+        <button id="nextTrackBtn"><i class="material-icons">skip_next</i></button>
+        <button id="volumeBtn"><i class="material-icons">volume_up</i></button>
+      </div>
+    </div>
   </div>
 
   <!-- Settings Icon -->
@@ -64,5 +112,6 @@
   <!-- Scripts -->
   <script src="scripts/storyLoader.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="scripts/musicPlayer.js"></script>
 </body>
 </html>

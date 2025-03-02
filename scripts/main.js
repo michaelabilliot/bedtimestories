@@ -2,7 +2,7 @@
 
 let currentStory = [];
 let currentSceneIndex = 0;
-let audioElement = null;
+let storyAudioElement = null; // Renamed to avoid conflicts with music player
 let volumeTimeout = null;
 let preloadedImages = [];
 let isTransitioning = false; // Flag to prevent multiple transitions at once
@@ -86,16 +86,16 @@ document.getElementById('closeLoveNote').addEventListener('click', () => {
  * Sets up the Audio element.
  */
 function setupAudio() {
-  if (!audioElement) {
-    audioElement = new Audio();
-    audioElement.preload = "auto";
-    audioElement.addEventListener("timeupdate", updateAudioProgress);
-    audioElement.addEventListener("ended", () => {
+  if (!storyAudioElement) {
+    storyAudioElement = new Audio();
+    storyAudioElement.preload = "auto";
+    storyAudioElement.addEventListener("timeupdate", updateAudioProgress);
+    storyAudioElement.addEventListener("ended", () => {
       setTimeout(() => returnToGallery(), 5000);
     });
   }
-  audioElement.src = `audios/${currentStory.folder}/recording.mp3`;
-  audioElement.load();
+  storyAudioElement.src = `audios/${currentStory.folder}/recording.mp3`;
+  storyAudioElement.load();
 }
 
 /**
@@ -104,17 +104,17 @@ function setupAudio() {
  */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
-  if (audioElement && audioElement.duration) {
-    const percent = (audioElement.currentTime / audioElement.duration) * 100;
+  if (storyAudioElement && storyAudioElement.duration) {
+    const percent = (storyAudioElement.currentTime / storyAudioElement.duration) * 100;
     progressBar.style.width = percent + "%";
     updateSceneIndicators();
   }
   
   const sceneEnd = currentStory[currentSceneIndex].end;
-  if (sceneEnd !== undefined && audioElement.currentTime >= sceneEnd) {
+  if (sceneEnd !== undefined && storyAudioElement.currentTime >= sceneEnd) {
     if (currentSceneIndex < currentStory.length - 1) {
       showScene(currentSceneIndex + 1);
-    } else if (audioElement.currentTime >= audioElement.duration) {
+    } else if (storyAudioElement.currentTime >= storyAudioElement.duration) {
       setTimeout(() => returnToGallery(), 5000);
     }
   }
@@ -127,17 +127,17 @@ function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
   if (!indicatorsContainer) return;
   indicatorsContainer.innerHTML = "";
-  if (audioElement && audioElement.duration) {
+  if (storyAudioElement && storyAudioElement.duration) {
     currentStory.forEach((scene, idx) => {
       if (idx > 0 && scene.start !== undefined) {
-        const posPercent = (scene.start / audioElement.duration) * 100;
+        const posPercent = (scene.start / storyAudioElement.duration) * 100;
         const indicator = document.createElement("div");
         indicator.className = "scene-indicator";
         indicator.innerHTML = `<svg viewBox="0 0 10 10" width="10" height="10"><polygon points="5,0 10,10 0,10"/></svg>`;
         indicator.style.left = posPercent + "%";
         indicator.addEventListener("click", () => {
           showScene(idx);
-          audioElement.currentTime = scene.start;
+          storyAudioElement.currentTime = scene.start;
         });
         indicatorsContainer.appendChild(indicator);
       }
@@ -156,29 +156,29 @@ function setupAudioPlayerControls() {
   const volumeSlider = document.getElementById("volumeSlider");
 
   playPauseBtn.addEventListener("click", () => {
-    if (audioElement.paused) {
+    if (storyAudioElement.paused) {
       // If on scene0, skip to scene1 and seek to its "start" if defined
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
         if (currentStory[1].start !== undefined) {
-          audioElement.currentTime = currentStory[1].start;
+          storyAudioElement.currentTime = currentStory[1].start;
         }
       }
-      audioElement.play();
+      storyAudioElement.play();
       playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
     } else {
-      audioElement.pause();
+      storyAudioElement.pause();
       playPauseBtn.innerHTML = `<span class="material-icons">play_arrow</span>`;
     }
   });
 
   goStartBtn.addEventListener("click", () => {
     const sceneStart = currentStory[currentSceneIndex].start;
-    audioElement.currentTime = sceneStart !== undefined ? sceneStart : 0;
+    storyAudioElement.currentTime = sceneStart !== undefined ? sceneStart : 0;
   });
   goEndBtn.addEventListener("click", () => {
     const sceneEnd = currentStory[currentSceneIndex].end;
-    audioElement.currentTime = sceneEnd !== undefined ? sceneEnd : audioElement.duration;
+    storyAudioElement.currentTime = sceneEnd !== undefined ? sceneEnd : storyAudioElement.duration;
   });
 
   volumeToggle.addEventListener("click", () => {
@@ -190,7 +190,7 @@ function setupAudioPlayerControls() {
     }
   });
   volumeSlider.addEventListener("input", (e) => {
-    audioElement.volume = e.target.value;
+    storyAudioElement.volume = e.target.value;
     const volCtrl = document.getElementById("volumeControl");
     if (volumeTimeout) clearTimeout(volumeTimeout);
     volumeTimeout = setTimeout(() => { volCtrl.classList.add("hidden"); }, 3000);
@@ -485,9 +485,9 @@ function showScene(index) {
  * Returns to the gallery view and unloads preloaded images.
  */
 function returnToGallery() {
-  if (audioElement) {
-    audioElement.pause();
-    audioElement.currentTime = 0;
+  if (storyAudioElement) {
+    storyAudioElement.pause();
+    storyAudioElement.currentTime = 0;
   }
   unloadStoryImages();
   
@@ -499,17 +499,25 @@ function returnToGallery() {
   // Clean up the game container
   gameDiv.innerHTML = '';
   
-  // Make sure the game container is hidden
-  gameContainer.classList.add("hidden");
-  gameContainer.style.display = "none";
-  
-  // Make sure the gallery is visible
-  gallery.classList.remove("hidden");
-  gallery.style.display = "flex";
-  
-  // Set the background back to the gallery image with gradient overlay
+  // Reset background to gallery image
   document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
-  updateBackgroundEffects(); // Apply zoom and blur settings
+  
+  // Make sure we're on the stories tab and it's active
+  const storiesTab = document.getElementById('storiesTab');
+  const storiesTabButton = document.querySelector('.tab-button[data-tab="stories"]');
+  
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  
+  storiesTab.classList.add('active');
+  storiesTabButton.classList.add('active');
+  
+  // Show gallery and hide game container
+  gallery.classList.remove("hidden");
+  gameContainer.classList.add("hidden");
+  
+  // Update background effects
+  updateBackgroundEffects();
 }
 
 /**
@@ -768,3 +776,39 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial background setup
   updateBackgroundEffects();
 });
+
+// Initial setup when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Set the stories tab as active by default
+  document.querySelector('.tab-button[data-tab="stories"]').classList.add('active');
+  document.getElementById('storiesTab').classList.add('active');
+  
+  // Initialize background effects for the gallery view
+  updateBackgroundEffects();
+  
+  // Add keyboard navigation
+  setupKeyboardNavigation();
+});
+
+/**
+ * Sets up keyboard navigation for stories
+ */
+function setupKeyboardNavigation() {
+  // Only process keyboard events when a story is active
+  document.addEventListener('keydown', function(event) {
+    // Check if we're in story mode and not transitioning
+    if (!document.getElementById("gameContainer").classList.contains("hidden") && !isTransitioning) {
+      // Debounce key presses to prevent rapid transitions
+      if (event.key === 'ArrowLeft' && currentSceneIndex > 0) {
+        event.preventDefault();
+        showScene(currentSceneIndex - 1);
+      } else if (event.key === 'ArrowRight' && currentSceneIndex < currentStory.length - 1) {
+        event.preventDefault();
+        showScene(currentSceneIndex + 1);
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        returnToGallery();
+      }
+    }
+  }, { passive: false }); // Use passive: false to allow preventDefault
+}
