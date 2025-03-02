@@ -2,6 +2,8 @@
   {
     "order": 1,
     "image": "scene0.jpg",
+    "start": 100,
+    "end": 100,
     "content": "<h1 style=\"text-align:center;\">Whiskers of Forgiveness</h1><p style=\"text-align:center;\">A Tale of Love and Healing</p>"
   },
   {
@@ -142,6 +144,7 @@
     "image": "scene20.jpg",
     "start": 100,
     "end": 100,
-    "content": "<p>Goodnight, my love little baby. May your dreams be filled with nice, cute, and loving moments.</p>"
+    "content": "<p>Goodnight, my love. May your dreams be filled with warmth, forgiveness, and the promise of a new dawn.</p>"
   }
 ]
+```

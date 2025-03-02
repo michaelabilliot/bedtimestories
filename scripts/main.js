@@ -2,7 +2,7 @@
 
 let currentStory = [];
 let currentSceneIndex = 0;
-let storyAudioElement = null; // Renamed to avoid conflicts with music player
+let audioElement = null;
 let volumeTimeout = null;
 let preloadedImages = [];
 let isTransitioning = false; // Flag to prevent multiple transitions at once
@@ -86,27 +86,16 @@ document.getElementById('closeLoveNote').addEventListener('click', () => {
  * Sets up the Audio element.
  */
 function setupAudio() {
-  if (!storyAudioElement) {
-    storyAudioElement = new Audio();
-    storyAudioElement.preload = "auto";
-    storyAudioElement.addEventListener("timeupdate", updateAudioProgress);
-    storyAudioElement.addEventListener("ended", () => {
+  if (!audioElement) {
+    audioElement = new Audio();
+    audioElement.preload = "auto";
+    audioElement.addEventListener("timeupdate", updateAudioProgress);
+    audioElement.addEventListener("ended", () => {
       setTimeout(() => returnToGallery(), 5000);
     });
   }
-  
-  // Check if audio file exists before setting src
-  const audioPath = `audios/${currentStory.folder}/recording.mp3`;
-  console.log(`Loading audio from: ${audioPath}`);
-  
-  // Add error handling for audio loading
-  storyAudioElement.src = audioPath;
-  storyAudioElement.onerror = function() {
-    console.error(`Failed to load audio from ${audioPath}`);
-    alert(`Could not load audio for this story. The story will continue without sound.`);
-  };
-  
-  storyAudioElement.load();
+  audioElement.src = `audios/${currentStory.folder}/recording.mp3`;
+  audioElement.load();
 }
 
 /**
@@ -115,17 +104,17 @@ function setupAudio() {
  */
 function updateAudioProgress() {
   const progressBar = document.getElementById("audioProgressBar");
-  if (storyAudioElement && storyAudioElement.duration) {
-    const percent = (storyAudioElement.currentTime / storyAudioElement.duration) * 100;
+  if (audioElement && audioElement.duration) {
+    const percent = (audioElement.currentTime / audioElement.duration) * 100;
     progressBar.style.width = percent + "%";
     updateSceneIndicators();
   }
   
-  const sceneEnd = currentStory[currentSceneIndex]?.end;
-  if (sceneEnd !== undefined && storyAudioElement.currentTime >= sceneEnd) {
+  const sceneEnd = currentStory[currentSceneIndex].end;
+  if (sceneEnd !== undefined && audioElement.currentTime >= sceneEnd) {
     if (currentSceneIndex < currentStory.length - 1) {
       showScene(currentSceneIndex + 1);
-    } else if (storyAudioElement.currentTime >= storyAudioElement.duration) {
+    } else if (audioElement.currentTime >= audioElement.duration) {
       setTimeout(() => returnToGallery(), 5000);
     }
   }
@@ -138,17 +127,17 @@ function updateSceneIndicators() {
   const indicatorsContainer = document.getElementById("sceneIndicators");
   if (!indicatorsContainer) return;
   indicatorsContainer.innerHTML = "";
-  if (storyAudioElement && storyAudioElement.duration) {
+  if (audioElement && audioElement.duration) {
     currentStory.forEach((scene, idx) => {
       if (idx > 0 && scene.start !== undefined) {
-        const posPercent = (scene.start / storyAudioElement.duration) * 100;
+        const posPercent = (scene.start / audioElement.duration) * 100;
         const indicator = document.createElement("div");
         indicator.className = "scene-indicator";
         indicator.innerHTML = `<svg viewBox="0 0 10 10" width="10" height="10"><polygon points="5,0 10,10 0,10"/></svg>`;
         indicator.style.left = posPercent + "%";
         indicator.addEventListener("click", () => {
           showScene(idx);
-          storyAudioElement.currentTime = scene.start;
+          audioElement.currentTime = scene.start;
         });
         indicatorsContainer.appendChild(indicator);
       }
@@ -167,29 +156,29 @@ function setupAudioPlayerControls() {
   const volumeSlider = document.getElementById("volumeSlider");
 
   playPauseBtn.addEventListener("click", () => {
-    if (storyAudioElement.paused) {
+    if (audioElement.paused) {
       // If on scene0, skip to scene1 and seek to its "start" if defined
       if (currentSceneIndex === 0 && currentStory.length > 1) {
         showScene(1);
         if (currentStory[1].start !== undefined) {
-          storyAudioElement.currentTime = currentStory[1].start;
+          audioElement.currentTime = currentStory[1].start;
         }
       }
-      storyAudioElement.play();
+      audioElement.play();
       playPauseBtn.innerHTML = `<span class="material-icons">pause</span>`;
     } else {
-      storyAudioElement.pause();
+      audioElement.pause();
       playPauseBtn.innerHTML = `<span class="material-icons">play_arrow</span>`;
     }
   });
 
   goStartBtn.addEventListener("click", () => {
     const sceneStart = currentStory[currentSceneIndex].start;
-    storyAudioElement.currentTime = sceneStart !== undefined ? sceneStart : 0;
+    audioElement.currentTime = sceneStart !== undefined ? sceneStart : 0;
   });
   goEndBtn.addEventListener("click", () => {
     const sceneEnd = currentStory[currentSceneIndex].end;
-    storyAudioElement.currentTime = sceneEnd !== undefined ? sceneEnd : storyAudioElement.duration;
+    audioElement.currentTime = sceneEnd !== undefined ? sceneEnd : audioElement.duration;
   });
 
   volumeToggle.addEventListener("click", () => {
@@ -201,7 +190,7 @@ function setupAudioPlayerControls() {
     }
   });
   volumeSlider.addEventListener("input", (e) => {
-    storyAudioElement.volume = e.target.value;
+    audioElement.volume = e.target.value;
     const volCtrl = document.getElementById("volumeControl");
     if (volumeTimeout) clearTimeout(volumeTimeout);
     volumeTimeout = setTimeout(() => { volCtrl.classList.add("hidden"); }, 3000);
@@ -496,9 +485,9 @@ function showScene(index) {
  * Returns to the gallery view and unloads preloaded images.
  */
 function returnToGallery() {
-  if (storyAudioElement) {
-    storyAudioElement.pause();
-    storyAudioElement.currentTime = 0;
+  if (audioElement) {
+    audioElement.pause();
+    audioElement.currentTime = 0;
   }
   unloadStoryImages();
   
@@ -510,38 +499,17 @@ function returnToGallery() {
   // Clean up the game container
   gameDiv.innerHTML = '';
   
-  // Reset background to gallery image
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
-  
-  // Make sure we're on the stories tab and it's active
-  const storiesTab = document.getElementById('storiesTab');
-  const storiesTabButton = document.querySelector('.tab-button[data-tab="stories"]');
-  
-  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-  
-  storiesTab.classList.add('active');
-  storiesTabButton.classList.add('active');
-  
-  // Show gallery and hide game container
-  gallery.classList.remove("hidden");
-  gallery.style.display = "flex"; // Ensure display is set back to flex
+  // Make sure the game container is hidden
   gameContainer.classList.add("hidden");
+  gameContainer.style.display = "none";
   
-  // Update background effects
-  updateBackgroundEffects();
+  // Make sure the gallery is visible
+  gallery.classList.remove("hidden");
+  gallery.style.display = "flex";
   
-  // FIXED: Call setupGallery to repopulate the stories
-  setupGallery();
-  
-  // Reinitialize event listeners for UI elements
-  document.getElementById('settingsIcon').addEventListener('click', () => {
-    document.getElementById('settingsPanel').classList.toggle('hidden');
-  });
-  
-  document.getElementById('loveNoteButton').addEventListener('click', () => {
-    document.getElementById('loveNote').classList.toggle('hidden');
-  });
+  // Set the background back to the gallery image with gradient overlay
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+  updateBackgroundEffects(); // Apply zoom and blur settings
 }
 
 /**
@@ -680,13 +648,10 @@ function loadStoryData(storyData, folder) {
  * If a story has "today: true", it is displayed in a separate "Today's Story" section.
  */
 function setupGallery() {
-  // Load story data from actual files instead of hardcoding
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", order: 1, today: false, description: "A heartwarming tale of friendship and love" },
-    { title: "Little Sleepy Star", file: "sleepy-star", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
-    { title: "Whiskers of Forgiveness", file: "cat", order: 3, today: false, description: "A story about a cat and a heartwarming tale of friendship and love" }
+    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
+    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
   ];
-  
   availableStories.sort((a, b) => a.order - b.order);
   
   // Set global background to gallery image with a romantic gradient overlay
@@ -704,22 +669,16 @@ function setupGallery() {
     todaysSection.className = "todays-story-section";
     todaysSection.innerHTML = "<h2>Tonight's Special</h2>";
     todaysStories.forEach(story => {
-      // Use scene0.jpg for today's story as requested
-      const coverImage = `images/${story.file}/scene0.jpg`;
-      
       const card = document.createElement("div");
       card.className = "story-card todays-story";
       card.innerHTML = `
-        <img src="${coverImage}" alt="${story.title} Cover">
+        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { 
-            console.error("Error loading story:", err);
-            alert(`Failed to load story: ${err.message}`);
-          });
+          .catch(err => { console.error("Error loading story:", err); });
       });
       todaysSection.appendChild(card);
       
@@ -744,22 +703,16 @@ function setupGallery() {
     cardsContainer.className = "story-cards-row";
     
     otherStories.forEach(story => {
-      // Use cover.jpg for regular stories as requested
-      const coverImage = `images/${story.file}/cover.jpg`;
-      
       const card = document.createElement("div");
       card.className = "story-card";
       card.innerHTML = `
-        <img src="${coverImage}" alt="${story.title} Cover">
+        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { 
-            console.error("Error loading story:", err);
-            alert(`Failed to load story: ${err.message}`);
-          });
+          .catch(err => { console.error("Error loading story:", err); });
       });
       cardsContainer.appendChild(card);
     });
@@ -813,77 +766,4 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Initial background setup
   updateBackgroundEffects();
-  
-  // Set up event listeners for UI elements
-  document.getElementById('zoomSlider').addEventListener('input', updateBackgroundEffects);
-  document.getElementById('blurSlider').addEventListener('input', updateBackgroundEffects);
-  
-  document.getElementById('settingsIcon').addEventListener('click', () => {
-    document.getElementById('settingsPanel').classList.toggle('hidden');
-  });
-  
-  document.getElementById('closeSettings').addEventListener('click', () => {
-    document.getElementById('settingsPanel').classList.add('hidden');
-  });
-  
-  document.getElementById('loveNoteButton').addEventListener('click', () => {
-    document.getElementById('loveNote').classList.toggle('hidden');
-  });
-  
-  document.getElementById('closeLoveNote').addEventListener('click', () => {
-    document.getElementById('loveNote').classList.add('hidden');
-  });
-  
-  // Set the stories tab as active by default
-  document.querySelector('.tab-button[data-tab="stories"]').classList.add('active');
-  document.getElementById('storiesTab').classList.add('active');
-  
-  // Add keyboard navigation
-  setupKeyboardNavigation();
 });
-
-/**
- * Loads a story file from the server
- * @param {string} storyFolder - The folder name containing the story
- * @returns {Promise} - Promise that resolves with the story data
- */
-async function loadStory(storyFolder) {
-  try {
-    // FIXED: Load directly from the .json file in the stories directory
-    const response = await fetch(`stories/${storyFolder}.json`);
-    if (!response.ok) {
-      throw new Error(`Failed to load story: ${storyFolder} (HTTP ${response.status})`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error loading story ${storyFolder}:`, error);
-    throw error;
-  }
-}
-
-/**
- * Sets up keyboard navigation for stories
- */
-function setupKeyboardNavigation() {
-  // Only process keyboard events when a story is active
-  document.addEventListener('keydown', function(event) {
-    // Check if we're in story mode and not transitioning
-    if (!document.getElementById("gameContainer").classList.contains("hidden") && !isTransitioning) {
-      // Debounce key presses to prevent rapid transitions
-      if (event.key === 'ArrowLeft' && currentSceneIndex > 0) {
-        event.preventDefault();
-        showScene(currentSceneIndex - 1);
-      } else if (event.key === 'ArrowRight' && currentSceneIndex < currentStory.length - 1) {
-        event.preventDefault();
-        showScene(currentSceneIndex + 1);
-      } else if (event.key === 'Escape') {
-        event.preventDefault();
-        returnToGallery();
-      } else if (event.code === "Space") {
-        e.preventDefault();
-        const playPauseBtn = document.getElementById("playPauseBtn");
-        if (playPauseBtn) playPauseBtn.click();
-      }
-    }
-  }, { passive: false }); // Use passive: false to allow preventDefault
-}

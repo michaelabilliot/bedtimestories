@@ -419,13 +419,11 @@ html, body {
   z-index: 5;
   background: transparent;
   animation: fadeIn 0.8s ease;
-  overflow-y: auto; /* Enable vertical scrolling */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 #game {
   position: relative;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   padding: 20px;
   display: flex;
   align-items: center;
@@ -446,9 +444,9 @@ html, body {
   padding: 30px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   color: #fff;
+  overflow: auto;
   z-index: 2;
   border: 1px solid rgba(255,255,255,0.2);
-  margin: 20px 0; /* Add margin to ensure space at top and bottom */
 }
 
 /* Scene content elements transition individually */
@@ -459,7 +457,6 @@ html, body {
   margin-bottom: 30px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   z-index: 3;
-  text-align: justify; /* Add justified text alignment */
 }
 
 .scene-content h1 {
@@ -467,12 +464,10 @@ html, body {
   margin-bottom: 20px;
   font-weight: normal;
   letter-spacing: 1px;
-  text-align: center; /* Keep headings centered */
 }
 
 .scene-content p {
   margin-bottom: 20px;
-  text-align: justify; /* Ensure paragraphs are justified */
 }
 
 /* Image container to properly handle transitions */
@@ -550,7 +545,6 @@ html, body {
   background-color: rgb(255 182 193 / 65%);
   position: relative;
   margin-top: 20px;
-  margin-bottom: 20px; /* Add bottom margin to ensure space */
   border-radius: 20px;
   padding: 20px;
   display: flex;
@@ -671,38 +665,16 @@ html, body {
 
 /* "Today's Story" card override to force a 16:9 ratio */
 .todays-story {
-  width: 700px;
-  max-width: 90%;
+  width: 600px;
   aspect-ratio: 16 / 9;
+  object-fit: cover;
   border-radius: 20px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   transition: all 0.4s ease;
-  overflow: hidden;
-  position: relative;
-  transform: scale(1.05);
 }
 .todays-story:hover {
-  transform: translateY(-10px) scale(1.1);
+  transform: translateY(-10px);
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-
-/* Special styling for Today's Story image */
-.todays-story img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* Changed from cover to contain */
-  background-color: rgba(0, 0, 0, 0.1); /* Slight background to fill empty space */
-  transition: transform 0.5s ease;
-}
-
-.todays-story:hover img {
-  transform: scale(1.05);
-}
-
-/* Ensure the title is visible on the contained image */
-.todays-story .story-title {
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
-  padding-top: 40px; /* Extended padding to ensure visibility */
 }
 
 /* Animations */
@@ -784,10 +756,6 @@ html, body {
   }
   .scene-content {
     font-size: 1.1rem;
-    text-align: justify; /* Maintain justified text on tablets */
-    hyphens: auto; /* Add hyphenation for better text flow on smaller screens */
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
   }
   .scene-content h1 {
     font-size: 1.8rem;
@@ -798,8 +766,6 @@ html, body {
   }
   #audioPlayer {
     padding: 15px;
-    margin-bottom: 30px; /* Increased bottom margin on mobile */
-    position: relative; /* Ensure it's in the normal flow */
   }
   #audioControls {
     gap: 15px;
@@ -811,16 +777,7 @@ html, body {
     font-size: 20px;
   }
   .todays-story {
-    width: 95%;
-    max-width: 500px;
-    transform: scale(1);
-  }
-  .todays-story:hover {
-    transform: translateY(-5px);
-  }
-  /* Ensure the Today's Story image behaves consistently on mobile */
-  .todays-story img {
-    object-fit: contain;
+    width: 90%;
   }
   #loveNote {
     bottom: 70px;
@@ -863,10 +820,6 @@ html, body {
   }
   .scene-content {
     font-size: 1rem;
-    text-align: justify; /* Maintain justified text on mobile */
-    hyphens: auto; /* Add hyphenation for better text flow on smaller screens */
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
   }
   .scene {
     padding: 15px;
@@ -895,418 +848,4 @@ html, body {
     font-size: 1.4rem;
     margin-top: 15px;
   }
-}
-
-/* Tab Navigation */
-#tabNavigation {
-  position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 1100;
-  padding: 8px;
-  border-radius: 20px;
-  background-color: rgba(255,182,193,0.3);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.tab-button {
-  padding: 8px 20px;
-  border-radius: 15px;
-  border: none;
-  background-color: transparent;
-  color: white;
-  font-size: 1rem;
-  font-family: 'Merriweather', serif;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
-.tab-button.active {
-  background-color: rgb(255 182 193 / 65%);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-}
-
-.tab-button:hover:not(.active) {
-  background-color: rgba(255,255,255,0.2);
-}
-
-/* Tab Content */
-.tab-content {
-  display: none;
-  min-height: 100vh;
-  width: 100%;
-}
-
-.tab-content.active {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Music Gallery Styles */
-#musicGallery {
-  padding: 40px 20px;
-  text-align: center;
-  z-index: 2;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.music-cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 40px auto;
-}
-
-.music-card {
-  width: 250px;
-  aspect-ratio: 1 / 1;
-  border-radius: 15px;
-  overflow: hidden;
-  position: relative;
-  background-color: rgba(255,255,255,0.1);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  cursor: pointer;
-  transition: all 0.4s ease;
-  border: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(5px);
-}
-
-.music-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-}
-
-.music-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.music-card:hover img {
-  transform: scale(1.05);
-}
-
-.music-card .music-title {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
-  color: white;
-  text-align: center;
-  font-size: 1.1rem;
-  z-index: 1;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-}
-
-.music-card .play-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  background-color: rgba(255,182,193,0.7);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: all 0.3s ease;
-  z-index: 2;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.music-card:hover .play-button {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.music-card .play-button i {
-  color: white;
-  font-size: 30px;
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
-}
-
-/* Music Player */
-#musicPlayer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(30, 30, 40, 0.9);
-  backdrop-filter: blur(10px);
-  padding: 15px;
-  display: none;
-  flex-direction: column;
-  z-index: 100;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
-}
-
-#musicPlayer.active {
-  display: flex;
-}
-
-.music-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.music-thumbnail {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
-  object-fit: cover;
-  margin-right: 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-
-.music-details {
-  flex: 1;
-}
-
-.music-details .title {
-  font-size: 1rem;
-  color: white;
-  margin-bottom: 5px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
-
-/* Back to Gallery Button */
-.back-to-gallery-btn {
-  background-color: rgba(147, 112, 219, 0.3);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 5px 15px;
-  margin-right: 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  transition: background-color 0.3s;
-}
-
-.back-to-gallery-btn:hover {
-  background-color: rgba(147, 112, 219, 0.6);
-}
-
-.back-to-gallery-btn i {
-  margin-right: 5px;
-  font-size: 18px;
-}
-
-.music-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* Mobile Adjustments for tabs and music gallery */
-@media screen and (max-width: 768px) {
-  #tabNavigation {
-    width: 90%;
-    max-width: 400px;
-  }
-  
-  .tab-button {
-    padding: 6px 15px;
-    font-size: 0.9rem;
-  }
-  
-  .music-card {
-    width: 180px;
-  }
-  
-  .music-card .play-button {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .music-card .play-button i {
-    font-size: 24px;
-  }
-  
-  #musicPlayer {
-    flex-direction: column;
-    padding: 10px;
-  }
-  
-  .music-info {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
-  .music-progress {
-    width: 100%;
-    margin: 10px 0;
-  }
-  
-  .music-controls {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .music-card {
-    width: 140px;
-  }
-  
-  .music-card .music-title {
-    padding: 15px 10px;
-    font-size: 0.9rem;
-  }
-}
-
-/* Dev Mode Toggle */
-.toggle-container {
-  margin: 15px 0;
-  display: flex;
-  align-items: center;
-}
-
-.toggle-container label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.toggle-container input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 50px;
-  height: 24px;
-  background-color: rgba(255,255,255,0.2);
-  border-radius: 12px;
-  position: relative;
-  margin: 0 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.toggle-container input[type="checkbox"]::before {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  top: 2px;
-  left: 2px;
-  background-color: white;
-  transition: all 0.3s ease;
-}
-
-.toggle-container input[type="checkbox"]:checked {
-  background-color: rgba(255,182,193,0.8);
-}
-
-.toggle-container input[type="checkbox"]:checked::before {
-  left: 28px;
-}
-
-.toggle-label {
-  font-size: 0.9rem;
-  margin-right: auto;
-}
-
-/* Error Container */
-#errorContainer {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2000;
-  background-color: rgba(220,20,60,0.8);
-  backdrop-filter: blur(10px);
-  padding: 15px 25px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  max-width: 90%;
-  width: 400px;
-  text-align: center;
-  animation: slideDown 0.5s ease;
-}
-
-.error-content h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.error-content p {
-  margin-bottom: 15px;
-}
-
-#dismissError {
-  background-color: rgba(255,255,255,0.3);
-  border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#dismissError:hover {
-  background-color: rgba(255,255,255,0.4);
-  transform: translateY(-2px);
-}
-
-/* Loading Indicator */
-#loadingIndicator {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.7);
-  backdrop-filter: blur(5px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid rgba(255,255,255,0.3);
-  border-radius: 50%;
-  border-top-color: rgb(255,182,193);
-  animation: spin 1s linear infinite;
-}
-
-#loadingIndicator p {
-  margin-top: 20px;
-  font-size: 1.2rem;
-  color: white;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-50px) translateX(-50%); opacity: 0; }
-  to { transform: translateY(0) translateX(-50%); opacity: 1; }
 }
