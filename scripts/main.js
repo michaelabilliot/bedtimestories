@@ -271,32 +271,6 @@ function showScene(index) {
 }
 
 /**
- * Returns to the gallery view and unloads preloaded images.
- */
-function returnToGallery() {
-  if (audioElement) {
-    audioElement.pause();
-    audioElement.currentTime = 0;
-  }
-  unloadStoryImages();
-  
-  // Make sure the gallery is fully visible and the game container is hidden
-  const galleryElement = document.getElementById("gallery");
-  const gameContainerElement = document.getElementById("gameContainer");
-  
-  galleryElement.classList.remove("hidden");
-  galleryElement.style.display = "flex";
-  galleryElement.style.visibility = "visible";
-  
-  gameContainerElement.classList.add("hidden");
-  gameContainerElement.style.display = "none";
-  gameContainerElement.style.visibility = "hidden";
-  
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
-  updateBackgroundEffects(); // Apply zoom and blur settings
-}
-
-/**
  * Loads story data (JSON), preloads images, and sets up audio.
  */
 function loadStoryData(storyData, folder) {
@@ -313,15 +287,52 @@ function loadStoryData(storyData, folder) {
   galleryElement.classList.add("hidden");
   galleryElement.style.display = "none";
   galleryElement.style.visibility = "hidden";
+  galleryElement.style.opacity = "0";
+  galleryElement.style.pointerEvents = "none";
   
   // Make sure the game container is visible
   gameContainerElement.classList.remove("hidden");
   gameContainerElement.style.display = "block";
   gameContainerElement.style.visibility = "visible";
+  gameContainerElement.style.opacity = "1";
+  gameContainerElement.style.pointerEvents = "auto";
+  gameContainerElement.style.zIndex = "10";
   
   showScene(0);
   setupAudio();
   setupAudioPlayerControls();
+}
+
+/**
+ * Returns to the gallery view and unloads preloaded images.
+ */
+function returnToGallery() {
+  if (audioElement) {
+    audioElement.pause();
+    audioElement.currentTime = 0;
+  }
+  unloadStoryImages();
+  
+  // Make sure the gallery is fully visible and the game container is hidden
+  const galleryElement = document.getElementById("gallery");
+  const gameContainerElement = document.getElementById("gameContainer");
+  
+  galleryElement.classList.remove("hidden");
+  galleryElement.style.display = "flex";
+  galleryElement.style.visibility = "visible";
+  galleryElement.style.opacity = "1";
+  galleryElement.style.pointerEvents = "auto";
+  galleryElement.style.zIndex = "5";
+  
+  gameContainerElement.classList.add("hidden");
+  gameContainerElement.style.display = "none";
+  gameContainerElement.style.visibility = "hidden";
+  gameContainerElement.style.opacity = "0";
+  gameContainerElement.style.pointerEvents = "none";
+  gameContainerElement.style.zIndex = "-1";
+  
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
+  updateBackgroundEffects(); // Apply zoom and blur settings
 }
 
 /**
@@ -345,10 +356,16 @@ function setupGallery() {
   galleryElement.classList.remove("hidden");
   galleryElement.style.display = "flex";
   galleryElement.style.visibility = "visible";
+  galleryElement.style.opacity = "1";
+  galleryElement.style.pointerEvents = "auto";
+  galleryElement.style.zIndex = "5";
   
   gameContainerElement.classList.add("hidden");
   gameContainerElement.style.display = "none";
   gameContainerElement.style.visibility = "hidden";
+  gameContainerElement.style.opacity = "0";
+  gameContainerElement.style.pointerEvents = "none";
+  gameContainerElement.style.zIndex = "-1";
   
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
@@ -369,6 +386,24 @@ function setupGallery() {
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
+        // Force the gallery to be hidden immediately before loading the story
+        const galleryElement = document.getElementById("gallery");
+        const gameContainerElement = document.getElementById("gameContainer");
+        
+        galleryElement.classList.add("hidden");
+        galleryElement.style.display = "none";
+        galleryElement.style.visibility = "hidden";
+        galleryElement.style.opacity = "0";
+        galleryElement.style.pointerEvents = "none";
+        
+        gameContainerElement.classList.remove("hidden");
+        gameContainerElement.style.display = "block";
+        gameContainerElement.style.visibility = "visible";
+        gameContainerElement.style.opacity = "1";
+        gameContainerElement.style.pointerEvents = "auto";
+        gameContainerElement.style.zIndex = "10";
+        
+        // Then load the story data
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
           .catch(err => { console.error("Error loading story:", err); });
@@ -403,6 +438,24 @@ function setupGallery() {
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
+        // Force the gallery to be hidden immediately before loading the story
+        const galleryElement = document.getElementById("gallery");
+        const gameContainerElement = document.getElementById("gameContainer");
+        
+        galleryElement.classList.add("hidden");
+        galleryElement.style.display = "none";
+        galleryElement.style.visibility = "hidden";
+        galleryElement.style.opacity = "0";
+        galleryElement.style.pointerEvents = "none";
+        
+        gameContainerElement.classList.remove("hidden");
+        gameContainerElement.style.display = "block";
+        gameContainerElement.style.visibility = "visible";
+        gameContainerElement.style.opacity = "1";
+        gameContainerElement.style.pointerEvents = "auto";
+        gameContainerElement.style.zIndex = "10";
+        
+        // Then load the story data
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
           .catch(err => { console.error("Error loading story:", err); });
