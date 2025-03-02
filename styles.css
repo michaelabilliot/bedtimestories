@@ -960,6 +960,7 @@ html, body {
   text-align: center;
   margin-bottom: 30px;
   width: 100%;
+  max-width: 800px;
 }
 
 .music-cards {
@@ -970,6 +971,7 @@ html, body {
   padding: 0 20px;
   box-sizing: border-box;
   justify-items: center;
+  margin: 0 auto;
 }
 
 .music-card {
@@ -980,6 +982,8 @@ html, body {
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 280px;
 }
 
 .music-card:hover {
