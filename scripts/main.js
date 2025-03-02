@@ -212,6 +212,17 @@ function showScene(index) {
   // Clear any existing transition timeouts
   clearTransitionTimeouts();
   
+  // Add a safety timeout to reset the transition flag after a maximum time
+  // This ensures we don't get stuck in a transitioning state
+  const safetyTimeout = setTimeout(() => {
+    isTransitioning = false;
+    // Remove this timeout from tracking
+    const index = transitionTimeouts.indexOf(safetyTimeout);
+    if (index > -1) transitionTimeouts.splice(index, 1);
+  }, 2000); // 2 seconds max for any transition
+  
+  transitionTimeouts.push(safetyTimeout);
+  
   // Remember the previous scene index
   const prevIndex = currentSceneIndex;
   currentSceneIndex = index;
@@ -341,42 +352,55 @@ function showScene(index) {
     
     // Create and add the new content frame after a short delay
     const contentTimeout = setTimeout(() => {
-      // Remove the old content frame
-      currentFrame.remove();
-      
-      // Create a new content frame
-      const newContentFrame = document.createElement('div');
-      newContentFrame.className = 'content-frame';
-      
-      // Add the title if there is one
-      if (currentStory[index].title) {
-        const title = document.createElement('h1');
-        title.textContent = currentStory[index].title;
-        newContentFrame.appendChild(title);
+      try {
+        // Remove the old content frame if it still exists
+        if (currentFrame && currentFrame.parentNode) {
+          currentFrame.remove();
+        }
+        
+        // Create a new content frame
+        const newContentFrame = document.createElement('div');
+        newContentFrame.className = 'content-frame';
+        newContentFrame.style.opacity = '0'; // Start invisible
+        
+        // Add the title if there is one
+        if (currentStory[index].title) {
+          const title = document.createElement('h1');
+          title.textContent = currentStory[index].title;
+          newContentFrame.appendChild(title);
+        }
+        
+        // Add the content
+        const content = document.createElement('p');
+        content.innerHTML = currentStory[index].content;
+        newContentFrame.appendChild(content);
+        
+        // Add "The End" message if this is the last scene
+        if (index === currentStory.length - 1) {
+          const endingMessage = document.createElement('p');
+          endingMessage.className = 'ending-message';
+          endingMessage.innerHTML = 'The End <span class="heart-icon">♥</span>';
+          newContentFrame.appendChild(endingMessage);
+        }
+        
+        // Add the new frame to the scene container
+        sceneContainer.appendChild(newContentFrame);
+        
+        // Fade in the new content frame
+        setTimeout(() => {
+          newContentFrame.style.opacity = '1';
+          newContentFrame.style.transform = 'translateY(0)';
+        }, 10);
+      } catch (error) {
+        console.error("Error during content transition:", error);
+      } finally {
+        // Always reset the transition flag when everything is done
+        isTransitioning = false;
+        
+        // Remove this timeout from the tracking array
+        const index = transitionTimeouts.indexOf(contentTimeout);
+        if (index > -1) transitionTimeouts.splice(index, 1);
       }
-      
-      // Add the content
-      const content = document.createElement('p');
-      content.innerHTML = currentStory[index].content;
-      newContentFrame.appendChild(content);
-      
-      // Add "The End" message if this is the last scene
-      if (index === currentStory.length - 1) {
-        const endingMessage = document.createElement('p');
-        endingMessage.className = 'ending-message';
-        endingMessage.innerHTML = 'The End <span class="heart-icon">♥</span>';
-        newContentFrame.appendChild(endingMessage);
-      }
-      
-      // Add the new frame to the scene container
-      sceneContainer.appendChild(newContentFrame);
-      
-      // Reset the transition flag when everything is done
-      isTransitioning = false;
-      
-      // Remove this timeout from the tracking array
-      const index = transitionTimeouts.indexOf(contentTimeout);
-      if (index > -1) transitionTimeouts.splice(index, 1);
     }, 150); // Reduced from 200ms to 150ms for faster transition
     
     // Track this timeout
@@ -384,8 +408,30 @@ function showScene(index) {
   }
   
   // Update the navigation buttons
-  document.getElementById('prevButton').disabled = (index === 0);
-  document.getElementById('nextButton').disabled = (index === currentStory.length - 1);
+  const prevButton = document.getElementById('prevButton');
+  const nextButton = document.getElementById('nextButton');
+  
+  if (prevButton && nextButton) {
+    prevButton.disabled = (index === 0);
+    nextButton.disabled = (index === currentStory.length - 1);
+    
+    // Ensure the buttons are visible and clickable
+    prevButton.style.display = 'flex';
+    nextButton.style.display = 'flex';
+    
+    // Re-attach event listeners to ensure they work
+    prevButton.onclick = () => {
+      if (currentSceneIndex > 0 && !isTransitioning) {
+        showScene(currentSceneIndex - 1);
+      }
+    };
+    
+    nextButton.onclick = () => {
+      if (currentSceneIndex < currentStory.length - 1 && !isTransitioning) {
+        showScene(currentSceneIndex + 1);
+      }
+    };
+  }
   
   // Update the global background image
   updateBackgroundEffects();
