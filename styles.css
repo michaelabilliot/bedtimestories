@@ -255,6 +255,8 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 #gallery h1 {
   margin-bottom: 10px;
@@ -293,6 +295,7 @@ html, body {
   justify-content: center;
   gap: 30px;
   margin-top: 20px;
+  width: 100%;
 }
 
 /* Special message at the bottom */
@@ -339,6 +342,7 @@ html, body {
   width: 100%;
   max-width: 1200px;
   animation: fadeIn 1.2s ease;
+  margin: 0 auto;
 }
 .todays-story-section, .other-stories-section {
   width: 100%;
@@ -813,6 +817,21 @@ html, body {
     font-size: 1.6rem;
     margin-top: 20px;
   }
+  
+  .album-cover {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .music-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    padding: 0 10px;
+  }
+  
+  .scene {
+    padding: 20px;
+    min-height: auto;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -853,6 +872,15 @@ html, body {
     font-size: 1.4rem;
     margin-top: 15px;
   }
+  
+  .album-cover {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .music-cards {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
 }
 
 /* Navigation Tabs */
@@ -867,7 +895,12 @@ html, body {
   padding: 10px 20px;
   z-index: 100;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.navigation-tabs.hidden {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .nav-tab {
@@ -920,11 +953,13 @@ html, body {
   align-items: center;
   padding: 20px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .music-header {
   text-align: center;
   margin-bottom: 30px;
+  width: 100%;
 }
 
 .music-cards {
@@ -934,6 +969,7 @@ html, body {
   width: 100%;
   padding: 0 20px;
   box-sizing: border-box;
+  justify-items: center;
 }
 
 .music-card {
@@ -998,6 +1034,7 @@ html, body {
   padding: 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   margin: 20px auto;
+  box-sizing: border-box;
 }
 
 .music-player-container.hidden {
@@ -1042,7 +1079,7 @@ html, body {
   display: flex;
   gap: 20px;
   margin-bottom: 20px;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-wrap: wrap;
 }

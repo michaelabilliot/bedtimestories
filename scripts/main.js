@@ -486,60 +486,6 @@ function showScene(index) {
 }
 
 /**
- * Returns to the gallery view and unloads preloaded images.
- */
-function returnToGallery() {
-  if (audioElement) {
-    audioElement.pause();
-    audioElement.currentTime = 0;
-  }
-  unloadStoryImages();
-  
-  // Show navigation tabs when returning to gallery
-  const navigationTabs = document.getElementById('navigationTabs');
-  if (navigationTabs) {
-    navigationTabs.classList.remove('hidden');
-  }
-  
-  // Force the gallery to be visible
-  const gallery = document.getElementById("gallery");
-  const gameContainer = document.getElementById("gameContainer");
-  const gameDiv = document.getElementById("game");
-  
-  // Clean up the game container
-  gameDiv.innerHTML = '';
-  
-  // Make sure the game container is hidden
-  gameContainer.classList.add("hidden");
-  gameContainer.style.display = "none";
-  
-  // Make sure the gallery is visible
-  gallery.classList.remove("hidden");
-  gallery.style.display = "flex";
-  
-  // Set the background back to the gallery image with gradient overlay
-  // Use relative path for GitHub Pages compatibility
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
-  updateBackgroundEffects(); // Apply zoom and blur settings
-  
-  // Call setupGallery to repopulate the stories
-  setupGallery();
-  
-  // Reinitialize event listeners for UI elements
-  document.getElementById('settingsIcon').addEventListener('click', () => {
-    const settingsPanel = document.getElementById('settingsPanel');
-    settingsPanel.classList.toggle('hidden');
-    console.log('Settings panel toggled:', !settingsPanel.classList.contains('hidden'));
-  });
-  
-  document.getElementById('loveNoteButton').addEventListener('click', () => {
-    const loveNote = document.getElementById('loveNote');
-    loveNote.classList.toggle('hidden');
-    console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
-  });
-}
-
-/**
  * Loads story data (JSON), preloads images, and sets up audio.
  */
 function loadStoryData(storyData, folder) {
@@ -674,4 +620,58 @@ function loadStoryData(storyData, folder) {
   showScene(0);
   setupAudio();
   setupAudioPlayerControls();
+}
+
+/**
+ * Returns to the gallery view and unloads preloaded images.
+ */
+function returnToGallery() {
+  if (audioElement) {
+    audioElement.pause();
+    audioElement.currentTime = 0;
+  }
+  unloadStoryImages();
+  
+  // Show navigation tabs when returning to gallery
+  const navigationTabs = document.getElementById('navigationTabs');
+  if (navigationTabs) {
+    navigationTabs.classList.remove('hidden');
+  }
+  
+  // Force the gallery to be visible
+  const gallery = document.getElementById("gallery");
+  const gameContainer = document.getElementById("gameContainer");
+  const gameDiv = document.getElementById("game");
+  
+  // Clean up the game container
+  gameDiv.innerHTML = '';
+  
+  // Make sure the game container is hidden
+  gameContainer.classList.add("hidden");
+  gameContainer.style.display = "none";
+  
+  // Make sure the gallery is visible
+  gallery.classList.remove("hidden");
+  gallery.style.display = "flex";
+  
+  // Set the background back to the gallery image with gradient overlay
+  // Use relative path for GitHub Pages compatibility
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+  updateBackgroundEffects(); // Apply zoom and blur settings
+  
+  // Call setupGallery to repopulate the stories
+  setupGallery();
+  
+  // Reinitialize event listeners for UI elements
+  document.getElementById('settingsIcon').addEventListener('click', () => {
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.classList.toggle('hidden');
+    console.log('Settings panel toggled:', !settingsPanel.classList.contains('hidden'));
+  });
+  
+  document.getElementById('loveNoteButton').addEventListener('click', () => {
+    const loveNote = document.getElementById('loveNote');
+    loveNote.classList.toggle('hidden');
+    console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
+  });
 }
