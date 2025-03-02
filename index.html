@@ -17,18 +17,40 @@
   <div id="globalBackground"></div>
   <div id="globalNoise"></div>
 
-  <!-- Gallery -->
-  <div id="gallery">
-    <h1>Bedtime Stories</h1>
-    <p class="subtitle">Choose a story to drift away into dreamland together</p>
-    <div id="storyCards">
-      <!-- "Today's Story" and "Other Stories" cards will be inserted here -->
+  <!-- Navigation Tabs -->
+  <div id="navigationTabs" class="navigation-tabs">
+    <div class="nav-tab active" data-page="stories">
+      <span class="material-icons">auto_stories</span>
+      <span>Stories</span>
+    </div>
+    <div class="nav-tab" data-page="music">
+      <span class="material-icons">music_note</span>
+      <span>Music</span>
     </div>
   </div>
 
-  <!-- Game container (hidden until a story is selected) -->
-  <div id="gameContainer" class="hidden">
-    <div id="game"></div>
+  <!-- Stories Page Container -->
+  <div id="storiesPage" class="page-container">
+    <!-- Gallery -->
+    <div id="gallery">
+      <h1>Bedtime Stories</h1>
+      <p class="subtitle">Choose a story to drift away into dreamland together</p>
+      <div id="storyCards">
+        <!-- "Today's Story" and "Other Stories" cards will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Game container (hidden until a story is selected) -->
+    <div id="gameContainer" class="hidden">
+      <div id="game"></div>
+    </div>
+  </div>
+
+  <!-- Music Page Container -->
+  <div id="musicPage" class="page-container hidden">
+    <div id="musicGallery" class="music-gallery">
+      <!-- Music content will be inserted here by musicLoader.js -->
+    </div>
   </div>
 
   <!-- Settings Icon -->
@@ -62,7 +84,9 @@
   </div>
 
   <!-- Scripts -->
+  <script src="scripts/pageHandler.js"></script>
   <script src="scripts/storyLoader.js"></script>
+  <script src="scripts/musicLoader.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 </html>

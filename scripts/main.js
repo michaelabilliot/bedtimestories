@@ -772,19 +772,19 @@ document.addEventListener("keydown", (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize the gallery and ensure proper visibility
-  setupGallery();
-  
-  // Make sure initial state is correct
-  const gallery = document.getElementById("gallery");
-  const gameContainer = document.getElementById("gameContainer");
-  
-  gallery.classList.remove("hidden");
-  gallery.style.display = "flex";
-  
-  gameContainer.classList.add("hidden");
-  gameContainer.style.display = "none";
-  
-  // Initial background setup
+  // Initialize the background effects
   updateBackgroundEffects();
+  
+  // Set up event listeners for settings and love note buttons
+  document.getElementById('settingsIcon').addEventListener('click', () => {
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.classList.toggle('hidden');
+    console.log('Settings panel toggled:', !settingsPanel.classList.contains('hidden'));
+  });
+  
+  document.getElementById('loveNoteButton').addEventListener('click', () => {
+    const loveNote = document.getElementById('loveNote');
+    loveNote.classList.toggle('hidden');
+    console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
+  });
 });
