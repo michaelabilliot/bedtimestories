@@ -139,7 +139,7 @@ function createMusicCard(track) {
   card.innerHTML = `
     <div class="music-card-image">
       <img src="music/${track.folder}/album.jpg" alt="${track.title} Album Cover" 
-           onerror="this.src='images/default-album.jpg'">
+           loading="lazy">
     </div>
     <div class="music-card-info">
       <h3>${track.title}</h3>
@@ -147,6 +147,13 @@ function createMusicCard(track) {
       <p class="music-date">${formatDate(track.date)}</p>
     </div>
   `;
+  
+  // Add proper error handling for the image
+  const img = card.querySelector('img');
+  img.onerror = function() {
+    this.onerror = null; 
+    this.src = 'images/default-album.jpg';
+  };
   
   // Add click event to play the track
   card.addEventListener('click', () => {
@@ -203,8 +210,7 @@ function playTrack(track) {
   playerContent.innerHTML = `
     <div class="now-playing">
       <div class="album-cover">
-        <img src="music/${track.folder}/album.jpg" alt="${track.title} Album Cover"
-             onerror="this.src='images/default-album.jpg'">
+        <img src="music/${track.folder}/album.jpg" alt="${track.title} Album Cover">
       </div>
       <div class="track-info">
         <h2>${track.title}</h2>
@@ -245,48 +251,88 @@ function playTrack(track) {
     </div>
   `;
   
+  // Add proper error handling for the album cover image
+  const albumImg = playerContent.querySelector('.album-cover img');
+  if (albumImg) {
+    albumImg.onerror = function() {
+      this.onerror = null;
+      this.src = 'images/default-album.jpg';
+    };
+  }
+  
   // Set up the audio player
   setupMusicPlayer(track);
-  
-  // Add event listeners to the player controls
-  setupPlayerControls();
 }
 
 /**
- * Set up the audio player for the current track
+ * Set up the audio player for a track
  * @param {Object} track - The track data
  */
 function setupMusicPlayer(track) {
-  // Create a new audio element
-  musicPlayer = new Audio(`music/${track.folder}/music.mp3`);
-  musicPlayer.volume = 0.7;
+  if (musicPlayer) {
+    // Stop any existing audio player
+    musicPlayer.pause();
+    musicPlayer.src = '';
+    musicPlayer.load();
+    musicPlayer = null;
+  }
   
-  // Add event listeners
-  musicPlayer.addEventListener('loadedmetadata', () => {
-    updateTotalTime();
-    // Enable play button once loaded
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    if (playPauseBtn) {
-      playPauseBtn.disabled = false;
-    }
-  });
+  // Create a new audio player with the track's audio file
+  // Use an absolute path for GitHub Pages compatibility
+  const audioPath = window.location.href.includes('github.io') 
+    ? `/${window.location.pathname.split('/')[1]}/music/${track.folder}/music.mp3`
+    : `music/${track.folder}/music.mp3`;
   
-  musicPlayer.addEventListener('timeupdate', updateProgress);
-  musicPlayer.addEventListener('ended', () => {
-    // Reset the play button when the track ends
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    if (playPauseBtn) {
-      playPauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
-    }
-  });
+  console.log('Loading audio from:', audioPath);
   
-  musicPlayer.addEventListener('error', (e) => {
-    console.error('Error loading audio:', e);
-    showErrorMessage('Failed to load audio. Please try again later.');
-  });
-  
-  // Start loading the audio
-  musicPlayer.load();
+  try {
+    musicPlayer = new Audio(audioPath);
+    musicPlayer.volume = 0.7;
+    
+    // Add event listeners
+    musicPlayer.addEventListener('loadedmetadata', () => {
+      updateTotalTime();
+      // Enable play button once loaded
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      if (playPauseBtn) {
+        playPauseBtn.disabled = false;
+      }
+    });
+    
+    musicPlayer.addEventListener('timeupdate', updateProgress);
+    musicPlayer.addEventListener('ended', () => {
+      // Reset the play button when the track ends
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      if (playPauseBtn) {
+        playPauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
+      }
+    });
+    
+    musicPlayer.addEventListener('error', (e) => {
+      console.error('Error loading audio:', e);
+      console.log('Failed audio path:', audioPath);
+      
+      // Try alternative path if first one fails
+      if (!audioPath.startsWith('http')) {
+        const altPath = `./${audioPath}`;
+        console.log('Trying alternative path:', altPath);
+        musicPlayer.src = altPath;
+        musicPlayer.load();
+      } else {
+        showErrorMessage('Failed to load audio. Please check that the MP3 file exists in the correct location.');
+      }
+    });
+    
+    // Preload the audio
+    musicPlayer.preload = 'auto';
+    musicPlayer.load();
+    
+    // Set up the player controls
+    setupPlayerControls();
+  } catch (e) {
+    console.error('Error creating audio player:', e);
+    showErrorMessage('Failed to create audio player. Please try again later.');
+  }
 }
 
 /**

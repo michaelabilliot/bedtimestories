@@ -581,10 +581,10 @@ function loadStoryData(storyData, folder) {
   audioControls.id = 'audioControls';
   
   audioControls.innerHTML = `
-    <button id="goStart"><span class="material-icons">first_page</span></button>
-    <button id="playPauseBtn"><span class="material-icons">play_arrow</span></button>
-    <button id="goEnd"><span class="material-icons">last_page</span></button>
-    <button id="volumeToggle"><span class="material-icons">volume_up</span></button>
+        <button id="goStart"><span class="material-icons">first_page</span></button>
+        <button id="playPauseBtn"><span class="material-icons">play_arrow</span></button>
+        <button id="goEnd"><span class="material-icons">last_page</span></button>
+        <button id="volumeToggle"><span class="material-icons">volume_up</span></button>
   `;
   
   audioPlayer.appendChild(audioControls);

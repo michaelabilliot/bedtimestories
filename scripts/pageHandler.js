@@ -97,9 +97,9 @@ function showPage(pageName) {
         setupMusicGallery();
       }
       
-      // Set a different background for the music page
+      // Set a different background for the music page with pink gradient
       document.getElementById('globalBackground').style.backgroundImage = 
-        "linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(70,0,120,0.5)), url('images/music-bg.jpg')";
+        "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/music-bg.jpg')";
     }
     
     // Apply background effects
