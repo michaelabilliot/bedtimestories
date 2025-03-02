@@ -208,7 +208,7 @@ function playTrack(track) {
     playerContainer.classList.remove('hidden');
     header.classList.add('hidden');
     
-    // Set up the player content
+    // Set up the player content with album on left and info on right
     playerContent.innerHTML = `
       <div class="album-cover-container">
         <img src="music/${detailedTrack.folder}/album.jpg" alt="${detailedTrack.title} Album Cover" class="album-cover">
@@ -225,6 +225,10 @@ function playTrack(track) {
           ${detailedTrack.mood ? `<p class="mood">Mood: ${detailedTrack.mood}</p>` : ''}
         </div>
       </div>
+    `;
+    
+    // Add the player controls after the track info and album
+    playerContent.innerHTML += `
       <div class="player-controls">
         <div class="progress-container">
           <div class="progress-bar">
