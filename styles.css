@@ -22,12 +22,9 @@ html, body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 110%; /* Start slightly zoomed in to avoid white edges */
-  -webkit-filter: blur(10px);
   filter: blur(10px);
   z-index: -2;
-  -webkit-clip-path: inset(0);
   clip-path: inset(0);
-  -webkit-transition: background-size 0.5s ease, filter 0.5s ease;
   transition: background-size 0.5s ease, filter 0.5s ease;
 }
 
@@ -43,7 +40,6 @@ html, body {
   opacity: 0.3;
   mix-blend-mode: overlay;
   z-index: -1;
-  -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
 
@@ -208,15 +204,6 @@ html, body {
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   cursor: pointer;
 }
-#settingsPanel input[type="range"]::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: none;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-}
 #settingsPanel button {
   display: block;
   width: 80%;
@@ -240,17 +227,14 @@ html, body {
 
 /* Gallery styles */
 #gallery {
-  position: relative;
   padding: 40px 20px;
   text-align: center;
-  z-index: 5;
+  z-index: 2;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
-  width: 100%;
 }
 #gallery h1 {
   margin-bottom: 10px;
@@ -411,14 +395,14 @@ html, body {
 
 /* Game container */
 #gameContainer {
+  width: 100%;
+  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  z-index: 5;
+  background: transparent;
   animation: fadeIn 0.8s ease;
-  z-index: 10;
-  box-sizing: border-box;
 }
 #game {
   position: relative;
@@ -640,24 +624,10 @@ html, body {
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   cursor: pointer;
 }
-#volumeSlider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: none;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-}
 
 /* Utility class */
 .hidden {
   display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  position: absolute !important;
-  z-index: -999 !important;
-  pointer-events: none !important;
 }
 
 /* "Today's Story" card override to force a 16:9 ratio */

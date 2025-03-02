@@ -15,7 +15,7 @@ function preloadStoryImages(storyData, folder) {
   storyData.forEach(scene => {
     if (scene.image) {
       const img = new Image();
-      img.src = `./images/${folder}/${scene.image}`;
+      img.src = `images/${folder}/${scene.image}`;
       preloadedImages.push(img);
     }
   });
@@ -84,7 +84,7 @@ function setupAudio() {
       setTimeout(() => returnToGallery(), 5000);
     });
   }
-  audioElement.src = `./audios/${currentStory.folder}/recording.mp3`;
+  audioElement.src = `audios/${currentStory.folder}/recording.mp3`;
   audioElement.load();
 }
 
@@ -196,7 +196,7 @@ function showScene(index) {
   
   // Update background image if the scene has one.
   if (currentStory[index].image) {
-    document.getElementById('globalBackground').style.backgroundImage = `url('./images/${currentStory.folder}/${currentStory[index].image}')`;
+    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[index].image}')`;
   }
   
   // Build the scene HTML.
@@ -205,7 +205,7 @@ function showScene(index) {
   
   // Scene image.
   if (currentStory[index].image) {
-    html += `<img class="scene-img" src="./images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">`;
+    html += `<img class="scene-img" src="images/${currentStory.folder}/${currentStory[index].image}" alt="Scene ${index + 1}">`;
   }
   
   // Scene content with a romantic frame
@@ -271,39 +271,6 @@ function showScene(index) {
 }
 
 /**
- * Loads story data (JSON), preloads images, and sets up audio.
- */
-function loadStoryData(storyData, folder) {
-  currentStory = storyData.sort((a, b) => a.order - b.order);
-  currentStory.folder = folder;
-  currentSceneIndex = 0;
-  preloadStoryImages(currentStory, folder);
-  
-  // Ensure the gallery is completely hidden and the game container is visible
-  const galleryElement = document.getElementById("gallery");
-  const gameContainerElement = document.getElementById("gameContainer");
-  
-  // Force the gallery to be hidden with both display:none and visibility:hidden
-  galleryElement.classList.add("hidden");
-  galleryElement.style.display = "none";
-  galleryElement.style.visibility = "hidden";
-  galleryElement.style.opacity = "0";
-  galleryElement.style.pointerEvents = "none";
-  
-  // Make sure the game container is visible
-  gameContainerElement.classList.remove("hidden");
-  gameContainerElement.style.display = "block";
-  gameContainerElement.style.visibility = "visible";
-  gameContainerElement.style.opacity = "1";
-  gameContainerElement.style.pointerEvents = "auto";
-  gameContainerElement.style.zIndex = "10";
-  
-  showScene(0);
-  setupAudio();
-  setupAudioPlayerControls();
-}
-
-/**
  * Returns to the gallery view and unloads preloaded images.
  */
 function returnToGallery() {
@@ -313,26 +280,46 @@ function returnToGallery() {
   }
   unloadStoryImages();
   
-  // Make sure the gallery is fully visible and the game container is hidden
-  const galleryElement = document.getElementById("gallery");
-  const gameContainerElement = document.getElementById("gameContainer");
+  // Force the gallery to be visible
+  const gallery = document.getElementById("gallery");
+  const gameContainer = document.getElementById("gameContainer");
   
-  galleryElement.classList.remove("hidden");
-  galleryElement.style.display = "flex";
-  galleryElement.style.visibility = "visible";
-  galleryElement.style.opacity = "1";
-  galleryElement.style.pointerEvents = "auto";
-  galleryElement.style.zIndex = "5";
+  // Make sure the game container is hidden
+  gameContainer.classList.add("hidden");
+  gameContainer.style.display = "none";
   
-  gameContainerElement.classList.add("hidden");
-  gameContainerElement.style.display = "none";
-  gameContainerElement.style.visibility = "hidden";
-  gameContainerElement.style.opacity = "0";
-  gameContainerElement.style.pointerEvents = "none";
-  gameContainerElement.style.zIndex = "-1";
+  // Make sure the gallery is visible
+  gallery.classList.remove("hidden");
+  gallery.style.display = "flex";
   
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
   updateBackgroundEffects(); // Apply zoom and blur settings
+}
+
+/**
+ * Loads story data (JSON), preloads images, and sets up audio.
+ */
+function loadStoryData(storyData, folder) {
+  currentStory = storyData.sort((a, b) => a.order - b.order);
+  currentStory.folder = folder;
+  currentSceneIndex = 0;
+  preloadStoryImages(currentStory, folder);
+  
+  // Force the gallery to be hidden before showing game container
+  const gallery = document.getElementById("gallery");
+  const gameContainer = document.getElementById("gameContainer");
+  
+  // Make sure we remove the gallery completely from view
+  gallery.classList.add("hidden");
+  gallery.style.display = "none";
+  
+  // Make sure the game container is visible
+  gameContainer.classList.remove("hidden");
+  gameContainer.style.display = "flex";
+  
+  showScene(0);
+  setupAudio();
+  setupAudioPlayerControls();
 }
 
 /**
@@ -341,31 +328,13 @@ function returnToGallery() {
  */
 function setupGallery() {
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "./images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
-    { title: "Little Sleepy Star", file: "sleepy-star", cover: "./images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
+    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, description: "A heartwarming tale of friendship and love" },
+    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" }
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
   // Set global background to gallery image with a romantic gradient overlay
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('./images/gallery.jpg')";
-  
-  // Make sure the gallery is fully visible and the game container is hidden
-  const galleryElement = document.getElementById("gallery");
-  const gameContainerElement = document.getElementById("gameContainer");
-  
-  galleryElement.classList.remove("hidden");
-  galleryElement.style.display = "flex";
-  galleryElement.style.visibility = "visible";
-  galleryElement.style.opacity = "1";
-  galleryElement.style.pointerEvents = "auto";
-  galleryElement.style.zIndex = "5";
-  
-  gameContainerElement.classList.add("hidden");
-  gameContainerElement.style.display = "none";
-  gameContainerElement.style.visibility = "hidden";
-  gameContainerElement.style.opacity = "0";
-  gameContainerElement.style.pointerEvents = "none";
-  gameContainerElement.style.zIndex = "-1";
+  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
   
   const storyCardsContainer = document.getElementById("storyCards");
   storyCardsContainer.innerHTML = "";
@@ -382,28 +351,10 @@ function setupGallery() {
       const card = document.createElement("div");
       card.className = "story-card todays-story";
       card.innerHTML = `
-        <img src="${story.cover ? story.cover : './images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
-        // Force the gallery to be hidden immediately before loading the story
-        const galleryElement = document.getElementById("gallery");
-        const gameContainerElement = document.getElementById("gameContainer");
-        
-        galleryElement.classList.add("hidden");
-        galleryElement.style.display = "none";
-        galleryElement.style.visibility = "hidden";
-        galleryElement.style.opacity = "0";
-        galleryElement.style.pointerEvents = "none";
-        
-        gameContainerElement.classList.remove("hidden");
-        gameContainerElement.style.display = "block";
-        gameContainerElement.style.visibility = "visible";
-        gameContainerElement.style.opacity = "1";
-        gameContainerElement.style.pointerEvents = "auto";
-        gameContainerElement.style.zIndex = "10";
-        
-        // Then load the story data
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
           .catch(err => { console.error("Error loading story:", err); });
@@ -434,28 +385,10 @@ function setupGallery() {
       const card = document.createElement("div");
       card.className = "story-card";
       card.innerHTML = `
-        <img src="${story.cover ? story.cover : './images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
-        // Force the gallery to be hidden immediately before loading the story
-        const galleryElement = document.getElementById("gallery");
-        const gameContainerElement = document.getElementById("gameContainer");
-        
-        galleryElement.classList.add("hidden");
-        galleryElement.style.display = "none";
-        galleryElement.style.visibility = "hidden";
-        galleryElement.style.opacity = "0";
-        galleryElement.style.pointerEvents = "none";
-        
-        gameContainerElement.classList.remove("hidden");
-        gameContainerElement.style.display = "block";
-        gameContainerElement.style.visibility = "visible";
-        gameContainerElement.style.opacity = "1";
-        gameContainerElement.style.pointerEvents = "auto";
-        gameContainerElement.style.zIndex = "10";
-        
-        // Then load the story data
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
           .catch(err => { console.error("Error loading story:", err); });
@@ -485,5 +418,19 @@ document.addEventListener("keydown", (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize the gallery and ensure proper visibility
   setupGallery();
+  
+  // Make sure initial state is correct
+  const gallery = document.getElementById("gallery");
+  const gameContainer = document.getElementById("gameContainer");
+  
+  gallery.classList.remove("hidden");
+  gallery.style.display = "flex";
+  
+  gameContainer.classList.add("hidden");
+  gameContainer.style.display = "none";
+  
+  // Initial background setup
+  updateBackgroundEffects();
 });
