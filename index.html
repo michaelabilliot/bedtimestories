@@ -7,10 +7,19 @@
   <base href="./">
   <!-- Mobile-friendly scaling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO and performance improvements -->
+  <meta name="description" content="A collection of soothing bedtime stories and relaxing music to help you drift into peaceful sleep">
+  <meta name="theme-color" content="#ffb6c1">
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- Merriweather font and Material Icons from Google -->
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <!-- Development mode: Use unminified CSS -->
+  <link rel="stylesheet" href="styles.css" id="main-css">
+  <!-- Production mode: Switch to minified CSS (disabled by default) -->
+  <!-- <link rel="stylesheet" href="build/styles.min.css" id="min-css" disabled> -->
 </head>
 <body>
   <!-- Global background and noise -->
@@ -90,6 +99,15 @@
       <h2>Customize Your Experience</h2>
       <label>Background Zoom: <input type="range" id="zoomSlider" min="0.5" max="2" step="0.01" value="2"></label>
       <label>Background Blur: <input type="range" id="blurSlider" min="0" max="30" step="0.1" value="25"></label>
+      
+      <!-- New setting for toggling dev/prod mode -->
+      <div class="toggle-container">
+        <label for="devModeToggle">Development Mode: 
+          <input type="checkbox" id="devModeToggle" checked>
+          <span class="toggle-label">On</span>
+        </label>
+      </div>
+      
       <button id="closeSettings">Save Changes</button>
     </div>
   </div>
@@ -109,9 +127,110 @@
     <span class="material-icons">favorite</span>
   </div>
 
+  <!-- Error message container for user feedback -->
+  <div id="errorContainer" class="hidden">
+    <div class="error-content">
+      <h3>Oops! Something went wrong.</h3>
+      <p id="errorMessage">Please try again later.</p>
+      <button id="dismissError">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div id="loadingIndicator" class="hidden">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
   <!-- Scripts -->
-  <script src="scripts/storyLoader.js"></script>
-  <script src="scripts/main.js"></script>
-  <script src="scripts/musicPlayer.js"></script>
+  <!-- Development mode: Use unminified JS -->
+  <script src="scripts/storyLoader.js" id="storyLoader-script"></script>
+  <script src="scripts/main.js" id="main-script"></script>
+  <script src="scripts/musicPlayer.js" id="musicPlayer-script"></script>
+  
+  <!-- Production mode toggle script -->
+  <script>
+    // Toggle between development and production mode
+    document.getElementById('devModeToggle').addEventListener('change', function(e) {
+      const devMode = e.target.checked;
+      const label = e.target.nextElementSibling;
+      
+      // Update label text
+      label.textContent = devMode ? 'On' : 'Off';
+      
+      // Toggle CSS files
+      document.getElementById('main-css').disabled = !devMode;
+      
+      // Create and add minified CSS if it doesn't exist
+      let minCss = document.getElementById('min-css');
+      if (!minCss) {
+        minCss = document.createElement('link');
+        minCss.id = 'min-css';
+        minCss.rel = 'stylesheet';
+        minCss.href = 'build/styles.min.css';
+        document.head.appendChild(minCss);
+      }
+      minCss.disabled = devMode;
+      
+      // Toggle JS files (this will cause a page reload)
+      if (confirm('Switching modes requires a page reload. Continue?')) {
+        localStorage.setItem('devMode', devMode ? 'true' : 'false');
+        window.location.reload();
+      } else {
+        // Revert the toggle if user cancels
+        e.target.checked = !e.target.checked;
+        label.textContent = e.target.checked ? 'On' : 'Off';
+        document.getElementById('main-css').disabled = !e.target.checked;
+        minCss.disabled = e.target.checked;
+      }
+    });
+    
+    // Check saved mode on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const devMode = localStorage.getItem('devMode') !== 'false';
+      const toggle = document.getElementById('devModeToggle');
+      const label = toggle.nextElementSibling;
+      
+      toggle.checked = devMode;
+      label.textContent = devMode ? 'On' : 'Off';
+      
+      // Set correct CSS
+      document.getElementById('main-css').disabled = !devMode;
+      
+      let minCss = document.getElementById('min-css');
+      if (!minCss && !devMode) {
+        minCss = document.createElement('link');
+        minCss.id = 'min-css';
+        minCss.rel = 'stylesheet';
+        minCss.href = 'build/styles.min.css';
+        document.head.appendChild(minCss);
+      }
+      if (minCss) {
+        minCss.disabled = devMode;
+      }
+      
+      // Set up error handling
+      document.getElementById('dismissError').addEventListener('click', function() {
+        document.getElementById('errorContainer').classList.add('hidden');
+      });
+    });
+    
+    // Global error handler
+    window.addEventListener('error', function(e) {
+      console.error('Global error:', e.error || e.message);
+      const errorContainer = document.getElementById('errorContainer');
+      const errorMessage = document.getElementById('errorMessage');
+      
+      errorMessage.textContent = 'An error occurred: ' + (e.error?.message || e.message || 'Unknown error');
+      errorContainer.classList.remove('hidden');
+      
+      // Auto-hide after 10 seconds
+      setTimeout(() => {
+        errorContainer.classList.add('hidden');
+      }, 10000);
+      
+      return false; // Let other error handlers run
+    });
+  </script>
 </body>
 </html>

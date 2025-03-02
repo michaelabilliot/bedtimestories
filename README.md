@@ -1,107 +1,185 @@
-# Bedtime Stories
+# Bedtime Stories Application
 
-A beautiful web application that presents bedtime stories and relaxing music, designed for parents to share special moments with their children before bedtime.
+A beautiful, interactive application for bedtime stories and relaxing music that can help you or a loved one drift into peaceful sleep.
 
 ## Features
 
-### Stories Section
-- Gallery of bedtime stories with a featured "Today's Special" selection
-- Smooth scene transitions with fade effects
-- Auto-advancing scenes based on audio narration
-- Navigation controls for moving between scenes
-- Customizable background blur and zoom settings
-
-### Music Section
-- Relaxing music tracks for bedtime
-- Beautiful album covers in a card-based gallery
-- Music player with play/pause, next/previous, and progress controls
-- Smooth transitions and animations
-
-### General Features
-- Tab-based navigation between Stories and Music sections
-- Responsive design that works on all devices
-- Settings panel for customizing the background appearance
-- Love note from the creator that adds a personal touch
+- **Interactive Stories**: Navigate through beautiful illustrated stories with smooth transitions
+- **Peaceful Music**: Play relaxing tracks to enhance your sleep experience
+- **Customizable Experience**: Adjust background blur and zoom to your preference
+- **Tab-based Navigation**: Switch easily between stories and music
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
+- **Performance Optimized**: Includes both development and production modes
+- **Background Effects**: Beautiful animated backgrounds with adjustable blur and zoom
 
 ## File Structure
 
 ```
-/
-├── index.html           # Main HTML file
-├── styles.css           # All CSS styles
-├── scripts/
-│   ├── main.js          # Core functionality for the app
-│   ├── storyLoader.js   # Loads and displays stories
-│   └── musicPlayer.js   # Handles music playback and tab navigation
+bedtimestories/
 ├── images/
-│   ├── gallery.jpg      # Background for the gallery
-│   └── [story-folder]/  # Contains images for each story
-│       ├── cover.jpg    # Regular story cover image
-│       └── scene0.jpg   # Today's special story cover image and scene images
+│   ├── gallery.jpg            # Main gallery background
+│   ├── music.jpg              # Music section background
+│   ├── placeholder.jpg        # Default placeholder for missing images
+│   ├── cat/                   # "Whiskers of Forgiveness" story images
+│   │   ├── cover.jpg          # Thumbnail used in the gallery
+│   │   └── scene0.jpg, ...    # Scene images used in the story
+│   ├── sleepy-star/           # "Little Sleepy Star" story images
+│   │   ├── cover.jpg          # Thumbnail used in the gallery
+│   │   └── scene0.jpg, ...    # Scene images used in the story
+│   └── friends-tale/          # "Friends Tale" story images
+│       ├── cover.jpg          # Thumbnail used in the gallery
+│       └── scene0.jpg, ...    # Scene images used in the story
+├── music/
+│   └── Judas/                 # Music track folder
+│       ├── audio.mp3          # The actual music file
+│       ├── album.jpg          # Album cover image
+│       └── info.json          # Metadata about the track (optional)
 ├── stories/
-│   ├── stories.json     # List of all available stories
-│   └── [story-folder]/  # Contains story data
-│       └── scenes.json  # Scene data for each story
-└── music/               # Music tracks folder
-    └── [music-folder]/  # Folder for each music track (e.g., "judas")
-        ├── audio.mp3    # The music audio file
-        ├── album.jpg    # Album cover image
-        └── info.json    # Metadata about the track (optional)
+│   ├── cat.json               # Story data for "Whiskers of Forgiveness"
+│   ├── sleepy-star.json       # Story data for "Little Sleepy Star"
+│   └── friends-tale.json      # Story data for "Friends Tale"
+├── audios/
+│   └── [story-folder]/
+│       └── recording.mp3      # Narration audio for the story
+├── scripts/
+│   ├── main.js                # Main application logic
+│   ├── storyLoader.js         # Story loading functionality
+│   └── musicPlayer.js         # Music player functionality
+├── build/                     # Production-ready optimized files
+│   ├── styles.min.css         # Minified CSS
+│   └── scripts/               # Minified JS files
+├── styles.css                 # Main stylesheet
+└── index.html                 # Main HTML file
 ```
 
 ## Usage
 
-1. **Navigate between tabs** - Use the "Stories" and "Music" tabs to switch between sections
-2. **Stories Section:**
-   - Select a story from the gallery to begin
-   - Navigate between scenes using the arrow buttons or keyboard (left/right arrows)
-   - Control narration using the audio player
-   - Return to the gallery using the "Go to Gallery" button or Escape key
-3. **Music Section:**
-   - Select a music track to play
-   - Control playback using the music player controls
-   - Navigate between tracks using the player controls
+### Opening the Application
 
-## Settings
+1. Simply open `index.html` in a modern web browser
 
-Click the gear icon to open the settings panel, where you can adjust:
-- **Background Zoom** - Changes the zoom level of the background image
-- **Background Blur** - Adjusts the blur effect on the background
+### Stories
 
-## Development
+1. In the Stories tab, choose a story from the gallery
+2. Navigate through the story using:
+   - The arrow buttons at the bottom
+   - The left/right arrow keys on your keyboard
+   - The audio progress bar with scene indicators
+3. Return to the gallery at any point by clicking "Go to Gallery" or pressing ESC
 
-To add new stories:
-1. Create a new folder in `/stories/` with a unique folder name
-2. Add a `scenes.json` file with the scene data
-3. Add images to the corresponding folder in `/images/`:
-   - Use `cover.jpg` for regular stories
-   - Use `scene0.jpg` for stories marked as "today's special"
-4. Add an entry to `stories.json` with the story details
+### Music
 
-To add new music:
-1. Create a new folder in `/music/` with a unique folder name
-2. Add `audio.mp3` file to this folder (the actual music)
-3. Add `album.jpg` to the same folder (the album cover art)
-4. Optionally create an `info.json` file with metadata
-5. Add the folder name to the `musicTracks` array in `musicPlayer.js`
+1. Switch to the Music tab by clicking the "Music" button in the navigation
+2. Click on any music card to play the track
+3. Use the controls at the bottom to:
+   - Play/pause the music
+   - Skip to previous/next track
+   - Toggle volume on/off
+   - Seek through the track using the progress bar
 
-## Music Track Metadata Format
+### Customization
 
-If you want to add detailed information about your tracks, you can add an optional `info.json` file:
+1. Click the gear icon in the top-right corner to open settings
+2. Adjust the background zoom and blur using the sliders
+3. Toggle between development and production modes
+4. Click "Save Changes" to apply your settings
+
+## Development Guide
+
+### Adding New Stories
+
+1. Create a folder in `images/` with your story name (e.g., `new-story`)
+2. Add a `cover.jpg` for the gallery thumbnail
+3. Add scene images (`scene0.jpg`, `scene1.jpg`, etc.)
+4. Create a JSON file in `stories/` (e.g., `new-story.json`) with the following structure:
+
+```json
+[
+  {
+    "order": 1,
+    "image": "scene0.jpg",
+    "content": "<h1>Story Title</h1><p>Introduction text</p>"
+  },
+  {
+    "order": 2,
+    "image": "scene1.jpg",
+    "content": "<p>Scene 1 text content...</p>"
+  },
+  ...
+]
+```
+
+5. Add your story to the array in the `setupGallery()` function in `main.js`
+
+### Adding New Music Tracks
+
+1. Create a folder in `music/` with your track name (e.g., `new-track`)
+2. Add an `audio.mp3` file for the music
+3. Add an `album.jpg` file for the cover art
+4. Optionally, add an `info.json` file with metadata:
 
 ```json
 {
   "title": "Track Title",
-  "producer": "Producer Name",
+  "artist": "Artist Name",
+  "album": "Album Name",
   "year": "2023",
-  "description": "A brief description of the track"
+  ...
 }
 ```
 
+5. Add your track to the `musicTracks` array in `musicPlayer.js`
+
+### Performance Optimization
+
+The application includes both development and production modes:
+
+- **Development Mode**: Uses unminified CSS and JS for easier debugging
+- **Production Mode**: Uses minified files from the `build/` directory for better performance
+
+To switch between modes:
+1. Open the settings panel (gear icon)
+2. Toggle "Development Mode" on or off
+3. Confirm the page reload
+
+To update the minified files:
+```bash
+# For CSS
+cat styles.css | grep -v "^[[:space:]]*\/\/" | tr -s "\n" | tr -s " " > build/styles.min.css
+
+# For JS
+for file in scripts/*.js; do
+  cat "$file" | grep -v "^[[:space:]]*\/\/" | tr -s "\n" | tr -s " " > "build/${file}"
+done
+```
+
+## Recent Updates
+
+- Added tab navigation for Stories and Music sections
+- Implemented error handling for a more robust experience
+- Added development/production mode toggle for performance optimization
+- Fixed the story loading mechanism to use the correct file paths
+- Improved music player to handle the current folder structure
+- Added global error handling for better user experience
+- Fixed bug causing stories not to load when clicked
+- Ensured the music player displays and plays the Judas track correctly
+- Improved error messages for user clarity
+- Added loading indicators for asynchronous operations
+
+## Browser Compatibility
+
+- Chrome: Full support
+- Firefox: Full support
+- Safari: Full support
+- Edge: Full support
+- Mobile browsers: Optimized for touchscreens
+
 ## Credits
 
-- Fonts: Google Fonts (Poppins, Satisfy)
+- Fonts: Google Fonts (Merriweather, Dancing Script)
 - Icons: Material Icons
-- Background images and audio must be added by the user
+- Background noise texture generated programmatically
 
-Enjoy the special bedtime moments! ♥ 
+## License
+
+All rights reserved. This application is for personal use only. 

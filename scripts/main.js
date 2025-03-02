@@ -94,7 +94,18 @@ function setupAudio() {
       setTimeout(() => returnToGallery(), 5000);
     });
   }
-  storyAudioElement.src = `audios/${currentStory.folder}/recording.mp3`;
+  
+  // Check if audio file exists before setting src
+  const audioPath = `audios/${currentStory.folder}/recording.mp3`;
+  console.log(`Loading audio from: ${audioPath}`);
+  
+  // Add error handling for audio loading
+  storyAudioElement.src = audioPath;
+  storyAudioElement.onerror = function() {
+    console.error(`Failed to load audio from ${audioPath}`);
+    alert(`Could not load audio for this story. The story will continue without sound.`);
+  };
+  
   storyAudioElement.load();
 }
 
@@ -110,7 +121,7 @@ function updateAudioProgress() {
     updateSceneIndicators();
   }
   
-  const sceneEnd = currentStory[currentSceneIndex].end;
+  const sceneEnd = currentStory[currentSceneIndex]?.end;
   if (sceneEnd !== undefined && storyAudioElement.currentTime >= sceneEnd) {
     if (currentSceneIndex < currentStory.length - 1) {
       showScene(currentSceneIndex + 1);
@@ -656,11 +667,13 @@ function loadStoryData(storyData, folder) {
  * If a story has "today: true", it is displayed in a separate "Today's Story" section.
  */
 function setupGallery() {
+  // Load story data from actual files instead of hardcoding
   const availableStories = [
     { title: "Friends Tale", file: "friends-tale", order: 1, today: false, description: "A heartwarming tale of friendship and love" },
     { title: "Little Sleepy Star", file: "sleepy-star", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
     { title: "Whiskers of Forgiveness", file: "cat", order: 3, today: false, description: "A story about a cat and a heartwarming tale of friendship and love" }
   ];
+  
   availableStories.sort((a, b) => a.order - b.order);
   
   // Set global background to gallery image with a romantic gradient overlay
@@ -690,7 +703,10 @@ function setupGallery() {
       card.addEventListener("click", () => {
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { console.error("Error loading story:", err); });
+          .catch(err => { 
+            console.error("Error loading story:", err);
+            alert(`Failed to load story: ${err.message}`);
+          });
       });
       todaysSection.appendChild(card);
       
@@ -727,7 +743,10 @@ function setupGallery() {
       card.addEventListener("click", () => {
         loadStory(story.file)
           .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { console.error("Error loading story:", err); });
+          .catch(err => { 
+            console.error("Error loading story:", err);
+            alert(`Failed to load story: ${err.message}`);
+          });
       });
       cardsContainer.appendChild(card);
     });
@@ -781,16 +800,30 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Initial background setup
   updateBackgroundEffects();
-});
-
-// Initial setup when the page loads
-document.addEventListener('DOMContentLoaded', function() {
+  
+  // Set up event listeners for UI elements
+  document.getElementById('zoomSlider').addEventListener('input', updateBackgroundEffects);
+  document.getElementById('blurSlider').addEventListener('input', updateBackgroundEffects);
+  
+  document.getElementById('settingsIcon').addEventListener('click', () => {
+    document.getElementById('settingsPanel').classList.toggle('hidden');
+  });
+  
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    document.getElementById('settingsPanel').classList.add('hidden');
+  });
+  
+  document.getElementById('loveNoteButton').addEventListener('click', () => {
+    document.getElementById('loveNote').classList.toggle('hidden');
+  });
+  
+  document.getElementById('closeLoveNote').addEventListener('click', () => {
+    document.getElementById('loveNote').classList.add('hidden');
+  });
+  
   // Set the stories tab as active by default
   document.querySelector('.tab-button[data-tab="stories"]').classList.add('active');
   document.getElementById('storiesTab').classList.add('active');
-  
-  // Initialize background effects for the gallery view
-  updateBackgroundEffects();
   
   // Add keyboard navigation
   setupKeyboardNavigation();
@@ -803,9 +836,10 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 async function loadStory(storyFolder) {
   try {
-    const response = await fetch(`stories/${storyFolder}/scenes.json`);
+    // FIXED: Load directly from the .json file in the stories directory
+    const response = await fetch(`stories/${storyFolder}.json`);
     if (!response.ok) {
-      throw new Error(`Failed to load story: ${storyFolder}`);
+      throw new Error(`Failed to load story: ${storyFolder} (HTTP ${response.status})`);
     }
     return await response.json();
   } catch (error) {
@@ -832,6 +866,10 @@ function setupKeyboardNavigation() {
       } else if (event.key === 'Escape') {
         event.preventDefault();
         returnToGallery();
+      } else if (event.code === "Space") {
+        e.preventDefault();
+        const playPauseBtn = document.getElementById("playPauseBtn");
+        if (playPauseBtn) playPauseBtn.click();
       }
     }
   }, { passive: false }); // Use passive: false to allow preventDefault

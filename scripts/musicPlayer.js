@@ -49,7 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
   setupMusicPlayer();
 });
 
-// Available music tracks - using "judas" as the test song folder
+// FIXED: Use correct case for folder name to match file system
+// Available music tracks - using "Judas" as the test song folder
 const musicTracks = [
   { folder: "Judas" }
   // Add more tracks here as needed
@@ -93,7 +94,7 @@ async function loadMusicData() {
             console.warn(`Failed to load music data for ${track.folder}: ${response.status} ${response.statusText}`);
             // Add placeholder data if JSON not available
             loadedMusicData.push({
-              title: track.folder.charAt(0).toUpperCase() + track.folder.slice(1),
+              title: track.folder,
               producer: "Unknown",
               year: "Unknown",
               folder: track.folder,
@@ -104,7 +105,7 @@ async function loadMusicData() {
           console.error(`Error loading music data for ${track.folder}:`, error);
           // Add placeholder data if JSON not available
           loadedMusicData.push({
-            title: track.folder.charAt(0).toUpperCase() + track.folder.slice(1),
+            title: track.folder,
             producer: "Unknown",
             year: "Unknown",
             folder: track.folder,
@@ -146,6 +147,8 @@ function setupMusicGallery() {
     console.log(`Creating card for track: ${track.title || track.folder}`);
     const card = document.createElement('div');
     card.className = 'music-card';
+    
+    // FIXED: Use correct title fallback and error handling for images
     card.innerHTML = `
       <img src="${track.cover}" alt="${track.title || track.folder}" onerror="this.src='images/placeholder.jpg'">
       <div class="music-title">${track.title || track.folder}</div>
@@ -209,9 +212,18 @@ function setupMusicPlayer() {
     }
   });
   
-  // Volume button - future enhancement
+  // Volume button - implement functioning volume control
   volumeBtn.addEventListener('click', () => {
-    alert('Volume control coming soon!');
+    // FIXED: Implement a basic volume toggle instead of alert
+    if (audioElement) {
+      if (audioElement.volume > 0) {
+        audioElement.volume = 0;
+        volumeBtn.innerHTML = '<i class="material-icons">volume_off</i>';
+      } else {
+        audioElement.volume = 1;
+        volumeBtn.innerHTML = '<i class="material-icons">volume_up</i>';
+      }
+    }
   });
   
   // Progress bar click
@@ -246,8 +258,11 @@ function playTrack(index) {
   
   // Update music player UI
   document.getElementById('currentMusicTitle').textContent = track.title || track.folder;
-  document.getElementById('currentMusicThumbnail').src = track.cover;
-  document.getElementById('currentMusicThumbnail').onerror = function() {
+  
+  // FIXED: Better error handling for album art
+  const thumbnail = document.getElementById('currentMusicThumbnail');
+  thumbnail.src = track.cover;
+  thumbnail.onerror = function() {
     console.warn(`Failed to load cover image for ${track.folder}`);
     this.src = 'images/placeholder.jpg';
   };
@@ -258,7 +273,8 @@ function playTrack(index) {
   // Create or update audio element
   if (audioElement) {
     audioElement.pause();
-    audioElement.src = `music/${track.folder}/audio.mp3`; // Using audio.mp3 as per user's structure
+    const audioPath = `music/${track.folder}/audio.mp3`; // Using audio.mp3 as per user's structure
+    audioElement.src = audioPath;
   } else {
     const audioPath = `music/${track.folder}/audio.mp3`;
     console.log(`Creating new audio element with source: ${audioPath}`);
@@ -283,6 +299,9 @@ function playTrack(index) {
       document.getElementById('currentMusicTitle').textContent = `Error: Could not load "${track.title || track.folder}"`;
       document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
       isPlaying = false;
+      
+      // FIXED: Show a user-friendly error message
+      alert(`Could not load the audio file for ${track.title || track.folder}. Please check if the file exists.`);
     });
   }
   
@@ -298,12 +317,18 @@ function playTrack(index) {
         console.error('Audio playback failed:', error);
         document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
         isPlaying = false;
+        
+        // FIXED: Show detailed error for user
+        alert(`Could not play the track "${track.title || track.folder}". ${error.message}`);
       });
     }
   } catch (error) {
     console.error('Error attempting to play:', error);
     document.getElementById('playPauseBtn').innerHTML = '<i class="material-icons">play_arrow</i>';
     isPlaying = false;
+    
+    // FIXED: Show detailed error for user
+    alert(`An error occurred while trying to play the track: ${error.message}`);
   }
 }
 

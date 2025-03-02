@@ -1207,3 +1207,138 @@ html, body {
     font-size: 0.9rem;
   }
 }
+
+/* Dev Mode Toggle */
+.toggle-container {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-container label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle-container input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 50px;
+  height: 24px;
+  background-color: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  position: relative;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-container input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.toggle-container input[type="checkbox"]:checked {
+  background-color: rgba(255,182,193,0.8);
+}
+
+.toggle-container input[type="checkbox"]:checked::before {
+  left: 28px;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  margin-right: auto;
+}
+
+/* Error Container */
+#errorContainer {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  background-color: rgba(220,20,60,0.8);
+  backdrop-filter: blur(10px);
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+  animation: slideDown 0.5s ease;
+}
+
+.error-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.error-content p {
+  margin-bottom: 15px;
+}
+
+#dismissError {
+  background-color: rgba(255,255,255,0.3);
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#dismissError:hover {
+  background-color: rgba(255,255,255,0.4);
+  transform: translateY(-2px);
+}
+
+/* Loading Indicator */
+#loadingIndicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: rgb(255,182,193);
+  animation: spin 1s linear infinite;
+}
+
+#loadingIndicator p {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: white;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-50px) translateX(-50%); opacity: 0; }
+  to { transform: translateY(0) translateX(-50%); opacity: 1; }
+}
