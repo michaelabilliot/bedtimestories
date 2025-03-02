@@ -188,80 +188,114 @@ function formatDate(dateString) {
 function playTrack(track) {
   if (!track) return;
   
-  currentTrack = track;
-  
-  // Get the containers
-  const musicCardsContainer = document.getElementById('musicCards');
-  const playerContainer = document.getElementById('musicPlayerContainer');
-  const playerContent = document.getElementById('musicPlayerContent');
-  const header = document.querySelector('.music-header');
-  
-  if (!musicCardsContainer || !playerContainer || !playerContent) {
-    console.error('Required containers not found');
-    return;
-  }
-  
-  // Hide the cards and show the player
-  musicCardsContainer.classList.add('hidden');
-  if (header) header.classList.add('hidden');
-  playerContainer.classList.remove('hidden');
-  
-  // Create the player content
-  playerContent.innerHTML = `
-    <div class="now-playing">
-      <div class="album-cover">
-        <img src="music/${track.folder}/album.jpg" alt="${track.title} Album Cover">
+  // Load detailed track information
+  loadDetailedTrackInfo(track).then(detailedTrack => {
+    currentTrack = detailedTrack;
+    
+    // Get the containers
+    const musicCardsContainer = document.getElementById('musicCards');
+    const playerContainer = document.getElementById('musicPlayerContainer');
+    const playerContent = document.getElementById('musicPlayerContent');
+    const header = document.querySelector('.music-header');
+    
+    if (!musicCardsContainer || !playerContainer || !playerContent) {
+      console.error('Required containers not found');
+      return;
+    }
+    
+    // Hide the cards and show the player
+    musicCardsContainer.classList.add('hidden');
+    playerContainer.classList.remove('hidden');
+    header.classList.add('hidden');
+    
+    // Set up the player content
+    playerContent.innerHTML = `
+      <div class="album-cover-container">
+        <img src="music/${detailedTrack.folder}/album.jpg" alt="${detailedTrack.title} Album Cover" class="album-cover">
       </div>
       <div class="track-info">
-        <h2>${track.title}</h2>
-        <p class="artist">${track.artist || 'Unknown Artist'}</p>
-        <p class="album">${track.album || ''}</p>
-        <p class="description">${track.description || ''}</p>
-        <p class="producer">Producer: ${track.producer || 'Unknown'}</p>
-        <p class="date">Released: ${formatDate(track.date)}</p>
-      </div>
-    </div>
-    <div class="player-controls">
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div id="musicProgressBar" class="progress"></div>
-        </div>
-        <div class="time-display">
-          <span id="currentTime">0:00</span>
-          <span id="totalTime">0:00</span>
+        <h2 class="track-title">${detailedTrack.title}</h2>
+        <p class="artist-name">${detailedTrack.artist || 'Unknown Artist'}</p>
+        <p class="album-name">${detailedTrack.album || ''}</p>
+        <p class="description">${detailedTrack.description || ''}</p>
+        <div class="additional-info">
+          <p class="producer">Producer: ${detailedTrack.producer || 'Unknown'}</p>
+          <p class="release-date">Released: ${formatDate(detailedTrack.date)}</p>
+          ${detailedTrack.genre ? `<p class="genre">Genre: ${detailedTrack.genre}</p>` : ''}
+          ${detailedTrack.mood ? `<p class="mood">Mood: ${detailedTrack.mood}</p>` : ''}
         </div>
       </div>
-      <div class="control-buttons">
-        <button id="prevTrackBtn" class="control-button" disabled>
-          <span class="material-icons">skip_previous</span>
-        </button>
-        <button id="playPauseBtn" class="control-button play-pause">
-          <span class="material-icons">play_arrow</span>
-        </button>
-        <button id="nextTrackBtn" class="control-button" disabled>
-          <span class="material-icons">skip_next</span>
-        </button>
-        <button id="volumeBtn" class="control-button">
-          <span class="material-icons">volume_up</span>
-        </button>
+      <div class="player-controls">
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span>/</span>
+            <span id="totalTime">0:00</span>
+          </div>
+        </div>
+        <div class="control-buttons">
+          <button id="prevBtn" class="control-button" disabled>
+            <span class="material-icons">skip_previous</span>
+          </button>
+          <button id="playPauseBtn" class="control-button" disabled>
+            <span class="material-icons">play_arrow</span>
+          </button>
+          <button id="nextBtn" class="control-button" disabled>
+            <span class="material-icons">skip_next</span>
+          </button>
+          <button id="volumeBtn" class="control-button">
+            <span class="material-icons">volume_up</span>
+          </button>
+          <div id="volumeControl" class="volume-control hidden">
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.7">
+          </div>
+        </div>
       </div>
-      <div id="volumeControl" class="volume-control hidden">
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.7">
-      </div>
-    </div>
-  `;
-  
-  // Add proper error handling for the album cover image
-  const albumImg = playerContent.querySelector('.album-cover img');
-  if (albumImg) {
-    albumImg.onerror = function() {
-      this.onerror = null;
-      this.src = 'images/default-album.jpg';
-    };
+    `;
+    
+    // Add error handling for the album cover
+    const albumCover = playerContent.querySelector('.album-cover');
+    if (albumCover) {
+      albumCover.onerror = function() {
+        this.onerror = null;
+        this.src = 'images/default-album.jpg';
+      };
+    }
+    
+    // Set up the audio player
+    setupMusicPlayer(detailedTrack);
+  }).catch(error => {
+    console.error('Error loading detailed track info:', error);
+    // Fall back to using the basic track info
+    currentTrack = track;
+    // Continue with the rest of the function using the basic track info
+    // ... (similar code as above but using track instead of detailedTrack)
+  });
+}
+
+/**
+ * Load detailed track information from the track's folder
+ * @param {Object} track - The basic track data from index.json
+ * @returns {Promise<Object>} - Promise resolving to the detailed track data
+ */
+async function loadDetailedTrackInfo(track) {
+  try {
+    const response = await fetch(`music/${track.folder}/music.json`);
+    if (!response.ok) {
+      throw new Error(`Failed to load detailed track info: ${response.status} ${response.statusText}`);
+    }
+    
+    const detailedTrack = await response.json();
+    // Merge the detailed track data with the basic track data
+    return { ...track, ...detailedTrack };
+  } catch (error) {
+    console.error('Error loading detailed track info:', error);
+    // Return the original track data if there's an error
+    return track;
   }
-  
-  // Set up the audio player
-  setupMusicPlayer(track);
 }
 
 /**
@@ -345,6 +379,26 @@ function setupPlayerControls() {
     playPauseBtn.addEventListener('click', togglePlayPause);
   }
   
+  // Previous and Next buttons
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  
+  // Currently we only have one track, so these buttons are disabled
+  // But we'll add the event listeners for future implementation
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      // Implement previous track functionality in the future
+      console.log('Previous track button clicked');
+    });
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      // Implement next track functionality in the future
+      console.log('Next track button clicked');
+    });
+  }
+  
   // Volume button and slider
   const volumeBtn = document.getElementById('volumeBtn');
   const volumeControl = document.getElementById('volumeControl');
@@ -425,7 +479,7 @@ function togglePlayPause() {
 function updateProgress() {
   if (!musicPlayer) return;
   
-  const progressBar = document.getElementById('musicProgressBar');
+  const progressBar = document.querySelector('.progress-bar .progress-fill');
   const currentTimeEl = document.getElementById('currentTime');
   const totalTimeEl = document.getElementById('totalTime');
   
