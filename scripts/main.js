@@ -657,9 +657,9 @@ function loadStoryData(storyData, folder) {
  */
 function setupGallery() {
   const availableStories = [
-    { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/scene0.jpg", order: 1, today: false, description: "A heartwarming tale of friendship and love" },
-    { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
-    { title: "Whiskers of Forgiveness", file: "cat", cover: "images/cat/cover.jpg", order: 3, today: false, description: "A story about a cat and a heartwarming tale of friendship and love" }
+    { title: "Friends Tale", file: "friends-tale", order: 1, today: false, description: "A heartwarming tale of friendship and love" },
+    { title: "Little Sleepy Star", file: "sleepy-star", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
+    { title: "Whiskers of Forgiveness", file: "cat", order: 3, today: false, description: "A story about a cat and a heartwarming tale of friendship and love" }
   ];
   availableStories.sort((a, b) => a.order - b.order);
   
@@ -678,10 +678,13 @@ function setupGallery() {
     todaysSection.className = "todays-story-section";
     todaysSection.innerHTML = "<h2>Tonight's Special</h2>";
     todaysStories.forEach(story => {
+      // Use scene0.jpg for today's story as requested
+      const coverImage = `images/${story.file}/scene0.jpg`;
+      
       const card = document.createElement("div");
       card.className = "story-card todays-story";
       card.innerHTML = `
-        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <img src="${coverImage}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
@@ -712,10 +715,13 @@ function setupGallery() {
     cardsContainer.className = "story-cards-row";
     
     otherStories.forEach(story => {
+      // Use cover.jpg for regular stories as requested
+      const coverImage = `images/${story.file}/cover.jpg`;
+      
       const card = document.createElement("div");
       card.className = "story-card";
       card.innerHTML = `
-        <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
+        <img src="${coverImage}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {

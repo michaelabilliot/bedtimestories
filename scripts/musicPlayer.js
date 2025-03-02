@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // If switching to music tab, load music content
       if (tabId === 'music') {
-        setupMusicGallery();
-        document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(147,112,219,0.3), rgba(255,182,193,0.3)), url('images/music/background.jpg')";
+        loadMusicData();
+        document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(147,112,219,0.3), rgba(255,182,193,0.3)), url('images/music.jpg')";
       } else {
         // If switching to stories, reset the background if not in a story
         if (document.getElementById('gameContainer').classList.contains('hidden')) {
@@ -45,39 +45,14 @@ document.addEventListener('DOMContentLoaded', function() {
   setupMusicPlayer();
 });
 
-// Available music tracks
+// Available music tracks - using "judas" as the test song folder
 const musicTracks = [
-  { 
-    title: "Gentle Lullaby", 
-    file: "lullaby", 
-    cover: "images/music/lullaby.jpg" 
-  },
-  { 
-    title: "Ocean Waves", 
-    file: "ocean", 
-    cover: "images/music/ocean.jpg" 
-  },
-  { 
-    title: "Soft Piano", 
-    file: "piano", 
-    cover: "images/music/piano.jpg" 
-  },
-  { 
-    title: "Night Rain", 
-    file: "rain", 
-    cover: "images/music/rain.jpg" 
-  },
-  { 
-    title: "Forest Sounds", 
-    file: "forest", 
-    cover: "images/music/forest.jpg" 
-  },
-  { 
-    title: "Peaceful Meditation", 
-    file: "meditation", 
-    cover: "images/music/meditation.jpg" 
-  }
+  { folder: "judas" }
+  // Add more tracks here as needed
 ];
+
+// Loaded music data
+let loadedMusicData = [];
 
 // Current track variables
 let audioElement = null;
@@ -85,31 +60,87 @@ let currentTrackIndex = -1;
 let isPlaying = false;
 
 /**
+ * Loads music data from JSON files in each music folder
+ */
+async function loadMusicData() {
+  const musicCardsContainer = document.getElementById('musicCards');
+  
+  // Only populate if empty
+  if (musicCardsContainer.innerHTML === '') {
+    try {
+      // Load each music track data
+      loadedMusicData = [];
+      
+      for (const track of musicTracks) {
+        try {
+          const response = await fetch(`music/${track.folder}/info.json`);
+          if (response.ok) {
+            const data = await response.json();
+            loadedMusicData.push({
+              ...data,
+              folder: track.folder,
+              cover: `music/${track.folder}/album.jpg` // Using album.jpg as per user's structure
+            });
+          } else {
+            console.error(`Failed to load music data for ${track.folder}`);
+            // Add placeholder data if JSON not available
+            loadedMusicData.push({
+              title: track.folder.charAt(0).toUpperCase() + track.folder.slice(1),
+              producer: "Unknown",
+              year: "Unknown",
+              folder: track.folder,
+              cover: `music/${track.folder}/album.jpg` // Using album.jpg as per user's structure
+            });
+          }
+        } catch (error) {
+          console.error(`Error loading music data for ${track.folder}:`, error);
+          // Add placeholder data if JSON not available
+          loadedMusicData.push({
+            title: track.folder.charAt(0).toUpperCase() + track.folder.slice(1),
+            producer: "Unknown",
+            year: "Unknown",
+            folder: track.folder,
+            cover: `music/${track.folder}/album.jpg` // Using album.jpg as per user's structure
+          });
+        }
+      }
+      
+      // Now populate the music gallery with the loaded data
+      setupMusicGallery();
+    } catch (error) {
+      console.error("Error loading music data:", error);
+      musicCardsContainer.innerHTML = `<p class="error">Failed to load music data: ${error.message}</p>`;
+    }
+  }
+}
+
+/**
  * Sets up the music gallery with available tracks
  */
 function setupMusicGallery() {
   const musicCardsContainer = document.getElementById('musicCards');
   
-  // Only populate if empty
-  if (musicCardsContainer.innerHTML === '') {
-    musicTracks.forEach((track, index) => {
-      const card = document.createElement('div');
-      card.className = 'music-card';
-      card.innerHTML = `
-        <img src="${track.cover}" alt="${track.title}">
-        <div class="music-title">${track.title}</div>
-        <div class="play-button">
-          <i class="material-icons">play_arrow</i>
-        </div>
-      `;
-      
-      card.addEventListener('click', () => {
-        playTrack(index);
-      });
-      
-      musicCardsContainer.appendChild(card);
+  // Clear any existing content
+  musicCardsContainer.innerHTML = '';
+  
+  // Create a card for each track
+  loadedMusicData.forEach((track, index) => {
+    const card = document.createElement('div');
+    card.className = 'music-card';
+    card.innerHTML = `
+      <img src="${track.cover}" alt="${track.title}">
+      <div class="music-title">${track.title}</div>
+      <div class="play-button">
+        <i class="material-icons">play_arrow</i>
+      </div>
+    `;
+    
+    card.addEventListener('click', () => {
+      playTrack(index);
     });
-  }
+    
+    musicCardsContainer.appendChild(card);
+  });
 }
 
 /**
@@ -144,13 +175,13 @@ function setupMusicPlayer() {
     if (currentTrackIndex > 0) {
       playTrack(currentTrackIndex - 1);
     } else {
-      playTrack(musicTracks.length - 1); // Loop to last track
+      playTrack(loadedMusicData.length - 1); // Loop to last track
     }
   });
   
   // Next track button
   nextTrackBtn.addEventListener('click', () => {
-    if (currentTrackIndex < musicTracks.length - 1) {
+    if (currentTrackIndex < loadedMusicData.length - 1) {
       playTrack(currentTrackIndex + 1);
     } else {
       playTrack(0); // Loop to first track
@@ -178,11 +209,11 @@ function setupMusicPlayer() {
  */
 function playTrack(index) {
   // Validate index
-  if (index < 0 || index >= musicTracks.length) return;
+  if (index < 0 || index >= loadedMusicData.length) return;
   
   // Update current track index
   currentTrackIndex = index;
-  const track = musicTracks[index];
+  const track = loadedMusicData[index];
   
   // Show music player
   const musicPlayer = document.getElementById('musicPlayer');
@@ -198,9 +229,9 @@ function playTrack(index) {
   // Create or update audio element
   if (audioElement) {
     audioElement.pause();
-    audioElement.src = `audio/${track.file}.mp3`;
+    audioElement.src = `music/${track.folder}/audio.mp3`; // Using audio.mp3 as per user's structure
   } else {
-    audioElement = new Audio(`audio/${track.file}.mp3`);
+    audioElement = new Audio(`music/${track.folder}/audio.mp3`); // Using audio.mp3 as per user's structure
     
     // Setup time update event for progress bar
     audioElement.addEventListener('timeupdate', updateProgress);
@@ -208,7 +239,7 @@ function playTrack(index) {
     // Setup ended event
     audioElement.addEventListener('ended', () => {
       // Play next track when current one ends
-      if (currentTrackIndex < musicTracks.length - 1) {
+      if (currentTrackIndex < loadedMusicData.length - 1) {
         playTrack(currentTrackIndex + 1);
       } else {
         playTrack(0); // Loop to first track
