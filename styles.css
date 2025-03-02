@@ -419,11 +419,13 @@ html, body {
   z-index: 5;
   background: transparent;
   animation: fadeIn 0.8s ease;
+  overflow-y: auto; /* Enable vertical scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 #game {
   position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   padding: 20px;
   display: flex;
   align-items: center;
@@ -444,9 +446,9 @@ html, body {
   padding: 30px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   color: #fff;
-  overflow: auto;
   z-index: 2;
   border: 1px solid rgba(255,255,255,0.2);
+  margin: 20px 0; /* Add margin to ensure space at top and bottom */
 }
 
 /* Scene content elements transition individually */
@@ -548,6 +550,7 @@ html, body {
   background-color: rgb(255 182 193 / 65%);
   position: relative;
   margin-top: 20px;
+  margin-bottom: 20px; /* Add bottom margin to ensure space */
   border-radius: 20px;
   padding: 20px;
   display: flex;
@@ -668,16 +671,18 @@ html, body {
 
 /* "Today's Story" card override to force a 16:9 ratio */
 .todays-story {
-  width: 600px;
+  width: 700px;
+  max-width: 90%;
   aspect-ratio: 16 / 9;
   border-radius: 20px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   transition: all 0.4s ease;
   overflow: hidden;
   position: relative;
+  transform: scale(1.05);
 }
 .todays-story:hover {
-  transform: translateY(-10px);
+  transform: translateY(-10px) scale(1.1);
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
@@ -793,6 +798,8 @@ html, body {
   }
   #audioPlayer {
     padding: 15px;
+    margin-bottom: 30px; /* Increased bottom margin on mobile */
+    position: relative; /* Ensure it's in the normal flow */
   }
   #audioControls {
     gap: 15px;
@@ -804,8 +811,12 @@ html, body {
     font-size: 20px;
   }
   .todays-story {
-    width: 90%;
-    max-width: 400px; /* Add max-width for better control */
+    width: 95%;
+    max-width: 500px;
+    transform: scale(1);
+  }
+  .todays-story:hover {
+    transform: translateY(-5px);
   }
   /* Ensure the Today's Story image behaves consistently on mobile */
   .todays-story img {
