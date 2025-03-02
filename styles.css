@@ -457,6 +457,7 @@ html, body {
   margin-bottom: 30px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   z-index: 3;
+  text-align: justify; /* Add justified text alignment */
 }
 
 .scene-content h1 {
@@ -464,10 +465,12 @@ html, body {
   margin-bottom: 20px;
   font-weight: normal;
   letter-spacing: 1px;
+  text-align: center; /* Keep headings centered */
 }
 
 .scene-content p {
   margin-bottom: 20px;
+  text-align: justify; /* Ensure paragraphs are justified */
 }
 
 /* Image container to properly handle transitions */
@@ -776,6 +779,10 @@ html, body {
   }
   .scene-content {
     font-size: 1.1rem;
+    text-align: justify; /* Maintain justified text on tablets */
+    hyphens: auto; /* Add hyphenation for better text flow on smaller screens */
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
   }
   .scene-content h1 {
     font-size: 1.8rem;
@@ -845,6 +852,10 @@ html, body {
   }
   .scene-content {
     font-size: 1rem;
+    text-align: justify; /* Maintain justified text on mobile */
+    hyphens: auto; /* Add hyphenation for better text flow on smaller screens */
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
   }
   .scene {
     padding: 15px;
