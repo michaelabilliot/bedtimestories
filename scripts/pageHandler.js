@@ -1,7 +1,7 @@
 /**
  * pageHandler.js
  * Master handler for managing page navigation between different sections
- * (stories, music, games, and future sections)
+ * (stories, music, and future sections)
  */
 
 // Track the current active page
@@ -38,7 +38,7 @@ function setupNavigation() {
 
 /**
  * Show the specified page and hide all others
- * @param {string} pageName - The name of the page to show ('stories', 'music', 'games', etc.)
+ * @param {string} pageName - The name of the page to show ('stories', 'music', etc.)
  */
 function showPage(pageName) {
   // Update the current page tracker
@@ -100,15 +100,6 @@ function showPage(pageName) {
       // Set a dark background for the music page
       document.getElementById('globalBackground').style.backgroundImage = 
         "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(30,30,30,0.7)), url('images/music-bg.jpg')";
-    } else if (pageName === 'games') {
-      // If we're showing the games page, call the setupGamesGallery function
-      if (typeof setupGamesGallery === 'function') {
-        setupGamesGallery();
-      }
-      
-      // Set a colorful background for the games page
-      document.getElementById('globalBackground').style.backgroundImage = 
-        "linear-gradient(to bottom, rgba(70,130,180,0.6), rgba(106,90,205,0.6)), url('images/games-bg.jpg')";
     }
     
     // Apply background effects
