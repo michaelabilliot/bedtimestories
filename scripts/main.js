@@ -805,17 +805,14 @@ function setupMemoriesPage() {
         const entryElement = document.createElement('div');
         entryElement.className = 'timeline-entry';
         
-        // Add the dot and connector
+        // Add the dot
         const dotElement = document.createElement('div');
         dotElement.className = 'timeline-dot';
-        
-        const connectorElement = document.createElement('div');
-        connectorElement.className = 'timeline-connector';
         
         // Create the content
         const contentElement = document.createElement('div');
         contentElement.className = 'timeline-entry-content';
-        contentElement.style.animationDelay = `${memory.order * 0.2}s`;
+        contentElement.style.animationDelay = `${0.1 + (memory.order * 0.05)}s`;
         
         // Add date, title, and description
         const dateElement = document.createElement('span');
@@ -835,7 +832,6 @@ function setupMemoriesPage() {
         
         // Add all elements to the entry
         entryElement.appendChild(dotElement);
-        entryElement.appendChild(connectorElement);
         entryElement.appendChild(contentElement);
         
         // Insert the entry before the placeholder

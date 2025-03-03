@@ -1,38 +1,218 @@
 [
   {
     "order": 1,
-    "title": "Our first time meeting",
-    "description": "Our story began in the Socialize VC. I remember feeling an instant connection that I couldn't explain.",
+    "title": "The first time we met in the socialise vc",
+    "description": "PLACEHOLDER",
     "date": "The beginning"
   },
   {
     "order": 2,
-    "title": "Our first private call",
-    "description": "Just us, talking for hours. Time seemed to stand still as we got to know each other better.",
-    "date": "A new chapter"
+    "title": "Finding out we both like Jujutsu Kaisen and Gojo",
+    "description": "PLACEHOLDER",
+    "date": "Shared interests"
   },
   {
     "order": 3,
-    "title": "Our first \"I love you\"",
-    "description": "The words felt so natural, as if they'd been waiting to be said all along. I'll never forget the way my heart raced.",
-    "date": "A special moment"
+    "title": "Exchanging I love yous even if it started playfully",
+    "description": "PLACEHOLDER",
+    "date": "Growing closer"
   },
   {
     "order": 4,
-    "title": "First time missing you",
-    "description": "Distance has never felt so tangible. Even when we're apart, you're always in my thoughts and in my heart.",
-    "date": "The hardest part"
+    "title": "Giving each other pet names like dad and kitty",
+    "description": "PLACEHOLDER",
+    "date": "Playful affection"
   },
   {
     "order": 5,
-    "title": "Our first argument",
-    "description": "Every relationship has its challenges. Working through this together only made us stronger.",
-    "date": "Growing together"
+    "title": "Planning to get matching profile pictures",
+    "description": "PLACEHOLDER",
+    "date": "Coming together"
   },
   {
     "order": 6,
-    "title": "Our song",
-    "description": "Whenever I hear it, I'm transported back to all our special moments together.",
-    "date": "Our soundtrack"
+    "title": "Making plans to watch a show together",
+    "description": "PLACEHOLDER",
+    "date": "Future experiences"
+  },
+  {
+    "order": 7,
+    "title": "Sharing personal preferences and insecurities",
+    "description": "PLACEHOLDER",
+    "date": "Building trust"
+  },
+  {
+    "order": 8,
+    "title": "Planning an act of kindness to show his love",
+    "description": "PLACEHOLDER",
+    "date": "Thoughtfulness"
+  },
+  {
+    "order": 9,
+    "title": "Discovering our shared interest in Bungo Stray Dogs",
+    "description": "PLACEHOLDER",
+    "date": "Anime fans"
+  },
+  {
+    "order": 10,
+    "title": "Laughing together at random things online",
+    "description": "PLACEHOLDER",
+    "date": "Shared humor"
+  },
+  {
+    "order": 11,
+    "title": "Dreaming about our future together",
+    "description": "PLACEHOLDER",
+    "date": "Future dreams"
+  },
+  {
+    "order": 12,
+    "title": "Comforting each other during tough family situations",
+    "description": "PLACEHOLDER",
+    "date": "Being there"
+  },
+  {
+    "order": 13,
+    "title": "Watching The Notebook together",
+    "description": "PLACEHOLDER",
+    "date": "Movie night"
+  },
+  {
+    "order": 14,
+    "title": "Giving each other compliments",
+    "description": "PLACEHOLDER",
+    "date": "Appreciation"
+  },
+  {
+    "order": 15,
+    "title": "Making plans for future dates",
+    "description": "PLACEHOLDER",
+    "date": "Looking ahead"
+  },
+  {
+    "order": 16,
+    "title": "Me planning an act of kindness to show my love",
+    "description": "PLACEHOLDER",
+    "date": "Special surprise"
+  },
+  {
+    "order": 17,
+    "title": "Emir reading me bedtime stories",
+    "description": "PLACEHOLDER",
+    "date": "Sweet dreams"
+  },
+  {
+    "order": 18,
+    "title": "Sharing personal insecurities",
+    "description": "PLACEHOLDER",
+    "date": "Vulnerability"
+  },
+  {
+    "order": 19,
+    "title": "Watching a movie and discussing our reactions",
+    "description": "PLACEHOLDER",
+    "date": "Deep conversations"
+  },
+  {
+    "order": 20,
+    "title": "Sharing jokes",
+    "description": "PLACEHOLDER",
+    "date": "Laughter"
+  },
+  {
+    "order": 21,
+    "title": "Discussing personal interests together",
+    "description": "PLACEHOLDER",
+    "date": "Learning about each other"
+  },
+  {
+    "order": 22,
+    "title": "Comforting each other",
+    "description": "PLACEHOLDER",
+    "date": "Emotional support"
+  },
+  {
+    "order": 23,
+    "title": "Playing online games together",
+    "description": "PLACEHOLDER",
+    "date": "Game time"
+  },
+  {
+    "order": 24,
+    "title": "Expressing love and affection frequently",
+    "description": "PLACEHOLDER",
+    "date": "Constant love"
+  },
+  {
+    "order": 25,
+    "title": "Sharing a song together",
+    "description": "PLACEHOLDER",
+    "date": "Our melody"
+  },
+  {
+    "order": 26,
+    "title": "Sharing personal stories and experiences",
+    "description": "PLACEHOLDER",
+    "date": "Getting to know you"
+  },
+  {
+    "order": 27,
+    "title": "Talking about future plans",
+    "description": "PLACEHOLDER",
+    "date": "Our future"
+  },
+  {
+    "order": 28,
+    "title": "Listening to voice messages together",
+    "description": "PLACEHOLDER",
+    "date": "Your voice"
+  },
+  {
+    "order": 29,
+    "title": "Expressing a desire for a physical relationship",
+    "description": "PLACEHOLDER",
+    "date": "Closer together"
+  },
+  {
+    "order": 30,
+    "title": "Making future plans together",
+    "description": "PLACEHOLDER",
+    "date": "Dreams and goals"
+  },
+  {
+    "order": 31,
+    "title": "Watching a movie together",
+    "description": "PLACEHOLDER",
+    "date": "Cinema night"
+  },
+  {
+    "order": 32,
+    "title": "Comforting each other",
+    "description": "PLACEHOLDER",
+    "date": "Always there"
+  },
+  {
+    "order": 33,
+    "title": "Discussing shared interests in anime",
+    "description": "PLACEHOLDER",
+    "date": "Anime lovers"
+  },
+  {
+    "order": 34,
+    "title": "Giving each other words of affection",
+    "description": "PLACEHOLDER",
+    "date": "Sweet words"
+  },
+  {
+    "order": 35,
+    "title": "Discussing personal interests",
+    "description": "PLACEHOLDER",
+    "date": "Learning more"
+  },
+  {
+    "order": 36,
+    "title": "Playing Roblox together",
+    "description": "PLACEHOLDER",
+    "date": "Gaming connection"
   }
 ] 
