@@ -115,6 +115,12 @@ function setupGamesGallery() {
       gameContainer.classList.add('hidden');
       gameCardsContainer.classList.remove('hidden');
       header.classList.remove('hidden');
+      
+      // Show navigation tabs when returning to gallery
+      const navigationTabs = document.getElementById('navigationTabs');
+      if (navigationTabs) {
+        navigationTabs.classList.remove('hidden');
+      }
     });
   }
 }
@@ -192,53 +198,29 @@ function loadGame(game) {
   const gameContainer = document.getElementById('gamePlayerContainer');
   const gameContent = document.getElementById('gamePlayerContent');
   const header = document.querySelector('.games-header');
+  const navigationTabs = document.getElementById('navigationTabs');
   
   if (!gameCardsContainer || !gameContainer || !gameContent) {
     console.error('Required containers not found');
     return;
   }
   
-  // Hide the cards and show the game
+  // Hide the cards, navigation tabs, and show the game
   gameCardsContainer.classList.add('hidden');
   gameContainer.classList.remove('hidden');
   header.classList.add('hidden');
   
-  // Load the game details
-  loadGameDetails(game).then(gameDetails => {
-    // Set up the game content
-    gameContent.innerHTML = `
-      <div class="game-info">
-        <h2 class="game-title">${gameDetails.title}</h2>
-        <p class="game-description">${gameDetails.description || ''}</p>
-        <div class="additional-info">
-          <p class="developer">Developer: ${gameDetails.developer || 'Unknown'}</p>
-          <p class="release-date">Released: ${formatDate(gameDetails.date)}</p>
-          ${gameDetails.genre ? `<p class="genre">Genre: ${gameDetails.genre}</p>` : ''}
-          ${gameDetails.instructions ? `
-            <div class="game-instructions">
-              <h3>How to Play</h3>
-              <p>${gameDetails.instructions}</p>
-            </div>
-          ` : ''}
-        </div>
-      </div>
-      <div class="game-frame-container">
-        <iframe id="gameFrame" src="games/${game.folder}/index.html" frameborder="0" allowfullscreen></iframe>
-      </div>
-    `;
-  }).catch(error => {
-    console.error('Error loading game details:', error);
-    // Fall back to basic game info
-    gameContent.innerHTML = `
-      <div class="game-info">
-        <h2 class="game-title">${game.title}</h2>
-        <p class="game-description">${game.description || 'No description available.'}</p>
-      </div>
-      <div class="game-frame-container">
-        <iframe id="gameFrame" src="games/${game.folder}/index.html" frameborder="0" allowfullscreen></iframe>
-      </div>
-    `;
-  });
+  // Hide navigation tabs when game is selected
+  if (navigationTabs) {
+    navigationTabs.classList.add('hidden');
+  }
+  
+  // Set up the game content with minimal UI - just the game and a back button
+  gameContent.innerHTML = `
+    <div class="game-frame-container">
+      <iframe id="gameFrame" src="games/${game.folder}/index.html" frameborder="0" allowfullscreen></iframe>
+    </div>
+  `;
 }
 
 /**

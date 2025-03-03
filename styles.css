@@ -1440,16 +1440,17 @@ html, body {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Game Player Styles */
+/* Game Player Styles - Minimalist Version */
 .game-player-container {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
 }
 
 .game-player-container.hidden {
@@ -1459,51 +1460,25 @@ html, body {
 .game-player-header {
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 20px;
+  padding: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 101;
 }
 
 .game-player-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.game-info {
-  margin-bottom: 20px;
-}
-
-.game-title {
-  font-size: 24px;
-  color: #fff;
-  margin-bottom: 10px;
-}
-
-.game-description {
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 20px;
-}
-
-.game-instructions {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 15px;
-  border-radius: 8px;
-  margin-top: 15px;
-}
-
-.game-instructions h3 {
-  font-size: 18px;
-  color: #fff;
-  margin-bottom: 10px;
+  width: 100%;
+  height: 100%;
 }
 
 .game-frame-container {
   width: 100%;
-  height: 600px;
-  border-radius: 8px;
+  height: 100%;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 #gameFrame {
@@ -1511,6 +1486,30 @@ html, body {
   height: 100%;
   border: none;
   background: #fff;
+}
+
+/* Back button styling */
+.back-button {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  z-index: 102;
+}
+
+.back-button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.back-button .material-icons {
+  font-size: 18px;
 }
 
 /* Responsive adjustments for games section */
