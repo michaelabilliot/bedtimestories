@@ -1,0 +1,125 @@
+/* Base styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown 0.8s ease-out;
+}
+
+/* Heart shapes */
+.heart {
+  position: absolute;
+  background-color: rgba(255, 182, 193, 0.4);
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  transform: rotate(-45deg);
+  border-radius: 5px;
+}
+
+.heart:before,
+.heart:after {
+  content: "";
+  background-color: rgba(255, 182, 193, 0.4);
+  border-radius: 50%;
+  height: 30px;
+  position: absolute;
+  width: 30px;
+}
+
+.heart:before {
+  top: -15px;
+  left: 0;
+}
+
+.heart:after {
+  left: 15px;
+  top: 0;
+}
+
+.heart-1 {
+  background-color: rgba(255, 182, 193, 0.3);
+}
+.heart-1:before, .heart-1:after {
+  background-color: rgba(255, 182, 193, 0.3);
+}
+
+.heart-2 {
+  background-color: rgba(255, 105, 180, 0.2);
+}
+.heart-2:before, .heart-2:after {
+  background-color: rgba(255, 105, 180, 0.2);
+}
+
+.heart-3 {
+  background-color: rgba(219, 112, 147, 0.25);
+}
+.heart-3:before, .heart-3:after {
+  background-color: rgba(219, 112, 147, 0.25);
+}
+
+.heart-4 {
+  background-color: rgba(255, 20, 147, 0.15);
+}
+.heart-4:before, .heart-4:after {
+  background-color: rgba(255, 20, 147, 0.15);
+}
+
+.heart-5 {
+  background-color: rgba(199, 21, 133, 0.2);
+}
+.heart-5:before, .heart-5:after {
+  background-color: rgba(199, 21, 133, 0.2);
+}
+
+/* Typography */
+.site-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 3.5rem;
+  color: #d53f8c;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.site-subtitle {
+  font-size: 1.2rem;
+  color: #805ad5;
+  font-weight: 300;
+}
+
+/* Line clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+} 
