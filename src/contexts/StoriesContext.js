@@ -23,10 +23,15 @@ export const StoriesProvider = ({ children }) => {
   
   // Initialize available stories
   useEffect(() => {
+    // Get the base URL for the project
+    const basePath = window.location.pathname.endsWith('/') ? 
+      window.location.pathname : 
+      window.location.pathname + '/';
+      
     const stories = [
-      { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/cover.jpg", order: 1, today: false, description: "A heartwarming tale of friendship and love" },
-      { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
-      { title: "Cat", file: "cat", cover: "images/cat/cover.jpg", order: 3, today: false, description: "A story about a cat" }
+      { title: "Friends Tale", file: "friends-tale", cover: `${basePath}images/friends-tale/cover.jpg`, order: 1, today: false, description: "A heartwarming tale of friendship and love" },
+      { title: "Little Sleepy Star", file: "sleepy-star", cover: `${basePath}images/sleepy-star/cover.jpg`, order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
+      { title: "Cat", file: "cat", cover: `${basePath}images/cat/cover.jpg`, order: 3, today: false, description: "A story about a cat" }
     ];
     
     // Sort stories by order
@@ -119,9 +124,14 @@ export const StoriesProvider = ({ children }) => {
     // Preload images
     preloadStoryImages(storyData, storyFile);
     
+    // Get the base URL for the project
+    const basePath = window.location.pathname.endsWith('/') ? 
+      window.location.pathname : 
+      window.location.pathname + '/';
+    
     // Set up audio
     if (audioElement) {
-      audioElement.src = `audios/${storyFile}/recording.mp3`;
+      audioElement.src = `${basePath}audios/${storyFile}/recording.mp3`;
       audioElement.load();
     }
     
@@ -138,11 +148,16 @@ export const StoriesProvider = ({ children }) => {
     // Clear any existing preloaded images
     preloadedImages.forEach(img => { img.src = ""; });
     
+    // Get the base URL for the project
+    const basePath = window.location.pathname.endsWith('/') ? 
+      window.location.pathname : 
+      window.location.pathname + '/';
+    
     const newImages = [];
     storyData.forEach(scene => {
       if (scene.image) {
         const img = new Image();
-        img.src = `images/${folder}/${scene.image}`;
+        img.src = `${basePath}images/${folder}/${scene.image}`;
         newImages.push(img);
       }
     });

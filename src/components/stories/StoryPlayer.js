@@ -19,11 +19,16 @@ const StoryPlayer = () => {
     if (currentStory && currentStory[currentSceneIndex]) {
       const scene = currentStory[currentSceneIndex];
       if (scene.image) {
-        // Extract folder name from the first scene's image path
-        const folderMatch = scene.image.match(/^(.+?)\//);
-        const folder = folderMatch ? folderMatch[1] : '';
+        // Get the base URL for the project
+        const basePath = window.location.pathname.endsWith('/') ? 
+          window.location.pathname : 
+          window.location.pathname + '/';
+          
+        // Extract folder name from the current story
+        const storyFile = window.location.pathname.split('/').pop();
+        const folder = storyFile || 'sleepy-star'; // Default to sleepy-star if we can't determine
         
-        setBackground(`images/${folder}/${scene.image}`);
+        setBackground(`${basePath}images/${folder}/${scene.image}`);
       }
     }
   }, [currentStory, currentSceneIndex, setBackground]);

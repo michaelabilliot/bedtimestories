@@ -43,8 +43,20 @@ export const MusicProvider = ({ children }) => {
     try {
       setIsLoading(true);
       
+      // Get the base URL for the project, works in both local and GitHub Pages environments
+      const basePath = window.location.pathname.endsWith('/') ? 
+        window.location.pathname : 
+        window.location.pathname + '/';
+      
       // Fetch the list of available music folders
-      const response = await fetch('music/index.json');
+      let response = await fetch(`${basePath}music/index.json`);
+      
+      if (!response.ok) {
+        // If the first approach fails, try a relative path
+        console.log(`Failed to load from ${basePath}music/index.json, trying relative path...`);
+        response = await fetch('music/index.json');
+      }
+      
       if (!response.ok) {
         throw new Error(`Failed to load music index: ${response.status} ${response.statusText}`);
       }
@@ -71,8 +83,13 @@ export const MusicProvider = ({ children }) => {
     setCurrentTrack(track);
     setShowMusicPlayer(true);
     
+    // Get the base URL for the project
+    const basePath = window.location.pathname.endsWith('/') ? 
+      window.location.pathname : 
+      window.location.pathname + '/';
+    
     // Set the audio source
-    musicPlayer.src = `music/${track.folder}/track.mp3`;
+    musicPlayer.src = `${basePath}music/${track.folder}/music.mp3`;
     musicPlayer.load();
     
     // Play the track
@@ -84,7 +101,7 @@ export const MusicProvider = ({ children }) => {
     setIsPlaying(true);
     
     // Set a dark background for the music player
-    setBackground("linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(30,30,30,0.7)), url('images/music-bg.jpg')", false);
+    setBackground(`linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(30,30,30,0.7)), url('${basePath}images/music-bg.jpg')`, false);
   };
   
   // Toggle play/pause
