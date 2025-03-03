@@ -24,7 +24,7 @@ function setupMemoriesPage() {
   const placeholder = timelineContainer.querySelector('.timeline-placeholder');
   
   // Load the memories data
-  fetch('scripts/memories.json')
+  fetch('scripts/memories.json?v=' + new Date().getTime())
     .then(response => {
       if (!response.ok) {
         throw new Error('Failed to load memories data');
