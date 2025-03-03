@@ -1,7 +1,7 @@
 /**
  * pageHandler.js
  * Master handler for managing page navigation between different sections
- * (stories, music, and future sections)
+ * (stories, music, memories, and future sections)
  */
 
 // Track the current active page
@@ -38,7 +38,7 @@ function setupNavigation() {
 
 /**
  * Show the specified page and hide all others
- * @param {string} pageName - The name of the page to show ('stories', 'music', etc.)
+ * @param {string} pageName - The name of the page to show ('stories', 'music', 'memories', etc.)
  */
 function showPage(pageName) {
   // Update the current page tracker
@@ -85,7 +85,7 @@ function showPage(pageName) {
       
       // Set the background to the gallery image
       document.getElementById('globalBackground').style.backgroundImage = 
-        "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+        "linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/gallery.jpg')";
       
       // Call the setupGallery function from storyLoader.js
       if (typeof setupGallery === 'function') {
@@ -97,9 +97,16 @@ function showPage(pageName) {
         setupMusicGallery();
       }
       
-      // Set a dark background for the music page
+      // Set a romantic background for the music page
       document.getElementById('globalBackground').style.backgroundImage = 
-        "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(30,30,30,0.7)), url('images/music-bg.jpg')";
+        "linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/music-bg.jpg')";
+    } else if (pageName === 'memories') {
+      // Set up memories page
+      setupMemoriesPage();
+      
+      // Set a warm, romantic background for the memories page
+      document.getElementById('globalBackground').style.backgroundImage = 
+        "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/memories-bg.jpg')";
     }
     
     // Apply background effects
@@ -109,6 +116,17 @@ function showPage(pageName) {
   } else {
     console.error(`Page container for "${pageName}" not found`);
   }
+}
+
+/**
+ * Set up the memories page with timeline content
+ */
+function setupMemoriesPage() {
+  // This function can be expanded to load dynamic memory content
+  console.log('Setting up memories page');
+  
+  // For now, we have a placeholder. In the future, you could load memories from a JSON file
+  // and populate the timeline with your special moments together
 }
 
 /**
