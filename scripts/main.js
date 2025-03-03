@@ -761,3 +761,26 @@ function returnToGallery() {
     console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
   });
 }
+
+/**
+ * Set up the Memories page with timeline events
+ * This function can be expanded to load content from a JSON file
+ */
+function setupMemoriesPage() {
+  console.log('Initializing memories page...');
+  
+  // This is where you would typically load memory data from a JSON file
+  // and dynamically create the timeline elements
+  
+  // For now, we'll just make sure the container is visible
+  const memoriesContainer = document.getElementById('memoriesPage');
+  if (memoriesContainer) {
+    memoriesContainer.style.display = 'flex';
+  }
+  
+  // Set a custom background for the memories page
+  const globalBackground = document.getElementById('globalBackground');
+  if (globalBackground) {
+    globalBackground.style.backgroundImage = "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/memories-bg.jpg')";
+  }
+}
