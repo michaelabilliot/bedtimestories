@@ -1050,6 +1050,19 @@ h1, h2, h3, h4, h5 {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Page-specific visibility controls */
+#storiesPage #memoriesTimeline,
+#musicPage #memoriesTimeline,
+#storiesPage .memories-container,
+#musicPage .memories-container {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: -999 !important;
+}
+
 /* Page Containers */
 .page-container {
   max-width: 1200px;
@@ -1057,10 +1070,13 @@ h1, h2, h3, h4, h5 {
   padding: 0 20px 100px;
   opacity: 0;
   animation: fadeIn 1s ease forwards 1s;
+  position: relative;
 }
 
 .page-container.hidden {
-  display: none;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 /* Memories Page */

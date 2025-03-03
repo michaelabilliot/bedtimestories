@@ -59,6 +59,12 @@ function showPage(pageName) {
   pageContainers.forEach(container => {
     container.classList.add('hidden');
     container.style.display = 'none';
+    
+    // Force removal of any lingering memory elements from other pages
+    if (container.id !== 'memoriesPage') {
+      const memoryElements = container.querySelectorAll('.timeline-entry, .timeline-entry-content');
+      memoryElements.forEach(el => el.remove());
+    }
   });
 
   // Show the selected page container

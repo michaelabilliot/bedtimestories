@@ -13,6 +13,13 @@ function setupMemoriesPage() {
   // Check if we're actually on the memories page to prevent memories from showing on other pages
   if (window.getCurrentPage && window.getCurrentPage() !== 'memories') {
     console.log('Not on memories page, skipping memory setup');
+    
+    // Clean up any stray memory elements on other pages
+    document.querySelectorAll('.page-container:not(#memoriesPage) .timeline-entry').forEach(el => {
+      console.log('Removing stray memory element', el);
+      el.remove();
+    });
+    
     return;
   }
   
@@ -25,6 +32,12 @@ function setupMemoriesPage() {
   // Get the timeline container
   const timelineContainer = document.getElementById('memoriesTimeline');
   if (!timelineContainer) return;
+  
+  // Make sure timeline container is only in the memories page
+  if (!timelineContainer.closest('#memoriesPage')) {
+    console.error('Timeline container found outside memories page, skipping setup');
+    return;
+  }
   
   // Get the placeholder element
   const placeholder = timelineContainer.querySelector('.timeline-placeholder');
