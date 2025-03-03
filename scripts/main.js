@@ -2,15 +2,29 @@
  * Main JavaScript file for Bedtime Stories App
  */
 
-// Initialize the application when the DOM is loaded
+// Initialize the site when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // Set up event listeners for settings
-  setupSettingsListeners();
+  console.log('Initializing site...');
   
-  // Initialize the gallery
-  if (typeof setupGallery === 'function') {
-    setupGallery();
-  }
+  // Setup page navigation
+  setupNavigation();
+  
+  // Setup sliders for visual effects
+  setupSliders();
+  
+  // Setup the love note
+  setupLoveNote();
+  
+  // Initialize stories, music, and memories pages
+  setupStoriesPage();
+  setupMusicPage();
+  setupMemoriesPage();
+  
+  // Add polaroid wiggle effects
+  addPolaroidEffects();
+  
+  // Create necessary images
+  createNeededImages();
 });
 
 /**
@@ -759,6 +773,262 @@ function returnToGallery() {
     const loveNote = document.getElementById('loveNote');
     loveNote.classList.toggle('hidden');
     console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
+  });
+}
+
+/**
+ * Adds wiggle animations to polaroid-style elements on hover
+ */
+function addPolaroidEffects() {
+  // Add hover effects to all cards with a slight delay for natural feel
+  document.querySelectorAll('.story-card, .music-card, .nav-tab').forEach((card, index) => {
+    card.addEventListener('mouseenter', () => {
+      setTimeout(() => {
+        card.classList.add('wiggle-animation');
+      }, index * 50);
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('wiggle-animation');
+    });
+  });
+}
+
+/**
+ * Creates necessary images for the scrapbook design if they don't exist
+ */
+function createNeededImages() {
+  // Array of images to check/create
+  const neededImages = [
+    {
+      path: 'images/heart-pattern.png',
+      create: createHeartPattern
+    },
+    {
+      path: 'images/paper-texture.png',
+      create: createPaperTexture
+    },
+    {
+      path: 'images/cat-doodle.png',
+      create: createCatDoodle
+    }
+  ];
+  
+  // Check if each image exists, create if it doesn't
+  neededImages.forEach(img => {
+    const testImg = new Image();
+    testImg.src = img.path;
+    
+    testImg.onerror = () => {
+      console.log(`Creating missing image: ${img.path}`);
+      img.create();
+    };
+  });
+}
+
+/**
+ * Creates a heart pattern background image
+ */
+function createHeartPattern() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 200;
+  canvas.height = 200;
+  const ctx = canvas.getContext('2d');
+  
+  // Set background color
+  ctx.fillStyle = '#ffcfd5';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw small hearts
+  ctx.fillStyle = '#ff6b8e';
+  for (let i = 0; i < 20; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const size = 3 + Math.random() * 5;
+    
+    drawHeart(ctx, x, y, size);
+  }
+  
+  // Save the canvas as an image
+  saveCanvasAsImage(canvas, 'heart-pattern.png');
+}
+
+/**
+ * Creates a paper texture image
+ */
+function createPaperTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1000;
+  canvas.height = 1000;
+  const ctx = canvas.getContext('2d');
+  
+  // Set background color
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Add noise
+  for (let i = 0; i < 50000; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const opacity = Math.random() * 0.1;
+    ctx.fillStyle = `rgba(0,0,0,${opacity})`;
+    ctx.fillRect(x, y, 1, 1);
+  }
+  
+  // Save the canvas as an image
+  saveCanvasAsImage(canvas, 'paper-texture.png');
+}
+
+/**
+ * Creates a simple cat doodle image
+ */
+function createCatDoodle() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 120;
+  canvas.height = 120;
+  const ctx = canvas.getContext('2d');
+  
+  // Set transparent background
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw cat face
+  ctx.fillStyle = '#ff6b8e';
+  ctx.beginPath();
+  ctx.arc(60, 60, 40, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Draw cat ears
+  ctx.beginPath();
+  ctx.moveTo(30, 40);
+  ctx.lineTo(50, 10);
+  ctx.lineTo(70, 40);
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.moveTo(90, 40);
+  ctx.lineTo(110, 10);
+  ctx.lineTo(70, 40);
+  ctx.fill();
+  
+  // Draw cat eyes
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(45, 55, 10, 0, Math.PI * 2);
+  ctx.arc(75, 55, 10, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(45, 55, 5, 0, Math.PI * 2);
+  ctx.arc(75, 55, 5, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Draw cat nose and mouth
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(60, 70, 5, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(60, 75);
+  ctx.lineTo(60, 85);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(60, 85);
+  ctx.lineTo(50, 90);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(60, 85);
+  ctx.lineTo(70, 90);
+  ctx.stroke();
+  
+  // Draw whiskers
+  ctx.beginPath();
+  ctx.moveTo(45, 75);
+  ctx.lineTo(25, 70);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(45, 80);
+  ctx.lineTo(25, 85);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(75, 75);
+  ctx.lineTo(95, 70);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(75, 80);
+  ctx.lineTo(95, 85);
+  ctx.stroke();
+  
+  // Save the canvas as an image
+  saveCanvasAsImage(canvas, 'cat-doodle.png');
+}
+
+/**
+ * Saves a canvas as an image file
+ */
+function saveCanvasAsImage(canvas, filename) {
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
+ * Draws a heart shape on a canvas context
+ */
+function drawHeart(ctx, x, y, size) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(size, size);
+  
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.bezierCurveTo(-0.5, -0.3, -1, 0.1, 0, 0.5);
+  ctx.bezierCurveTo(1, 0.1, 0.5, -0.3, 0, 0);
+  ctx.fill();
+  
+  ctx.restore();
+}
+
+/**
+ * Sets up sliders for background effects
+ */
+function setupSliders() {
+  const zoomSlider = document.getElementById('zoomSlider');
+  const blurSlider = document.getElementById('blurSlider');
+  
+  // Update the sliders to work with new background
+  if (zoomSlider) {
+    zoomSlider.addEventListener('input', () => {
+      const brightness = zoomSlider.value;
+      document.documentElement.style.setProperty('--background-brightness', brightness);
+      document.getElementById('globalBackground').style.opacity = brightness * 0.15;
+    });
+  }
+  
+  if (blurSlider) {
+    blurSlider.addEventListener('input', () => {
+      const intensity = blurSlider.value;
+      document.getElementById('globalNoise').style.opacity = intensity;
+    });
+  }
+  
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    document.getElementById('settingsPanel').classList.add('hidden');
+  });
+  
+  document.getElementById('settingsIcon').addEventListener('click', () => {
+    document.getElementById('settingsPanel').classList.remove('hidden');
   });
 }
 
