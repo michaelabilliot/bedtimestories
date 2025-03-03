@@ -1098,6 +1098,124 @@ h1, h2, h3, h4, h5 {
   transform: translateX(-50%);
 }
 
+.timeline-entry {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.timeline-entry:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-entry::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.timeline-entry-content {
+  position: relative;
+  width: calc(50% - 40px);
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.8s ease forwards;
+  opacity: 0;
+  animation-delay: calc(var(--order) * 0.2s);
+}
+
+.timeline-entry-content:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.timeline-entry-left .timeline-entry-content {
+  float: left;
+  text-align: right;
+}
+
+.timeline-entry-right .timeline-entry-content {
+  float: right;
+  text-align: left;
+}
+
+.timeline-entry-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+}
+
+.timeline-entry-content p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+.timeline-entry-date {
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.timeline-entry-left .timeline-entry-content::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  right: -15px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 15px;
+  border-color: transparent transparent transparent rgba(255, 255, 255, 0.1);
+}
+
+.timeline-entry-right .timeline-entry-content::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: -15px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 15px 10px 0;
+  border-color: transparent rgba(255, 255, 255, 0.1) transparent transparent;
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 182, 193, 0.8);
+  box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.timeline-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+
 .timeline-placeholder {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
@@ -1106,12 +1224,42 @@ h1, h2, h3, h4, h5 {
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
 }
 
 .timeline-placeholder p {
   font-size: 1.5rem;
   font-family: 'Dancing Script', cursive;
   color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .timeline::before {
+    left: 30px;
+  }
+  
+  .timeline-entry-content {
+    width: calc(100% - 80px);
+    float: right;
+    text-align: left;
+  }
+  
+  .timeline-entry-left .timeline-entry-content, 
+  .timeline-entry-right .timeline-entry-content {
+    text-align: left;
+    float: right;
+  }
+  
+  .timeline-entry-left .timeline-entry-content::before {
+    left: -15px;
+    right: auto;
+    border-width: 10px 15px 10px 0;
+    border-color: transparent rgba(255, 255, 255, 0.1) transparent transparent;
+  }
+  
+  .timeline-dot {
+    left: 30px;
+  }
 }
 
 /* Footer */
@@ -1529,4 +1677,41 @@ h1, h2, h3, h4, h5 {
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   animation: fadeIn 1.5s ease;
   max-width: 600px;
+}
+
+.timeline-entry-content.highlight {
+  transform: translateY(-5px);
+  background: rgba(255, 182, 193, 0.25);
+  box-shadow: 0 10px 30px rgba(255, 182, 193, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.timeline-entry-content.active {
+  animation: fadeIn 0.8s ease forwards, slideIn 0.8s ease forwards;
+}
+
+.timeline-entry-left .timeline-entry-content.active {
+  animation: fadeIn 0.8s ease forwards, slideInRight 0.8s ease forwards;
+}
+
+.timeline-entry-right .timeline-entry-content.active {
+  animation: fadeIn 0.8s ease forwards, slideInLeft 0.8s ease forwards;
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(-50px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(50px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }

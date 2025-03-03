@@ -764,15 +764,12 @@ function returnToGallery() {
 
 /**
  * Set up the Memories page with timeline events
- * This function can be expanded to load content from a JSON file
+ * This function adds animation and interaction to the timeline
  */
 function setupMemoriesPage() {
   console.log('Initializing memories page...');
   
-  // This is where you would typically load memory data from a JSON file
-  // and dynamically create the timeline elements
-  
-  // For now, we'll just make sure the container is visible
+  // Make sure the container is visible
   const memoriesContainer = document.getElementById('memoriesPage');
   if (memoriesContainer) {
     memoriesContainer.style.display = 'flex';
@@ -783,4 +780,49 @@ function setupMemoriesPage() {
   if (globalBackground) {
     globalBackground.style.backgroundImage = "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/memories-bg.jpg')";
   }
+  
+  // Add scroll animation to timeline entries
+  const timelineEntries = document.querySelectorAll('.timeline-entry-content');
+  
+  // Check if IntersectionObserver is supported
+  if ('IntersectionObserver' in window) {
+    const appearOptions = {
+      threshold: 0.25,
+      rootMargin: "0px 0px -100px 0px"
+    };
+    
+    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, appearOptions);
+    
+    timelineEntries.forEach(entry => {
+      appearOnScroll.observe(entry);
+    });
+  } else {
+    // Fallback for browsers that don't support IntersectionObserver
+    timelineEntries.forEach(entry => {
+      entry.classList.add('active');
+    });
+  }
+  
+  // Add hover effect for dots
+  const timelineDots = document.querySelectorAll('.timeline-dot');
+  timelineDots.forEach(dot => {
+    dot.addEventListener('mouseenter', () => {
+      const entry = dot.closest('.timeline-entry');
+      const content = entry.querySelector('.timeline-entry-content');
+      content.classList.add('highlight');
+    });
+    
+    dot.addEventListener('mouseleave', () => {
+      const entry = dot.closest('.timeline-entry');
+      const content = entry.querySelector('.timeline-entry-content');
+      content.classList.remove('highlight');
+    });
+  });
 }
