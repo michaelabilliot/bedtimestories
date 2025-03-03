@@ -9,7 +9,8 @@ const StoryPlayer = () => {
     currentSceneIndex, 
     returnToGallery, 
     showScene,
-    isTransitioning
+    isTransitioning,
+    currentStoryFile
   } = useStories();
   
   const { setBackground } = useSettings();
@@ -23,15 +24,12 @@ const StoryPlayer = () => {
         const basePath = window.location.pathname.endsWith('/') ? 
           window.location.pathname : 
           window.location.pathname + '/';
-          
-        // Extract folder name from the current story
-        const storyFile = window.location.pathname.split('/').pop();
-        const folder = storyFile || 'sleepy-star'; // Default to sleepy-star if we can't determine
         
-        setBackground(`${basePath}images/${folder}/${scene.image}`);
+        // Use the currentStoryFile to get the correct folder
+        setBackground(`${basePath}images/${currentStoryFile}/${scene.image}`);
       }
     }
-  }, [currentStory, currentSceneIndex, setBackground]);
+  }, [currentStory, currentSceneIndex, setBackground, currentStoryFile]);
   
   if (!currentStory || currentStory.length === 0) {
     return null;
@@ -40,56 +38,44 @@ const StoryPlayer = () => {
   const currentScene = currentStory[currentSceneIndex];
   
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center">
-      {/* Back button */}
-      <div className="self-start mb-4">
-        <button
-          onClick={returnToGallery}
-          className="flex items-center gap-2 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full hover:bg-black/50 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white/50"
-          aria-label="Return to story gallery"
-        >
-          <span className="material-icons">arrow_back</span>
-          <span>Back to Gallery</span>
-        </button>
-      </div>
-      
-      {/* Story content */}
-      <div 
-        className={`w-full bg-black/40 backdrop-blur-sm rounded-xl p-6 shadow-lg transition-opacity duration-500 ${
-          isTransitioning ? 'opacity-0' : 'opacity-100'
-        }`}
-      >
+    <div className={`story-player w-full max-w-4xl flex flex-col items-center ${isTransitioning ? 'fade-transition' : ''}`}>
+      <div className="story-content bg-black/40 backdrop-blur-sm p-6 rounded-lg w-full mb-4">
         <div 
-          className="prose prose-invert max-w-none"
+          className="story-text text-white"
           dangerouslySetInnerHTML={{ __html: currentScene.content }}
         />
       </div>
       
-      {/* Audio controls */}
-      <div className="w-full mt-6">
-        <AudioControls />
-      </div>
-      
-      {/* Scene navigation */}
-      {currentStory.length > 1 && (
-        <div className="w-full mt-4 flex justify-center">
-          <div className="flex gap-2">
-            {currentStory.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => showScene(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 ${
-                  index === currentSceneIndex 
-                    ? 'bg-white scale-125' 
-                    : 'bg-white/40 hover:bg-white/60'
-                }`}
-                aria-label={`Go to scene ${index + 1}`}
-                aria-current={index === currentSceneIndex ? 'true' : 'false'}
-              />
-            ))}
-          </div>
+      <div className="story-controls flex items-center justify-between w-full">
+        <button 
+          onClick={() => returnToGallery()}
+          className="btn-control flex items-center justify-center bg-black/40 backdrop-blur-sm p-2 rounded-full"
+        >
+          <span className="material-icons">arrow_back</span>
+        </button>
+        
+        <div className="navigation-controls flex items-center space-x-4">
+          <button 
+            onClick={() => showScene(currentSceneIndex - 1)}
+            disabled={currentSceneIndex === 0}
+            className={`btn-control flex items-center justify-center bg-black/40 backdrop-blur-sm p-2 rounded-full ${currentSceneIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <span className="material-icons">navigate_before</span>
+          </button>
+          
+          <AudioControls />
+          
+          <button 
+            onClick={() => showScene(currentSceneIndex + 1)}
+            disabled={currentSceneIndex === currentStory.length - 1}
+            className={`btn-control flex items-center justify-center bg-black/40 backdrop-blur-sm p-2 rounded-full ${currentSceneIndex === currentStory.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <span className="material-icons">navigate_next</span>
+          </button>
         </div>
-      )}
+        
+        <div className="w-10"></div> {/* Empty div for balance */}
+      </div>
     </div>
   );
 };

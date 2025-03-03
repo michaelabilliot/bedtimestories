@@ -20,6 +20,7 @@ export const StoriesProvider = ({ children }) => {
   const [audioElement, setAudioElement] = useState(null);
   const [preloadedImages, setPreloadedImages] = useState([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentStoryFile, setCurrentStoryFile] = useState('');
   
   // Initialize available stories
   useEffect(() => {
@@ -121,6 +122,9 @@ export const StoriesProvider = ({ children }) => {
     const story = availableStories.find(s => s.file === storyFile);
     if (!story) return;
     
+    // Set current story file
+    setCurrentStoryFile(storyFile);
+    
     // Preload images
     preloadStoryImages(storyData, storyFile);
     
@@ -206,13 +210,19 @@ export const StoriesProvider = ({ children }) => {
     setStoryPlaying(false);
     setCurrentSceneIndex(0);
     setCurrentStory(null);
+    setCurrentStoryFile('');
     
     // Unload preloaded images
     preloadedImages.forEach(img => { img.src = ""; });
     setPreloadedImages([]);
     
+    // Get the base URL for the project
+    const basePath = window.location.pathname.endsWith('/') ? 
+      window.location.pathname : 
+      window.location.pathname + '/';
+    
     // Set background back to gallery
-    setBackground("images/gallery.jpg");
+    setBackground(`${basePath}images/gallery.jpg`);
   };
   
   return (
@@ -223,6 +233,7 @@ export const StoriesProvider = ({ children }) => {
       currentSceneIndex,
       audioElement,
       isTransitioning,
+      currentStoryFile,
       loadStory,
       playStory,
       showScene,
