@@ -11,6 +11,8 @@ html, body {
   overflow-x: hidden;
   color: #fff;
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: rgba(255, 182, 193, 0.3); /* Subtle highlight for touch interactions */
+  touch-action: manipulation; /* Optimize for touch */
 }
 
 h1, h2, h3, h4, h5 {
@@ -191,6 +193,8 @@ h1, h2, h3, h4, h5 {
   box-shadow: 0 3px 15px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 
 #settingsIcon:hover {
@@ -222,6 +226,8 @@ h1, h2, h3, h4, h5 {
   transition: all 0.3s ease;
   animation: pulse 2s infinite;
   backdrop-filter: blur(5px);
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 
 #loveNoteButton:hover {
@@ -283,10 +289,10 @@ h1, h2, h3, h4, h5 {
 #settingsPanel {
   position: fixed;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: 15px;
+  transform: translateY(-50%);
   backdrop-filter: blur(15px);
-  background-color: rgba(255,182,193,0.2);
+  background-color: rgba(255, 182, 193, 0.2);
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,0.2);
@@ -294,64 +300,63 @@ h1, h2, h3, h4, h5 {
   z-index: 1100;
   max-width: 350px;
   width: 90%;
-  animation: fadeIn 0.5s ease;
+  transition: all 0.3s ease;
 }
+
 #settingsPanel.hidden {
   display: none;
 }
+
 #settingsPanel h2 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2rem;
+  margin-top: 0;
   margin-bottom: 20px;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  font-size: 1.8rem;
-  text-align: center;
 }
+
 #settingsPanel label {
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  font-size: 1rem;
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  font-size: 1.1rem;
 }
+
 #settingsPanel input[type="range"] {
   width: 100%;
-  margin-bottom: 20px;
-  height: 6px;
-  -webkit-appearance: none;
-  appearance: none;
-  background: rgba(255,255,255,0.3);
-  border-radius: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
   outline: none;
+  margin-top: 10px;
+  -webkit-appearance: none;
 }
+
 #settingsPanel input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
 #settingsPanel button {
-  display: block;
-  width: 80%;
-  margin: 20px auto 0;
-  padding: 12px;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
   border-radius: 30px;
+  padding: 12px 25px;
   color: #fff;
-  font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-#settingsPanel button:hover {
-  background: rgba(255,255,255,0.3);
-  transform: translateY(-2px);
+  display: block;
+  margin: 20px auto 0;
+  font-size: 1rem;
+  min-width: 120px;
+  min-height: 44px; /* Minimum touch target size */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 
 /* Gallery styles */
@@ -472,17 +477,18 @@ h1, h2, h3, h4, h5 {
   text-align: center; /* Ensure heading is centered */
 }
 .story-card {
-  background: rgba(255,255,255,0.1);
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
-  overflow: hidden;
-  cursor: pointer;
-  width: 250px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   position: relative;
-  margin: 0 auto; /* Center the card */
+  width: 220px;
+  height: 300px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 .story-card:hover {
   transform: translateY(-10px) scale(1.03);
@@ -720,17 +726,18 @@ h1, h2, h3, h4, h5 {
   margin-top: 15px;
 }
 #audioControls button {
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  background: rgb(255 182 193 / 85%);
-  padding: 12px;
   border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 #audioControls button:hover {
   background: rgba(255,255,255,0.3);
@@ -831,26 +838,46 @@ h1, h2, h3, h4, h5 {
 @media screen and (max-width: 768px) {
   #globalBackground {
     background-size: cover !important;
+    background-attachment: scroll; /* Better performance on mobile */
   }
+  
+  .site-header {
+    padding: 40px 15px 15px; /* Reduced padding on mobile */
+  }
+  
+  .site-title {
+    font-size: 3.5rem; /* Smaller title on mobile */
+  }
+  
+  .site-subtitle {
+    font-size: 1.1rem;
+    margin: 5px 0 20px;
+  }
+  
   #gallery h1 {
     font-size: 2rem;
     margin-bottom: 10px;
   }
+  
   #gallery .subtitle {
     font-size: 1rem;
     margin-bottom: 30px;
   }
+  
   .todays-story-section h2,
   .other-stories-section h2 {
     font-size: 1.5rem;
   }
+  
   .story-card {
     width: 200px;
   }
+  
   .story-card .story-title {
     font-size: 1.1rem;
     padding: 15px;
   }
+  
   /* Center the gallery sections */
   .todays-story-section, .other-stories-section {
     width: 100%;
@@ -858,56 +885,75 @@ h1, h2, h3, h4, h5 {
     margin: 0 auto 20px auto; /* Reduced bottom margin */
     align-items: center;
   }
+  
   #gallery #storyCards {
     flex-direction: column;
     align-items: center;
     gap: 20px; /* Reduced gap */
   }
+  
   .scene {
     padding: 20px;
     margin: 10px;
   }
+  
   .scene-img {
     aspect-ratio: auto;
     border-radius: 10px;
   }
+  
   .scene-content {
     font-size: 1.1rem;
   }
+  
   .scene-content h1 {
     font-size: 1.8rem;
   }
+  
   .nav-buttons button {
     padding: 12px;
     font-size: 1rem;
+    min-width: 44px; /* Minimum touch target size */
+    min-height: 44px; /* Minimum touch target size */
   }
+  
   #audioPlayer {
     padding: 15px;
   }
+  
   #audioControls {
     gap: 15px;
   }
+  
   #audioControls button {
     padding: 10px;
+    min-width: 44px; /* Minimum touch target size */
+    min-height: 44px; /* Minimum touch target size */
   }
+  
   #audioControls .material-icons {
     font-size: 20px;
   }
+  
   .todays-story {
     width: 90%;
   }
+  
   #loveNote {
     bottom: 70px;
     right: 10px;
     padding: 20px;
     max-width: 300px;
   }
+  
   #loveNote h2 {
     font-size: 1.5rem;
   }
+  
   #loveNote p {
     font-size: 1rem;
   }
+  
   .story-description {
     font-size: 1rem;
     margin: 10px 0 15px; /* Reduced bottom margin */
@@ -915,6 +961,8 @@ h1, h2, h3, h4, h5 {
   
   .story-cards-row {
     gap: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: center;
   }
   
   .content-frame {
@@ -937,38 +985,80 @@ h1, h2, h3, h4, h5 {
     padding: 0 10px;
   }
   
-  .scene {
-    padding: 20px;
-    min-height: auto;
+  /* Improved navigation tabs for mobile */
+  .navigation-tabs {
+    gap: 10px;
+    padding: 0 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Allow wrapping if needed */
+  }
+  
+  .nav-tab {
+    padding: 12px 15px;
+    min-height: 80px; /* Ensure good touch target size */
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Adjust settings and love note buttons for better touch */
+  #settingsIcon, #loveNoteButton {
+    width: 50px;
+    height: 50px;
+  }
+  
+  /* Improve scrolling experience */
+  .timeline {
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scroll-behavior: smooth;
   }
 }
 
 @media screen and (max-width: 480px) {
+  .site-title {
+    font-size: 2.8rem; /* Even smaller title on very small screens */
+  }
+  
   #gallery h1 {
     font-size: 1.8rem;
   }
+  
   .story-card {
     width: 160px;
   }
+  
   .scene-content {
     font-size: 1rem;
   }
+  
   .scene {
     padding: 15px;
     margin: 5px;
   }
+  
   #settingsPanel {
     padding: 20px;
+    width: 85%; /* Wider panel on small screens */
+    max-width: none;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
   }
+  
   #settingsPanel h2 {
     font-size: 1.5rem;
   }
+  
   #loveNote {
     max-width: 250px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
   }
+  
   #loveNote .signature {
     font-size: 1.2rem;
   }
+  
   .story-description {
     font-size: 0.9rem;
   }
@@ -990,6 +1080,27 @@ h1, h2, h3, h4, h5 {
   .music-cards {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
+  
+  /* Full-width navigation tabs on very small screens */
+  .navigation-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .nav-tab {
+    flex: 1 1 30%; /* Allow 3 tabs per row */
+    min-width: 0;
+    padding: 10px;
+  }
+  
+  .nav-tab .material-icons {
+    font-size: 20px;
+  }
+  
+  .nav-tab span {
+    font-size: 0.9rem;
+  }
 }
 
 /* Navigation Tabs */
@@ -1004,6 +1115,7 @@ h1, h2, h3, h4, h5 {
   padding: 0 20px;
   opacity: 0;
   animation: fadeIn 1s ease forwards 0.8s;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 .navigation-tabs.hidden {
@@ -1024,6 +1136,8 @@ h1, h2, h3, h4, h5 {
   flex: 1;
   min-width: 100px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 
 .nav-tab:hover {
@@ -1083,47 +1197,45 @@ h1, h2, h3, h4, h5 {
 #memoriesPage {
   text-align: center;
   width: 100%;
-  margin: 0 auto;
-  display: block !important; /* Override any display:flex set by JavaScript */
+  max-width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .memories-container {
-  max-width: 900px;
+  width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 20px;
-  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .memories-container h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
   font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
   font-weight: 700;
+  margin-bottom: 10px;
   color: #fff;
-  text-shadow: 0 4px 8px rgba(0,0,0,0.5);
-  text-align: center;
-  width: 100%;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .memories-container .subtitle {
-  font-size: 1.4rem;
-  margin-bottom: 35px;
-  color: rgba(255, 255, 255, 0.95);
+  font-family: 'Lato', sans-serif;
+  font-size: 1.2rem;
   font-weight: 300;
-  text-align: center;
-  max-width: 800px;
+  margin-bottom: 40px;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  text-shadow: 0 3px 8px rgba(0,0,0,0.5);
-  letter-spacing: 0.5px;
 }
 
-/* Timeline Styles */
 .timeline {
   position: relative;
-  max-width: 900px;
-  margin: 50px auto;
-  padding: 20px;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .timeline::before {
@@ -1131,44 +1243,35 @@ h1, h2, h3, h4, h5 {
   position: absolute;
   top: 0;
   bottom: 0;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.3);
   left: 50%;
-  width: 3px;
-  background: rgba(255, 255, 255, 0.7);
-  transform: translateX(-50%);
+  margin-left: -2px;
+  border-radius: 4px;
   box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
 }
 
 .timeline-entry {
   position: relative;
-  margin-bottom: 70px;
-  clear: both;
-}
-
-.timeline-entry:last-child {
-  margin-bottom: 0;
-}
-
-.timeline-entry::after {
-  content: '';
-  display: table;
-  clear: both;
+  margin-bottom: 50px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .timeline-entry-content {
   position: relative;
-  width: calc(45% - 20px);
-  padding: 25px;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 45%;
+  box-sizing: border-box;
   transition: all 0.3s ease;
-  opacity: 0;
-  animation-duration: 0.8s;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease;
-  animation-name: fadeIn;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 
 .timeline-entry-content:hover {
@@ -1266,26 +1369,145 @@ h1, h2, h3, h4, h5 {
   letter-spacing: 0.5px;
 }
 
-/* Mobile Styles */
+/* Mobile adjustments for timeline */
 @media screen and (max-width: 768px) {
   .timeline::before {
-    left: 30px;
+    left: 20px;
   }
   
   .timeline-entry-content {
-    width: calc(100% - 80px);
-    float: right;
-    text-align: left;
-  }
-  
-  .timeline-entry:nth-child(odd) .timeline-entry-content, 
-  .timeline-entry:nth-child(even) .timeline-entry-content {
-    text-align: left;
-    float: right;
+    width: calc(100% - 50px);
+    max-width: 100%;
+    padding: 15px;
   }
   
   .timeline-dot {
-    left: 30px;
+    left: 20px;
+  }
+  
+  .timeline-entry:nth-child(odd) .timeline-entry-content,
+  .timeline-entry:nth-child(even) .timeline-entry-content {
+    left: 50px;
+    right: auto;
+    transform: none;
+  }
+  
+  .timeline-entry-content h3 {
+    font-size: 1.3rem;
+  }
+  
+  .timeline-entry-date {
+    font-size: 0.9rem;
+  }
+  
+  /* Music player mobile adjustments */
+  .music-player-container {
+    padding: 20px;
+    width: 95%;
+  }
+  
+  .music-player-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .album-cover {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+  }
+  
+  .track-info {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+  
+  .player-controls {
+    width: 100%;
+  }
+  
+  .progress-container {
+    margin: 15px 0;
+  }
+  
+  .control-buttons {
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .control-button {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .control-button.play-pause {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .volume-control {
+    width: 100%;
+    max-width: 200px;
+    margin: 15px auto 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .timeline-entry-content {
+    width: calc(100% - 40px);
+    padding: 12px;
+  }
+  
+  .timeline-entry-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+  }
+  
+  .timeline-entry-content p {
+    font-size: 0.9rem;
+  }
+  
+  .timeline-entry-date {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+  }
+  
+  .timeline-dot {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .album-cover {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .track-info h2 {
+    font-size: 1.3rem;
+  }
+  
+  .track-info p {
+    font-size: 0.9rem;
+  }
+  
+  .control-button {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .control-button.play-pause {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .control-button .material-icons {
+    font-size: 20px;
+  }
+  
+  .control-button.play-pause .material-icons {
+    font-size: 30px;
   }
 }
 
@@ -1321,6 +1543,7 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 30px;
   width: 100%;
   max-width: 800px;
+  padding: 0 15px; /* Add padding for mobile */
 }
 
 .music-cards {
@@ -1344,12 +1567,12 @@ h1, h2, h3, h4, h5 {
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
   max-width: 200px;
+  -webkit-tap-highlight-color: rgba(255, 182, 193, 0.3); /* Better touch feedback */
 }
 
 .music-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color: rgba(70, 70, 70, 0.7);
 }
 
 .music-card-image {
@@ -1394,47 +1617,39 @@ h1, h2, h3, h4, h5 {
 
 /* Music Player */
 .music-player-container {
-  width: calc(100% - 40px);
-  max-width: 1000px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  margin: 20px auto;
+  background-color: rgba(50, 50, 50, 0.5);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.music-player-container.hidden {
-  display: none;
 }
 
 .music-player-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
 .back-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
-  background-color: rgba(70, 70, 70, 0.7);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 15px;
+  justify-content: center;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.back-button:hover {
-  background-color: rgba(100, 100, 100, 0.9);
-}
-
-.back-button .material-icons {
-  margin-right: 5px;
+  margin-right: 20px;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Optimize for touch */
 }
 
 .music-player-content {
@@ -1756,4 +1971,163 @@ h1, h2, h3, h4, h5 {
   padding: 0 20px;
   box-sizing: border-box;
   position: relative;
+}
+
+/* Add active state for better touch feedback */
+.nav-tab:active,
+.story-card:active,
+#audioControls button:active,
+.control-button:active,
+#settingsIcon:active,
+#loveNoteButton:active,
+.music-card:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* Fix for iOS Safari 100vh issue */
+@supports (-webkit-touch-callout: none) {
+  .page-container {
+    min-height: -webkit-fill-available;
+  }
+  
+  #globalBackground,
+  #globalNoise {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Additional mobile optimizations */
+@media screen and (max-width: 768px) {
+  /* Prevent text size adjustment */
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  /* Ensure buttons are easy to tap */
+  button, 
+  .nav-tab,
+  .story-card,
+  .music-card,
+  #settingsIcon,
+  #loveNoteButton,
+  .control-button,
+  #audioControls button {
+    touch-action: manipulation;
+  }
+  
+  /* Improve form inputs on mobile */
+  input[type="range"] {
+    height: 30px; /* Larger height for better touch */
+  }
+  
+  /* Ensure modals are properly positioned */
+  #settingsPanel,
+  #loveNote {
+    position: fixed;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  /* Ensure close buttons are easy to tap */
+  #closeSettings,
+  #closeLoveNote {
+    padding: 12px 20px;
+    min-height: 44px;
+  }
+}
+
+/* Fix for notched devices */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  #settingsIcon {
+    top: max(15px, env(safe-area-inset-top));
+    right: max(15px, env(safe-area-inset-right));
+  }
+  
+  #loveNoteButton {
+    bottom: max(15px, env(safe-area-inset-bottom));
+    right: max(15px, env(safe-area-inset-right));
+  }
+}
+
+/* Ensure proper form element sizing for touch */
+input[type="range"],
+button {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 8px;
+  touch-action: manipulation;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border: none;
+}
+
+/* Prevent zoom on input focus in iOS */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px; /* Prevents zoom on focus in iOS */
+  }
+  
+  /* Ensure proper spacing for touch */
+  .nav-tab,
+  .story-card,
+  .music-card,
+  .timeline-entry-content,
+  button,
+  #settingsIcon,
+  #loveNoteButton {
+    margin-bottom: 10px; /* Ensure enough space between touch targets */
+  }
+  
+  /* Fix for iOS momentum scrolling */
+  .page-container,
+  .timeline,
+  .music-gallery,
+  #settingsPanel,
+  #loveNote {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Ensure proper button sizing */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 15px;
+  }
+  
+  /* Improve tap targets */
+  a, button, .nav-tab, .story-card, .music-card {
+    padding: 10px;
+  }
+  
+  /* Fix for iOS fixed position issues */
+  #settingsIcon, 
+  #loveNoteButton {
+    position: fixed;
+    z-index: 1100;
+  }
 }
