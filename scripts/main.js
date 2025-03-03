@@ -764,7 +764,7 @@ function returnToGallery() {
 
 /**
  * Set up the Memories page with timeline events
- * This function adds animation and interaction to the timeline
+ * This function loads memories from a JSON file and creates the timeline
  */
 function setupMemoriesPage() {
   console.log('Initializing memories page...');
@@ -781,7 +781,84 @@ function setupMemoriesPage() {
     globalBackground.style.backgroundImage = "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/memories-bg.jpg')";
   }
   
-  // Add scroll animation to timeline entries
+  // Get the timeline container
+  const timelineContainer = document.getElementById('memoriesTimeline');
+  if (!timelineContainer) return;
+  
+  // Get the placeholder element
+  const placeholder = timelineContainer.querySelector('.timeline-placeholder');
+  
+  // Load the memories data
+  fetch('scripts/memories.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to load memories data');
+      }
+      return response.json();
+    })
+    .then(memories => {
+      // Sort memories by order if needed
+      memories.sort((a, b) => a.order - b.order);
+      
+      // Add each memory to the timeline
+      memories.forEach(memory => {
+        const entryElement = document.createElement('div');
+        entryElement.className = 'timeline-entry';
+        
+        // Add the dot and connector
+        const dotElement = document.createElement('div');
+        dotElement.className = 'timeline-dot';
+        
+        const connectorElement = document.createElement('div');
+        connectorElement.className = 'timeline-connector';
+        
+        // Create the content
+        const contentElement = document.createElement('div');
+        contentElement.className = 'timeline-entry-content';
+        contentElement.style.animationDelay = `${memory.order * 0.2}s`;
+        
+        // Add date, title, and description
+        const dateElement = document.createElement('span');
+        dateElement.className = 'timeline-entry-date';
+        dateElement.textContent = memory.date;
+        
+        const titleElement = document.createElement('h3');
+        titleElement.textContent = memory.title;
+        
+        const descriptionElement = document.createElement('p');
+        descriptionElement.textContent = memory.description;
+        
+        // Add all elements to the content
+        contentElement.appendChild(dateElement);
+        contentElement.appendChild(titleElement);
+        contentElement.appendChild(descriptionElement);
+        
+        // Add all elements to the entry
+        entryElement.appendChild(dotElement);
+        entryElement.appendChild(connectorElement);
+        entryElement.appendChild(contentElement);
+        
+        // Insert the entry before the placeholder
+        timelineContainer.insertBefore(entryElement, placeholder);
+      });
+      
+      // Add entry animation when scrolling
+      addScrollAnimation();
+    })
+    .catch(error => {
+      console.error('Error loading memories:', error);
+      // Create a fallback message if loading fails
+      const errorElement = document.createElement('div');
+      errorElement.className = 'timeline-entry-content';
+      errorElement.innerHTML = '<h3>Our Story</h3><p>Every day with you is a new chapter in our beautiful story.</p>';
+      timelineContainer.insertBefore(errorElement, placeholder);
+    });
+}
+
+/**
+ * Add scroll animation to timeline entries
+ */
+function addScrollAnimation() {
   const timelineEntries = document.querySelectorAll('.timeline-entry-content');
   
   // Check if IntersectionObserver is supported
@@ -794,7 +871,7 @@ function setupMemoriesPage() {
     const appearOnScroll = new IntersectionObserver(function(entries, observer) {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('active');
+          entry.target.style.opacity = 1;
           observer.unobserve(entry.target);
         }
       });
@@ -806,23 +883,7 @@ function setupMemoriesPage() {
   } else {
     // Fallback for browsers that don't support IntersectionObserver
     timelineEntries.forEach(entry => {
-      entry.classList.add('active');
+      entry.style.opacity = 1;
     });
   }
-  
-  // Add hover effect for dots
-  const timelineDots = document.querySelectorAll('.timeline-dot');
-  timelineDots.forEach(dot => {
-    dot.addEventListener('mouseenter', () => {
-      const entry = dot.closest('.timeline-entry');
-      const content = entry.querySelector('.timeline-entry-content');
-      content.classList.add('highlight');
-    });
-    
-    dot.addEventListener('mouseleave', () => {
-      const entry = dot.closest('.timeline-entry');
-      const content = entry.querySelector('.timeline-entry-content');
-      content.classList.remove('highlight');
-    });
-  });
 }

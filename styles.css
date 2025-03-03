@@ -1094,13 +1094,14 @@ h1, h2, h3, h4, h5 {
   bottom: 0;
   left: 50%;
   width: 2px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   transform: translateX(-50%);
 }
 
 .timeline-entry {
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 70px;
+  clear: both;
 }
 
 .timeline-entry:last-child {
@@ -1115,7 +1116,7 @@ h1, h2, h3, h4, h5 {
 
 .timeline-entry-content {
   position: relative;
-  width: calc(50% - 40px);
+  width: calc(45% - 20px);
   padding: 25px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
@@ -1123,9 +1124,11 @@ h1, h2, h3, h4, h5 {
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
-  animation: fadeIn 0.8s ease forwards;
   opacity: 0;
-  animation-delay: calc(var(--order) * 0.2s);
+  animation-duration: 0.8s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease;
+  animation-name: fadeIn;
 }
 
 .timeline-entry-content:hover {
@@ -1134,12 +1137,12 @@ h1, h2, h3, h4, h5 {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.timeline-entry-left .timeline-entry-content {
+.timeline-entry:nth-child(odd) .timeline-entry-content {
   float: left;
   text-align: right;
 }
 
-.timeline-entry-right .timeline-entry-content {
+.timeline-entry:nth-child(even) .timeline-entry-content {
   float: right;
   text-align: left;
 }
@@ -1167,33 +1170,26 @@ h1, h2, h3, h4, h5 {
   font-style: italic;
 }
 
-.timeline-entry-left .timeline-entry-content::before {
-  content: '';
+/* Horizontal connectors */
+.timeline-connector {
   position: absolute;
-  top: 22px;
-  right: -15px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 10px 0 10px 15px;
-  border-color: transparent transparent transparent rgba(255, 255, 255, 0.1);
+  top: 30px;
+  width: calc(5% + 10px);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
 }
 
-.timeline-entry-right .timeline-entry-content::before {
-  content: '';
-  position: absolute;
-  top: 22px;
-  left: -15px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 10px 15px 10px 0;
-  border-color: transparent rgba(255, 255, 255, 0.1) transparent transparent;
+.timeline-entry:nth-child(odd) .timeline-connector {
+  right: calc(55% - 10px);
+}
+
+.timeline-entry:nth-child(even) .timeline-connector {
+  left: calc(55% - 10px);
 }
 
 .timeline-dot {
   position: absolute;
-  top: 20px;
+  top: 21px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -1225,6 +1221,9 @@ h1, h2, h3, h4, h5 {
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   margin-top: 50px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .timeline-placeholder p {
@@ -1233,6 +1232,7 @@ h1, h2, h3, h4, h5 {
   color: #fff;
 }
 
+/* Mobile Styles */
 @media screen and (max-width: 768px) {
   .timeline::before {
     left: 30px;
@@ -1244,17 +1244,19 @@ h1, h2, h3, h4, h5 {
     text-align: left;
   }
   
-  .timeline-entry-left .timeline-entry-content, 
-  .timeline-entry-right .timeline-entry-content {
+  .timeline-entry:nth-child(odd) .timeline-entry-content, 
+  .timeline-entry:nth-child(even) .timeline-entry-content {
     text-align: left;
     float: right;
   }
   
-  .timeline-entry-left .timeline-entry-content::before {
-    left: -15px;
-    right: auto;
-    border-width: 10px 15px 10px 0;
-    border-color: transparent rgba(255, 255, 255, 0.1) transparent transparent;
+  .timeline-connector {
+    width: 30px;
+  }
+  
+  .timeline-entry:nth-child(odd) .timeline-connector,
+  .timeline-entry:nth-child(even) .timeline-connector {
+    left: 30px;
   }
   
   .timeline-dot {

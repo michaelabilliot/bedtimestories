@@ -1,0 +1,38 @@
+[
+  {
+    "order": 1,
+    "title": "Our first time meeting",
+    "description": "Our story began in the Socialize VC. I remember feeling an instant connection that I couldn't explain.",
+    "date": "The beginning"
+  },
+  {
+    "order": 2,
+    "title": "Our first private call",
+    "description": "Just us, talking for hours. Time seemed to stand still as we got to know each other better.",
+    "date": "A new chapter"
+  },
+  {
+    "order": 3,
+    "title": "Our first \"I love you\"",
+    "description": "The words felt so natural, as if they'd been waiting to be said all along. I'll never forget the way my heart raced.",
+    "date": "A special moment"
+  },
+  {
+    "order": 4,
+    "title": "First time missing you",
+    "description": "Distance has never felt so tangible. Even when we're apart, you're always in my thoughts and in my heart.",
+    "date": "The hardest part"
+  },
+  {
+    "order": 5,
+    "title": "Our first argument",
+    "description": "Every relationship has its challenges. Working through this together only made us stronger.",
+    "date": "Growing together"
+  },
+  {
+    "order": 6,
+    "title": "Our song",
+    "description": "Whenever I hear it, I'm transported back to all our special moments together.",
+    "date": "Our soundtrack"
+  }
+] 
