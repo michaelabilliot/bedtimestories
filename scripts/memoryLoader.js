@@ -10,6 +10,12 @@
 function setupMemoriesPage() {
   console.log('Initializing memories page...');
   
+  // Check if we're actually on the memories page to prevent memories from showing on other pages
+  if (window.getCurrentPage && window.getCurrentPage() !== 'memories') {
+    console.log('Not on memories page, skipping memory setup');
+    return;
+  }
+  
   // Set a custom background for the memories page
   const globalBackground = document.getElementById('globalBackground');
   if (globalBackground) {
@@ -22,6 +28,12 @@ function setupMemoriesPage() {
   
   // Get the placeholder element
   const placeholder = timelineContainer.querySelector('.timeline-placeholder');
+  
+  // Clear any existing entries before fetching new ones
+  const existingEntries = timelineContainer.querySelectorAll('.timeline-entry');
+  existingEntries.forEach(entry => {
+    timelineContainer.removeChild(entry);
+  });
   
   // Load the memories data
   fetch('scripts/memories.json?v=' + new Date().getTime())
@@ -36,12 +48,6 @@ function setupMemoriesPage() {
       
       // Sort memories by order if needed
       memories.sort((a, b) => a.order - b.order);
-      
-      // Clear any existing entries (excluding the placeholder)
-      const existingEntries = timelineContainer.querySelectorAll('.timeline-entry');
-      existingEntries.forEach(entry => {
-        timelineContainer.removeChild(entry);
-      });
       
       // Add each memory to the timeline
       memories.forEach(memory => {

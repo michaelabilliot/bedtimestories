@@ -132,4 +132,7 @@ function showPage(pageName) {
  */
 function getCurrentPage() {
   return currentPage;
-} 
+}
+
+// Export functions for use in other scripts
+window.getCurrentPage = getCurrentPage; 
