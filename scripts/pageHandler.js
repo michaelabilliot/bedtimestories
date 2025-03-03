@@ -65,7 +65,13 @@ function showPage(pageName) {
   const selectedContainer = document.getElementById(`${pageName}Page`);
   if (selectedContainer) {
     selectedContainer.classList.remove('hidden');
-    selectedContainer.style.display = 'flex';
+    
+    // Use display:block for memories page, display:flex for others
+    if (pageName === 'memories') {
+      selectedContainer.style.display = 'block';
+    } else {
+      selectedContainer.style.display = 'flex';
+    }
     
     // Call the appropriate setup function based on the page
     if (pageName === 'stories') {
@@ -101,8 +107,10 @@ function showPage(pageName) {
       document.getElementById('globalBackground').style.backgroundImage = 
         "linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/music-bg.jpg')";
     } else if (pageName === 'memories') {
-      // Set up memories page
-      setupMemoriesPage();
+      // Set up memories page using the function from memoryLoader.js
+      if (typeof setupMemoriesPage === 'function') {
+        setupMemoriesPage();
+      }
       
       // Set a warm, romantic background for the memories page
       document.getElementById('globalBackground').style.backgroundImage = 
@@ -116,17 +124,6 @@ function showPage(pageName) {
   } else {
     console.error(`Page container for "${pageName}" not found`);
   }
-}
-
-/**
- * Set up the memories page with timeline content
- */
-function setupMemoriesPage() {
-  // This function can be expanded to load dynamic memory content
-  console.log('Setting up memories page');
-  
-  // For now, we have a placeholder. In the future, you could load memories from a JSON file
-  // and populate the timeline with your special moments together
 }
 
 /**
