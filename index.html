@@ -29,6 +29,10 @@
       <span class="material-icons">music_note</span>
       <span>Music</span>
     </div>
+    <div class="nav-tab" data-page="games">
+      <span class="material-icons">sports_esports</span>
+      <span>Games</span>
+    </div>
   </div>
 
   <!-- Stories Page Container -->
@@ -52,6 +56,13 @@
   <div id="musicPage" class="page-container hidden">
     <div id="musicGallery" class="music-gallery">
       <!-- Music content will be inserted here by musicLoader.js -->
+    </div>
+  </div>
+
+  <!-- Games Page Container -->
+  <div id="gamesPage" class="page-container hidden">
+    <div id="gamesGallery" class="games-gallery">
+      <!-- Games content will be inserted here by gameLoader.js -->
     </div>
   </div>
 
@@ -86,9 +97,10 @@
   </div>
 
   <!-- Scripts -->
-  <script src="scripts/pageHandler.js"></script>
   <script src="scripts/storyLoader.js"></script>
-  <script src="scripts/musicLoader.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="scripts/pageHandler.js"></script>
+  <script src="scripts/musicLoader.js"></script>
+  <script src="scripts/gameLoader.js"></script>
 </body>
 </html>
