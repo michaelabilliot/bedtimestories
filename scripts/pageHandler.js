@@ -72,8 +72,8 @@ function showPage(pageName) {
   if (selectedContainer) {
     selectedContainer.classList.remove('hidden');
     
-    // Use display:block for memories page, display:flex for others
-    if (pageName === 'memories') {
+    // Use display:block for memories and love pages, display:flex for others
+    if (pageName === 'memories' || pageName === 'love') {
       selectedContainer.style.display = 'block';
     } else {
       selectedContainer.style.display = 'flex';
@@ -121,6 +121,15 @@ function showPage(pageName) {
       // Set a warm, romantic background for the memories page
       document.getElementById('globalBackground').style.backgroundImage = 
         "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/memories-bg.jpg')";
+    } else if (pageName === 'love') {
+      // Set up love notes page using the function from loveLoader.js
+      if (typeof setupLovePage === 'function') {
+        setupLovePage();
+      }
+      
+      // Set a special background for the love notes page
+      document.getElementById('globalBackground').style.backgroundImage = 
+        "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/love-bg.jpg')";
     }
     
     // Apply background effects

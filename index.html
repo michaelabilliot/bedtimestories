@@ -60,6 +60,10 @@
       <span class="material-icons">favorite</span>
       <span>Memories</span>
     </div>
+    <div class="nav-tab" data-page="love">
+      <span class="material-icons">calendar_today</span>
+      <span>Daily Love</span>
+    </div>
   </div>
 
   <!-- Stories Page Container -->
@@ -102,6 +106,18 @@
     </div>
   </div>
 
+  <!-- Daily Love Page Container -->
+  <div id="lovePage" class="page-container hidden">
+    <div class="memories-container">
+      <h1 class="memories-title">Daily Love Notes</h1>
+      <p class="subtitle">A little reminder of my love for you each day</p>
+      
+      <div id="loveNotesContainer">
+        <!-- Love notes calendar and content will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </div>
+
   <!-- Settings Icon -->
   <div id="settingsIcon">
     <span class="material-icons">settings</span>
@@ -133,6 +149,31 @@
     <span class="material-icons">favorite</span>
   </div>
 
+  <!-- Audio Player (hidden until a story is selected) -->
+  <div id="audioPlayer" class="hidden">
+    <div id="audioProgress">
+      <div id="audioProgressBar"></div>
+      <div id="sceneIndicators"></div>
+    </div>
+    <div id="audioControls">
+      <button id="prevSceneBtn" disabled>
+        <span class="material-icons">skip_previous</span>
+      </button>
+      <button id="playPauseBtn">
+        <span class="material-icons">play_arrow</span>
+      </button>
+      <button id="nextSceneBtn">
+        <span class="material-icons">skip_next</span>
+      </button>
+      <button id="volumeBtn">
+        <span class="material-icons">volume_up</span>
+      </button>
+    </div>
+    <div id="volumeControl" class="hidden">
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.7">
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="site-footer">
     <p>Created with ♥ for the most beautiful person in my world</p>
@@ -143,6 +184,7 @@
   <script src="scripts/storyLoader.js"></script>
   <script src="scripts/musicLoader.js"></script>
   <script src="scripts/memoryLoader.js"></script>
+  <script src="scripts/loveLoader.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 </html>

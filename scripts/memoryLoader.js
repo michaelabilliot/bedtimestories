@@ -63,18 +63,25 @@ function setupMemoriesPage() {
       memories.sort((a, b) => a.order - b.order);
       
       // Add each memory to the timeline
-      memories.forEach(memory => {
+      memories.forEach((memory, index) => {
         const entryElement = document.createElement('div');
         entryElement.className = 'timeline-entry';
         
         // Add the dot
         const dotElement = document.createElement('div');
         dotElement.className = 'timeline-dot';
+        // Set a delay for the dot to appear after the timeline line
+        dotElement.style.animationDelay = `${1.5 + (index * 0.15)}s`;
         
         // Create the content
         const contentElement = document.createElement('div');
         contentElement.className = 'timeline-entry-content';
-        contentElement.style.animationDelay = `${0.1 + (memory.order * 0.05)}s`;
+        // Set animation properties for staggered appearance
+        contentElement.style.animationDuration = '0.6s';
+        contentElement.style.animationFillMode = 'forwards';
+        contentElement.style.animationTimingFunction = 'ease';
+        // Delay each entry more than the previous one
+        contentElement.style.animationDelay = `${2.0 + (index * 0.3)}s`;
         
         // Add date, title, and description
         const dateElement = document.createElement('span');
@@ -100,8 +107,10 @@ function setupMemoriesPage() {
         timelineContainer.insertBefore(entryElement, placeholder);
       });
       
-      // Add entry animation when scrolling
-      addScrollAnimation();
+      // Add entry animation when scrolling for entries that might be out of view
+      setTimeout(() => {
+        addScrollAnimation();
+      }, 3000); // Wait for initial animations to complete
     })
     .catch(error => {
       console.error('Error loading memories:', error);
@@ -129,7 +138,10 @@ function addScrollAnimation() {
     const appearOnScroll = new IntersectionObserver(function(entries, observer) {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.style.opacity = 1;
+          // If the entry is already visible from the initial animation, don't change it
+          if (entry.target.style.opacity !== '1') {
+            entry.target.style.opacity = 1;
+          }
           observer.unobserve(entry.target);
         }
       });

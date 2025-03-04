@@ -374,14 +374,14 @@ h1, h2, h3, h4, h5 {
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   font-weight: normal;
   letter-spacing: 1px;
-  animation: fadeInDown 1s ease;
+  animation: fadeInDown 0.3s ease; /* Faster animation */
 }
 #gallery .subtitle {
   font-size: 1.2rem;
   color: rgba(255,255,255,0.9);
   margin-bottom: 40px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  animation: fadeIn 1.5s ease;
+  animation: fadeIn 0.4s ease; /* Faster animation */
   max-width: 600px;
 }
 
@@ -393,7 +393,7 @@ h1, h2, h3, h4, h5 {
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   max-width: 600px;
   line-height: 1.6;
-  animation: fadeIn 1.5s ease;
+  animation: fadeIn 0.4s ease; /* Faster animation */
   text-align: center; /* Center the description text */
 }
 
@@ -450,7 +450,7 @@ h1, h2, h3, h4, h5 {
   align-items: center;
   width: 100%;
   max-width: 1200px;
-  animation: fadeIn 1.2s ease;
+  animation: fadeIn 0.4s ease; /* Faster animation */
   margin: 0 auto;
 }
 .todays-story-section, .other-stories-section {
@@ -832,6 +832,35 @@ h1, h2, h3, h4, h5 {
   100% { transform: scale(1); }
 }
 
+/* New animation for timeline center line */
+@keyframes fadeInLine {
+  from { opacity: 0; height: 0; }
+  to { opacity: 1; height: 100%; }
+}
+
+/* New animation for timeline entries sliding in */
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Heart icon for special elements */
 .heart-icon {
   display: inline-block;
@@ -1190,7 +1219,7 @@ h1, h2, h3, h4, h5 {
   max-width: 90%; /* Ensure it doesn't overflow on mobile */
   box-sizing: border-box;
   opacity: 0;
-  animation: fadeIn 1s ease forwards 0.8s;
+  animation: fadeIn 0.3s ease forwards 0.2s; /* Faster animation */
 }
 
 .navigation-tabs.hidden {
@@ -1315,7 +1344,7 @@ h1, h2, h3, h4, h5 {
   box-sizing: border-box;
   transition: opacity 0.5s ease;
   opacity: 0;
-  animation: fadeIn 1s ease forwards 1s;
+  animation: fadeIn 0.3s ease forwards 0.3s; /* Faster animation */
 }
 
 .page-container.hidden {
@@ -1381,6 +1410,8 @@ h1, h2, h3, h4, h5 {
   background: rgba(255, 255, 255, 0.7);
   transform: translateX(-50%);
   box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+  animation: fadeInLine 1.5s ease forwards; /* New animation for the timeline line */
+  transform-origin: top center;
 }
 
 .timeline-entry {
@@ -1410,26 +1441,19 @@ h1, h2, h3, h4, h5 {
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
   opacity: 0;
-  animation-duration: 0.8s;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease;
-  animation-name: fadeIn;
-}
-
-.timeline-entry-content:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
-  background: rgba(255, 255, 255, 0.3);
+  /* Animation will be applied via JavaScript with staggered delays */
 }
 
 .timeline-entry:nth-child(odd) .timeline-entry-content {
   float: left;
   text-align: right;
+  animation-name: slideInRight; /* Animation for entries on the left */
 }
 
 .timeline-entry:nth-child(even) .timeline-entry-content {
   float: right;
   text-align: left;
+  animation-name: slideInLeft; /* Animation for entries on the right */
 }
 
 .timeline-entry-content h3 {
@@ -1474,6 +1498,8 @@ h1, h2, h3, h4, h5 {
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
+  opacity: 0; /* Start invisible */
+  animation: fadeIn 0.5s ease forwards; /* Will be delayed via JavaScript */
 }
 
 .timeline-dot::before {
@@ -1943,7 +1969,7 @@ h1, h2, h3, h4, h5 {
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   font-weight: normal;
   letter-spacing: 1px;
-  animation: fadeInDown 1s ease;
+  animation: fadeInDown 0.3s ease; /* Faster animation */
   font-size: 2.5rem;
   margin-bottom: 10px;
   font-family: 'Dancing Script', cursive; /* Match the font with site-title */
@@ -1954,7 +1980,7 @@ h1, h2, h3, h4, h5 {
   color: rgba(200,200,200,0.9);
   margin-bottom: 30px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  animation: fadeIn 1.5s ease;
+  animation: fadeIn 0.4s ease; /* Faster animation */
   max-width: 600px;
 }
 
@@ -2376,4 +2402,201 @@ h1, h2, h3, h4, h5 {
   object-position: center 20%; /* Position slightly from the top of the image for better framing */
   object-fit: cover; /* Ensure the image covers the container */
   height: 100%; /* Make sure the image fills the height of the container */
+}
+
+/* Calendar styles for Daily Love */
+.calendar-container {
+  max-width: 900px;
+  margin: 30px auto;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 15px;
+}
+
+.calendar-nav button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #fff;
+}
+
+.calendar-nav button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10px 0;
+  font-size: 0.9rem;
+}
+
+.calendar-day {
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calendar-day:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.calendar-day.today {
+  background: rgba(255, 182, 193, 0.4);
+  box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
+}
+
+.calendar-day.has-note:after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff69b4;
+}
+
+.calendar-day.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(100, 100, 100, 0.1);
+}
+
+.calendar-day.past {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.love-note-display {
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: none;
+}
+
+.love-note-display.visible {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
+
+.love-note-date {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.love-note-content {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'Dancing Script', cursive;
+}
+
+.love-note-signature {
+  text-align: right;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.5rem;
+  margin-top: 20px;
+  color: #fff;
+}
+
+/* Mobile adjustments for calendar */
+@media screen and (max-width: 768px) {
+  .calendar-grid {
+    gap: 5px;
+  }
+  
+  .calendar-day {
+    font-size: 0.9rem;
+  }
+  
+  .calendar-day.has-note:after {
+    width: 6px;
+    height: 6px;
+    top: 5px;
+    right: 5px;
+  }
+  
+  .calendar-title {
+    font-size: 1.3rem;
+  }
+  
+  .calendar-nav button {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .calendar-day-header {
+    font-size: 0.8rem;
+  }
+  
+  .calendar-day {
+    font-size: 0.8rem;
+  }
+  
+  .calendar-container {
+    padding: 15px;
+  }
+  
+  .love-note-content {
+    font-size: 1.1rem;
+  }
+  
+  .love-note-signature {
+    font-size: 1.3rem;
+  }
 }
