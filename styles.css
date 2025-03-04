@@ -2410,14 +2410,13 @@ h1, h2, h3, h4, h5 {
 
 /* Calendar styles for Daily Love */
 .calendar-container {
-  max-width: 900px;
-  margin: 20px auto;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 192, 203, 0.3); /* Semi-transparent light pink */
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .calendar-header {
@@ -2428,10 +2427,11 @@ h1, h2, h3, h4, h5 {
 }
 
 .calendar-title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  font-family: 'Dancing Script', cursive;
+  color: #d24b72;
 }
 
 .calendar-nav {
@@ -2461,50 +2461,118 @@ h1, h2, h3, h4, h5 {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
+  gap: 8px;
+  margin-top: 15px;
 }
 
 .calendar-day-header {
   text-align: center;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
-  padding: 10px 0;
-  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #d24b72;
 }
 
 .calendar-day {
+  width: calc(100% / 7);
   aspect-ratio: 1/1;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
+  border-radius: 50%;
   font-weight: 500;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #d24b72;
+  transition: all 0.2s ease;
 }
 
-.calendar-day:hover:not(.disabled) {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+.calendar-day:hover:not(.disabled):not(.empty) {
+  background-color: rgba(255, 192, 203, 0.6);
+  color: #fff;
+  transform: scale(1.1);
 }
 
 .calendar-day.today {
-  background: rgba(255, 182, 193, 0.4);
-  box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
+  background-color: rgba(210, 75, 114, 0.7);
+  color: white;
+  font-weight: 700;
 }
 
 .calendar-day.has-note:after {
   content: '';
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 8px;
-  height: 8px;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #ff69b4;
+  background-color: #d24b72;
+}
+
+.calendar-day.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.love-note-display {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 192, 203, 0.9);
+  border-radius: 15px;
+  padding: 25px;
+  max-width: 90%;
+  width: 500px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none;
+  text-align: center;
+  border: 2px solid #fff;
+}
+
+.love-note-display.visible {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+.love-note-date {
+  font-family: 'Dancing Script', cursive;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #d24b72;
+}
+
+.love-note-content {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.love-note-signature {
+  font-family: 'Dancing Script', cursive;
+  font-size: 24px;
+  margin-top: 15px;
+  color: #d24b72;
+}
+
+.note-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  display: none;
+}
+
+.note-overlay.visible {
+  display: block;
+  animation: fadeIn 0.2s ease;
 }
 
 .calendar-day.disabled {
@@ -2515,56 +2583,6 @@ h1, h2, h3, h4, h5 {
 
 .calendar-day.past {
   background: rgba(255, 255, 255, 0.15);
-}
-
-/* Love note display */
-.love-note-display {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  max-width: 90%;
-  width: 500px;
-  display: none;
-  color: #333;
-  text-align: center;
-}
-
-.love-note-display.visible {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
-
-.love-note-date {
-  font-size: 1.2rem;
-  color: #8e44ad;
-  font-weight: bold;
-  margin-bottom: 15px;
-  font-family: 'Dancing Script', cursive;
-}
-
-.love-note-content {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: left;
-  font-family: 'Lato', sans-serif;
-}
-
-.love-note-signature {
-  font-size: 1.3rem;
-  color: #e74c3c;
-  font-family: 'Dancing Script', cursive;
-  text-align: right;
-  margin-top: 20px;
 }
 
 /* Mobile adjustments for calendar */
@@ -2580,17 +2598,22 @@ h1, h2, h3, h4, h5 {
   .calendar-day.has-note:after {
     width: 6px;
     height: 6px;
-    top: 5px;
-    right: 5px;
+    bottom: 3px;
   }
   
   .calendar-title {
-    font-size: 1.3rem;
+    font-size: 22px;
   }
   
   .calendar-nav button {
     width: 35px;
     height: 35px;
+  }
+  
+  .love-note-display {
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
   }
 }
 
@@ -2608,11 +2631,15 @@ h1, h2, h3, h4, h5 {
   }
   
   .love-note-content {
-    font-size: 1.1rem;
+    font-size: 16px;
   }
   
   .love-note-signature {
-    font-size: 1.3rem;
+    font-size: 20px;
+  }
+  
+  .love-note-date {
+    font-size: 18px;
   }
 }
 
@@ -2628,21 +2655,4 @@ h1, h2, h3, h4, h5 {
 
 #lovePage .subtitle {
   margin-bottom: 15px;
-}
-
-/* Add overlay for clicking outside the note */
-.note-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 999;
-  display: none;
-}
-
-.note-overlay.visible {
-  display: block;
-  animation: fadeIn 0.2s ease;
 }
