@@ -33,11 +33,27 @@ window.loadStory = loadStory;
  * If a story has "today: true", it is displayed in a separate "Today's Story" section.
  */
 function setupGallery() {
+  // Sample stories - in a real application, these would likely come from a JSON file or API
   const availableStories = [
     { title: "Friends Tale", file: "friends-tale", cover: "images/friends-tale/cover.jpg", order: 1, today: false, description: "A heartwarming tale of friendship and love" },
     { title: "Little Sleepy Star", file: "sleepy-star", cover: "images/sleepy-star/scene0.jpg", order: 2, today: true, description: "A magical bedtime adventure with a sleepy little star" },
-    { title: "Cat", file: "cat", cover: "images/cat/cover.jpg", order: 3, today: false, description: "A story about a cat" }
+    { title: "Cat", file: "cat", cover: "images/cat/cover.jpg", order: 3, today: false, description: "A story about a cat" },
+    // Add more sample stories to fill out the 4x4 grid
+    { title: "The Dream Garden", file: "dream-garden", cover: "images/friends-tale/cover.jpg", order: 4, today: false, description: "A magical journey through a garden of dreams" },
+    { title: "Moonlit Adventure", file: "moonlit-adventure", cover: "images/sleepy-star/scene0.jpg", order: 5, today: false, description: "An adventure under the moonlight" },
+    { title: "Starry Night", file: "starry-night", cover: "images/cat/cover.jpg", order: 6, today: false, description: "A tale about the stars in the night sky" },
+    { title: "Fluffy Clouds", file: "fluffy-clouds", cover: "images/friends-tale/cover.jpg", order: 7, today: false, description: "Journey through the fluffy clouds" },
+    { title: "Ocean Dreams", file: "ocean-dreams", cover: "images/sleepy-star/scene0.jpg", order: 8, today: false, description: "A dreamy adventure under the sea" },
+    { title: "Forest Friends", file: "forest-friends", cover: "images/cat/cover.jpg", order: 9, today: false, description: "Meet the friendly animals of the forest" },
+    { title: "Magic Journey", file: "magic-journey", cover: "images/friends-tale/cover.jpg", order: 10, today: false, description: "A magical journey to far away lands" },
+    { title: "Sweet Dreams", file: "sweet-dreams", cover: "images/sleepy-star/scene0.jpg", order: 11, today: false, description: "A story to help you have sweet dreams" },
+    { title: "Twinkle Stars", file: "twinkle-stars", cover: "images/cat/cover.jpg", order: 12, today: false, description: "A story about the twinkling stars" },
+    { title: "Rainbow Tales", file: "rainbow-tales", cover: "images/friends-tale/cover.jpg", order: 13, today: false, description: "Adventure across the rainbow" },
+    { title: "Sleepy Time", file: "sleepy-time", cover: "images/sleepy-star/scene0.jpg", order: 14, today: false, description: "A gentle story for sleepy time" },
+    { title: "Cuddly Bears", file: "cuddly-bears", cover: "images/cat/cover.jpg", order: 15, today: false, description: "A story about cuddly teddy bears" },
+    { title: "Dream Fairies", file: "dream-fairies", cover: "images/friends-tale/cover.jpg", order: 16, today: false, description: "Meet the magical dream fairies" }
   ];
+  
   availableStories.sort((a, b) => a.order - b.order);
   
   // Set global background to gallery image with a romantic gradient overlay
@@ -68,12 +84,20 @@ function setupGallery() {
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
-        loadStory(story.file)
-          .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { 
-            console.error("Error loading story:", err);
-            showErrorMessage("Failed to load story. Please try again.");
-          });
+        // Add fade-out class to gallery
+        document.getElementById('gallery').classList.add('fade-out');
+        
+        // Load story after short delay for fade effect
+        setTimeout(() => {
+          loadStory(story.file)
+            .then(data => { loadStoryData(data, story.file); })
+            .catch(err => { 
+              console.error("Error loading story:", err);
+              showErrorMessage("Failed to load story. Please try again.");
+              // Remove fade-out if there's an error
+              document.getElementById('gallery').classList.remove('fade-out');
+            });
+        }, 500); // Match this with the CSS transition duration
       });
       todaysSection.appendChild(card);
       
@@ -93,7 +117,7 @@ function setupGallery() {
     otherSection.className = "other-stories-section";
     otherSection.innerHTML = "<h2>More Sweet Dreams</h2>";
     
-    // Create a container for the cards to display them in a row
+    // Create a container for the cards to display them in a grid
     const cardsContainer = document.createElement("div");
     cardsContainer.className = "story-cards-row";
     
@@ -106,12 +130,20 @@ function setupGallery() {
         <div class="story-title">${story.title}</div>
       `;
       card.addEventListener("click", () => {
-        loadStory(story.file)
-          .then(data => { loadStoryData(data, story.file); })
-          .catch(err => { 
-            console.error("Error loading story:", err);
-            showErrorMessage("Failed to load story. Please try again.");
-          });
+        // Add fade-out class to gallery
+        document.getElementById('gallery').classList.add('fade-out');
+        
+        // Load story after short delay for fade effect
+        setTimeout(() => {
+          loadStory(story.file)
+            .then(data => { loadStoryData(data, story.file); })
+            .catch(err => { 
+              console.error("Error loading story:", err);
+              showErrorMessage("Failed to load story. Please try again.");
+              // Remove fade-out if there's an error
+              document.getElementById('gallery').classList.remove('fade-out');
+            });
+        }, 500); // Match this with the CSS transition duration
       });
       cardsContainer.appendChild(card);
     });

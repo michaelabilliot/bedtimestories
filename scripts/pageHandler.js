@@ -37,11 +37,15 @@ function setupNavigation() {
 }
 
 /**
- * Show the specified page and hide all others
+ * Show the specified page and hide all others with fade transitions
  * @param {string} pageName - The name of the page to show ('stories', 'music', 'memories', etc.)
  */
 function showPage(pageName) {
+  // If we're already on this page, do nothing
+  if (currentPage === pageName) return;
+  
   // Update the current page tracker
+  const previousPage = currentPage;
   currentPage = pageName;
   
   // Update active tab styling
@@ -54,30 +58,50 @@ function showPage(pageName) {
     }
   });
 
-  // Hide all page containers
-  const pageContainers = document.querySelectorAll('.page-container');
-  pageContainers.forEach(container => {
-    container.classList.add('hidden');
-    container.style.display = 'none';
+  // Fade out the current page
+  const currentContainer = document.getElementById(`${previousPage}Page`);
+  if (currentContainer) {
+    // Add the hidden class which has opacity: 0
+    currentContainer.classList.add('hidden');
     
-    // Force removal of any lingering memory elements from other pages
-    if (container.id !== 'memoriesPage') {
-      const memoryElements = container.querySelectorAll('.timeline-entry, .timeline-entry-content');
-      memoryElements.forEach(el => el.remove());
-    }
-  });
+    // After the fade out animation, hide the page completely
+    setTimeout(() => {
+      currentContainer.style.display = 'none';
+      
+      // Force removal of any lingering memory elements from other pages
+      if (currentContainer.id !== 'memoriesPage') {
+        const memoryElements = currentContainer.querySelectorAll('.timeline-entry, .timeline-entry-content');
+        memoryElements.forEach(el => el.remove());
+      }
+      
+      // Show the new page with fade in
+      showNewPage(pageName);
+    }, 500); // Match this with the CSS transition duration
+  } else {
+    // If there's no current container, just show the new page
+    showNewPage(pageName);
+  }
+}
 
+/**
+ * Helper function to show the new page with fade-in effect
+ * @param {string} pageName - The name of the page to show
+ */
+function showNewPage(pageName) {
   // Show the selected page container
   const selectedContainer = document.getElementById(`${pageName}Page`);
   if (selectedContainer) {
-    selectedContainer.classList.remove('hidden');
-    
     // Use display:block for memories page, display:flex for others
     if (pageName === 'memories') {
       selectedContainer.style.display = 'block';
     } else {
       selectedContainer.style.display = 'flex';
     }
+    
+    // Remove the hidden class after a short delay to trigger the fade-in
+    setTimeout(() => {
+      selectedContainer.classList.remove('hidden');
+    }, 50);
     
     // Call the appropriate setup function based on the page
     if (pageName === 'stories') {

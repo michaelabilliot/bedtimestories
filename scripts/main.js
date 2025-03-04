@@ -572,194 +572,84 @@ function showScene(index) {
 }
 
 /**
- * Loads story data (JSON), preloads images, and sets up audio.
+ * Loads a story into the game container and sets up the scene navigation.
+ * @param {Array} storyData - The array of scene objects for the story
+ * @param {string} folder - The folder name for the story's resources
  */
 function loadStoryData(storyData, folder) {
-  currentStory = storyData.sort((a, b) => a.order - b.order);
+  // Store story data globally
+  currentStory = storyData.map(scene => ({ ...scene }));
   currentStory.folder = folder;
-  currentSceneIndex = -1; // Set to -1 first so the showScene function knows to build the entire scene
-  preloadStoryImages(currentStory, folder);
+  currentSceneIndex = 0;
   
-  // Hide navigation tabs when story is loaded
-  const navigationTabs = document.getElementById('navigationTabs');
-  if (navigationTabs) {
-    navigationTabs.classList.add('hidden');
+  // Clear any existing audio and preload images
+  if (audioElement) {
+    audioElement.pause();
+    audioElement.src = "";
   }
+  preloadStoryImages(storyData, folder);
   
-  // Force the gallery to be hidden before showing game container
+  // Hide the gallery and show the game container with fade effect
   const gallery = document.getElementById("gallery");
   const gameContainer = document.getElementById("gameContainer");
   
-  // Make sure we remove the gallery completely from view
-  gallery.classList.add("hidden");
-  gallery.style.display = "none";
-  
-  // Make sure the game container is visible
-  gameContainer.classList.remove("hidden");
-  gameContainer.style.display = "flex";
-  
-  // Make sure the game div has the necessary structure
-  const gameDiv = document.getElementById("game");
-  
-  // Clear the game div and create a scene container if it doesn't exist
-  gameDiv.innerHTML = '';
-  
-  // Create the main scene container as a div with class "scene"
-  const sceneContainer = document.createElement('div');
-  sceneContainer.className = 'scene';
-  
-  // Create an inner container for the actual scene content
-  const sceneContentContainer = document.createElement('div');
-  sceneContentContainer.id = 'sceneContainer';
-  sceneContainer.appendChild(sceneContentContainer);
-  
-  // Add navigation buttons inside the scene container
-  const navButtonsContainer = document.createElement('div');
-  navButtonsContainer.className = 'nav-buttons';
-  navButtonsContainer.style.display = 'flex';
-  navButtonsContainer.style.justifyContent = 'center';
-  navButtonsContainer.style.flexWrap = 'wrap';
-  navButtonsContainer.style.gap = '10px';
-  navButtonsContainer.style.marginTop = '20px';
-  
-  const prevButton = document.createElement('button');
-  prevButton.id = 'prevButton';
-  prevButton.innerHTML = '<span class="material-icons">arrow_back</span>Previous';
-  prevButton.addEventListener('click', () => {
-    if (currentSceneIndex > 0) {
-      showScene(currentSceneIndex - 1);
-    }
-  });
-  
-  const nextButton = document.createElement('button');
-  nextButton.id = 'nextButton';
-  nextButton.innerHTML = 'Next<span class="material-icons">arrow_forward</span>';
-  nextButton.addEventListener('click', () => {
-    if (currentSceneIndex < currentStory.length - 1) {
-      showScene(currentSceneIndex + 1);
-    }
-  });
-  
-  navButtonsContainer.appendChild(prevButton);
-  navButtonsContainer.appendChild(nextButton);
-  sceneContainer.appendChild(navButtonsContainer);
-  
-  // Create and add the audio player
-  const audioPlayer = document.createElement('div');
-  audioPlayer.id = 'audioPlayer';
-  
-  // Audio progress bar with scene indicators
-  const audioProgress = document.createElement('div');
-  audioProgress.id = 'audioProgress';
-  
-  const audioProgressBar = document.createElement('div');
-  audioProgressBar.id = 'audioProgressBar';
-  audioProgress.appendChild(audioProgressBar);
-  
-  const sceneIndicators = document.createElement('div');
-  sceneIndicators.id = 'sceneIndicators';
-  audioProgress.appendChild(sceneIndicators);
-  
-  audioPlayer.appendChild(audioProgress);
-  
-  // Audio controls
-  const audioControls = document.createElement('div');
-  audioControls.id = 'audioControls';
-  
-  audioControls.innerHTML = `
-        <button id="goStart"><span class="material-icons">first_page</span></button>
-        <button id="playPauseBtn"><span class="material-icons">play_arrow</span></button>
-        <button id="goEnd"><span class="material-icons">last_page</span></button>
-        <button id="volumeToggle"><span class="material-icons">volume_up</span></button>
-  `;
-  
-  audioPlayer.appendChild(audioControls);
-  
-  // Volume control
-  const volumeControl = document.createElement('div');
-  volumeControl.id = 'volumeControl';
-  volumeControl.className = 'hidden';
-  
-  const volumeSlider = document.createElement('input');
-  volumeSlider.type = 'range';
-  volumeSlider.id = 'volumeSlider';
-  volumeSlider.min = '0';
-  volumeSlider.max = '1';
-  volumeSlider.step = '0.01';
-  volumeSlider.value = '0.5';
-  
-  volumeControl.appendChild(volumeSlider);
-  audioPlayer.appendChild(volumeControl);
-  
-  // Add the audio player to the scene container
-  sceneContainer.appendChild(audioPlayer);
-  
-  // Add everything to the game div
-  gameDiv.appendChild(sceneContainer);
-  
-  // Make sure the background image is also updated
-  if (currentStory[0].image) {
-    document.getElementById('globalBackground').style.backgroundImage = `url('images/${currentStory.folder}/${currentStory[0].image}')`;
+  if (gallery && gameContainer) {
+    // Gallery is already fading out (handled in storyLoader.js)
+    // Now prepare the game container
+    gameContainer.style.display = "flex";
+    gameContainer.classList.remove("hidden");
+    
+    // Apply fade-in after a short delay
+    setTimeout(() => {
+      gameContainer.classList.add("fade-in");
+    }, 100);
   }
   
   // Show the first scene
   showScene(0);
+  
+  // Set up audio player
   setupAudio();
   setupAudioPlayerControls();
 }
 
 /**
- * Returns to the gallery view and unloads preloaded images.
+ * Returns to the gallery view from a story
  */
 function returnToGallery() {
-  if (audioElement) {
-    audioElement.pause();
-    audioElement.currentTime = 0;
-  }
-  unloadStoryImages();
-  
-  // Show navigation tabs when returning to gallery
-  const navigationTabs = document.getElementById('navigationTabs');
-  if (navigationTabs) {
-    navigationTabs.classList.remove('hidden');
-  }
-  
-  // Force the gallery to be visible
-  const gallery = document.getElementById("gallery");
+  // Fade out game container first
   const gameContainer = document.getElementById("gameContainer");
-  const gameDiv = document.getElementById("game");
+  const gallery = document.getElementById("gallery");
   
-  // Clean up the game container
-  gameDiv.innerHTML = '';
-  
-  // Make sure the game container is hidden
-  gameContainer.classList.add("hidden");
-  gameContainer.style.display = "none";
-  
-  // Make sure the gallery is visible
-  gallery.classList.remove("hidden");
-  gallery.style.display = "flex";
-  
-  // Set the background back to the gallery image with gradient overlay
-  // Use relative path for GitHub Pages compatibility
-  document.getElementById('globalBackground').style.backgroundImage = "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
-  updateBackgroundEffects(); // Apply zoom and blur settings
-  
-  // Call setupGallery to repopulate the stories
-  setupGallery();
-  
-  // Reinitialize event listeners for UI elements
-  document.getElementById('settingsIcon').addEventListener('click', () => {
-    const settingsPanel = document.getElementById('settingsPanel');
-    settingsPanel.classList.toggle('hidden');
-    console.log('Settings panel toggled:', !settingsPanel.classList.contains('hidden'));
-  });
-  
-  document.getElementById('loveNoteButton').addEventListener('click', () => {
-    const loveNote = document.getElementById('loveNote');
-    loveNote.classList.toggle('hidden');
-    console.log('Love note toggled:', !loveNote.classList.contains('hidden'));
-  });
+  if (gameContainer) {
+    gameContainer.classList.remove("fade-in");
+    
+    // After fade-out animation completes, hide and reset
+    setTimeout(() => {
+      if (gameContainer) {
+        gameContainer.classList.add("hidden");
+        gameContainer.style.display = "none";
+      }
+      
+      // Clear all story resources
+      if (audioElement) {
+        audioElement.pause();
+        audioElement.src = "";
+      }
+      unloadStoryImages();
+      
+      // Show gallery with fade-in effect
+      if (gallery) {
+        gallery.style.display = "flex";
+        gallery.classList.remove("hidden");
+        gallery.classList.remove("fade-out");
+      }
+      
+      // Reset global background
+      document.getElementById('globalBackground').style.backgroundImage = 
+        "linear-gradient(to bottom, rgba(255,182,193,0.3), rgba(147,112,219,0.3)), url('images/gallery.jpg')";
+    }, 500); // Match this with the CSS transition duration
+  }
 }
 
 // Memory related functions have been moved to memoryLoader.js
