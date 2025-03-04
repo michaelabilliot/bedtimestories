@@ -1176,18 +1176,20 @@ h1, h2, h3, h4, h5 {
 /* Navigation Tabs */
 .navigation-tabs {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 10px;
-  margin: 0 auto 20px; /* Reduced bottom margin from 30px to 20px */
+  gap: 15px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 15px;
-  padding: 5px;
+  padding: 15px 10px;
   width: fit-content;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
-  max-width: 90%; /* Ensure it doesn't overflow on mobile */
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
   box-sizing: border-box;
   opacity: 0;
   animation: fadeIn 1s ease forwards 0.8s;
@@ -1200,16 +1202,16 @@ h1, h2, h3, h4, h5 {
 .nav-tab {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 15px 20px;
+  justify-content: center;
+  padding: 12px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 400;
-  letter-spacing: 0.5px;
-  white-space: nowrap; /* Prevent text wrapping */
+  width: 45px;
+  height: 45px;
 }
 
 .nav-tab:hover {
@@ -1224,84 +1226,69 @@ h1, h2, h3, h4, h5 {
   font-weight: 500;
 }
 
-.nav-tab span {
-  font-size: 0.95rem;
-  display: inline-block;
-  vertical-align: middle;
+.nav-tab span:not(.material-icons) {
+  display: none;
 }
 
 .nav-tab .material-icons {
-  font-size: 20px;
+  font-size: 22px;
   display: inline-block;
-  vertical-align: middle;
 }
 
-/* iPhone 13 specific fixes */
-@media screen and (device-width: 390px) and (device-height: 844px), 
-       screen and (device-width: 428px) and (device-height: 926px) {
+/* Page Containers */
+.page-container {
+  position: relative;
+  min-height: 60vh;
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto 0 5%;
+  padding: 20px 20px 100px;
+  box-sizing: border-box;
+  transition: opacity 0.5s ease;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards 1s;
+}
+
+/* Mobile adjustments for navigation */
+@media screen and (max-width: 768px) {
   .navigation-tabs {
-    width: calc(100% - 30px);
-    max-width: 360px;
-    padding: 5px;
-    gap: 5px;
+    right: 10px;
+    padding: 10px 8px;
+    gap: 10px;
   }
   
   .nav-tab {
+    width: 40px;
+    height: 40px;
     padding: 10px;
-    gap: 5px;
   }
   
-  .nav-tab span:not(.material-icons) {
-    font-size: 0.8rem;
+  .nav-tab .material-icons {
+    font-size: 20px;
+  }
+  
+  .page-container {
+    width: 95%;
+    margin: 0 auto 0 2%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navigation-tabs {
+    right: 5px;
+    padding: 8px 6px;
+    gap: 8px;
+  }
+  
+  .nav-tab {
+    width: 35px;
+    height: 35px;
+    padding: 8px;
   }
   
   .nav-tab .material-icons {
     font-size: 18px;
   }
-  
-  /* Ensure content has proper padding */
-  .page-container {
-    padding: 10px;
-    width: calc(100% - 20px);
-    box-sizing: border-box;
-  }
-  
-  /* Adjust story cards for iPhone 13 */
-  .story-card {
-    width: 150px;
-  }
-  
-  /* Ensure proper spacing for all containers */
-  .memories-container, 
-  .music-gallery {
-    padding: 15px;
-    width: calc(100% - 30px);
-  }
-  
-  /* Ensure proper spacing for scene content */
-  .scene {
-    padding: 15px;
-    margin: 10px;
-    width: calc(100% - 20px);
-  }
-  
-  /* Ensure proper spacing for audio player */
-  #audioPlayer {
-    width: calc(100% - 30px);
-  }
-}
-
-/* Page-specific visibility controls */
-#storiesPage #memoriesTimeline,
-#musicPage #memoriesTimeline,
-#storiesPage .memories-container,
-#musicPage .memories-container {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  z-index: -999 !important;
 }
 
 /* Page Containers */
@@ -2376,4 +2363,69 @@ h1, h2, h3, h4, h5 {
   object-position: center 20%; /* Position slightly from the top of the image for better framing */
   object-fit: cover; /* Ensure the image covers the container */
   height: 100%; /* Make sure the image fills the height of the container */
+}
+
+/* Page-specific visibility controls */
+#storiesPage #memoriesTimeline,
+#musicPage #memoriesTimeline,
+#storiesPage .memories-container,
+#musicPage .memories-container {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: -999 !important;
+}
+
+/* iPhone 13 specific fixes */
+@media screen and (device-width: 390px) and (device-height: 844px), 
+       screen and (device-width: 428px) and (device-height: 926px) {
+  .navigation-tabs {
+    right: 8px;
+    padding: 8px 6px;
+    gap: 8px;
+  }
+  
+  .nav-tab {
+    width: 35px;
+    height: 35px;
+    padding: 8px;
+  }
+  
+  .nav-tab .material-icons {
+    font-size: 18px;
+  }
+  
+  /* Ensure content has proper padding */
+  .page-container {
+    padding: 10px 10px 100px;
+    width: 95%;
+    margin: 0 auto 0 2%;
+    box-sizing: border-box;
+  }
+  
+  /* Adjust story cards for iPhone 13 */
+  .story-card {
+    width: 150px;
+  }
+  
+  /* Ensure proper spacing for all containers */
+  .memories-container, 
+  .music-gallery {
+    padding: 15px;
+    width: calc(100% - 30px);
+  }
+  
+  /* Ensure proper spacing for scene content */
+  .scene {
+    padding: 15px;
+    margin: 10px;
+    width: calc(100% - 20px);
+  }
+  
+  /* Ensure proper spacing for audio player */
+  #audioPlayer {
+    width: calc(100% - 30px);
+  }
 }
