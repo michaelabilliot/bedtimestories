@@ -472,17 +472,21 @@ h1, h2, h3, h4, h5 {
   text-align: center; /* Ensure heading is centered */
 }
 .story-card {
+  position: relative;
+  width: 220px;
+  height: 320px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  margin: 10px;
+  box-sizing: border-box; /* Ensure padding and border are included in width */
   background: rgba(255,255,255,0.1);
-  border-radius: 20px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.2);
-  overflow: hidden;
-  cursor: pointer;
-  width: 250px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  position: relative;
-  margin: 0 auto; /* Center the card */
 }
 .story-card:hover {
   transform: translateY(-10px) scale(1.03);
@@ -832,6 +836,16 @@ h1, h2, h3, h4, h5 {
   #globalBackground {
     background-size: cover !important;
   }
+  .site-header {
+    padding: 40px 15px 15px; /* Reduced padding */
+  }
+  .site-title {
+    font-size: 3.5rem; /* Smaller title */
+  }
+  .site-subtitle {
+    font-size: 1rem;
+    margin: 5px 0 20px; /* Reduced margins */
+  }
   #gallery h1 {
     font-size: 2rem;
     margin-bottom: 10px;
@@ -857,22 +871,30 @@ h1, h2, h3, h4, h5 {
     max-width: 500px;
     margin: 0 auto 20px auto; /* Reduced bottom margin */
     align-items: center;
+    padding: 0 15px; /* Add horizontal padding */
   }
   #gallery #storyCards {
     flex-direction: column;
     align-items: center;
     gap: 20px; /* Reduced gap */
+    width: 100%; /* Ensure full width */
+    padding: 0 10px; /* Add horizontal padding */
   }
   .scene {
     padding: 20px;
     margin: 10px;
+    width: calc(100% - 20px); /* Ensure proper width with margins */
+    box-sizing: border-box;
   }
   .scene-img {
     aspect-ratio: auto;
     border-radius: 10px;
+    max-width: 100%; /* Ensure images don't overflow */
+    height: auto;
   }
   .scene-content {
     font-size: 1.1rem;
+    padding: 0 10px; /* Add horizontal padding */
   }
   .scene-content h1 {
     font-size: 1.8rem;
@@ -883,6 +905,7 @@ h1, h2, h3, h4, h5 {
   }
   #audioPlayer {
     padding: 15px;
+    width: calc(100% - 30px); /* Account for padding */
   }
   #audioControls {
     gap: 15px;
@@ -895,6 +918,7 @@ h1, h2, h3, h4, h5 {
   }
   .todays-story {
     width: 90%;
+    max-width: 300px; /* Limit width */
   }
   #loveNote {
     bottom: 70px;
@@ -911,20 +935,27 @@ h1, h2, h3, h4, h5 {
   .story-description {
     font-size: 1rem;
     margin: 10px 0 15px; /* Reduced bottom margin */
+    padding: 0 15px; /* Add horizontal padding */
   }
   
   .story-cards-row {
     gap: 20px;
+    padding: 0 15px; /* Add horizontal padding */
+    justify-content: center; /* Center cards */
+    flex-wrap: wrap; /* Allow wrapping */
   }
   
   .content-frame {
     padding: 15px;
     margin: 20px;
+    width: calc(100% - 40px); /* Account for margins */
+    box-sizing: border-box;
   }
   
   .ending-message {
     font-size: 1.6rem;
     margin-top: 20px;
+    padding: 0 15px; /* Add horizontal padding */
   }
   
   .album-cover {
@@ -934,16 +965,54 @@ h1, h2, h3, h4, h5 {
   
   .music-cards {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    padding: 0 10px;
+    padding: 0 15px; /* Add horizontal padding */
+    gap: 15px; /* Reduced gap */
   }
   
   .scene {
     padding: 20px;
     min-height: auto;
   }
+  
+  /* Ensure navigation tabs fit */
+  .navigation-tabs {
+    padding: 0 10px;
+    width: calc(100% - 20px);
+    justify-content: center;
+  }
+  
+  .nav-tab {
+    padding: 12px 15px;
+  }
+  
+  /* Music player adjustments */
+  .music-player-container {
+    width: calc(100% - 30px);
+    padding: 15px;
+    margin: 0 auto;
+  }
+  
+  .track-info {
+    padding: 0 10px;
+  }
+  
+  /* Memory timeline adjustments */
+  .memories-container {
+    padding: 20px 15px;
+  }
+  
+  .timeline {
+    padding: 0 15px;
+  }
 }
 
 @media screen and (max-width: 480px) {
+  .site-header {
+    padding: 30px 10px 10px; /* Further reduced padding */
+  }
+  .site-title {
+    font-size: 3rem; /* Even smaller title */
+  }
   #gallery h1 {
     font-size: 1.8rem;
   }
@@ -956,15 +1025,19 @@ h1, h2, h3, h4, h5 {
   .scene {
     padding: 15px;
     margin: 5px;
+    width: calc(100% - 10px); /* Ensure proper width with margins */
   }
   #settingsPanel {
     padding: 20px;
+    width: calc(100% - 40px); /* Account for padding */
+    max-width: 300px;
   }
   #settingsPanel h2 {
     font-size: 1.5rem;
   }
   #loveNote {
     max-width: 250px;
+    width: calc(100% - 40px); /* Account for padding */
   }
   #loveNote .signature {
     font-size: 1.2rem;
@@ -975,6 +1048,8 @@ h1, h2, h3, h4, h5 {
   
   .content-frame {
     padding: 10px;
+    margin: 10px;
+    width: calc(100% - 20px); /* Account for margins */
   }
   
   .ending-message {
@@ -989,6 +1064,96 @@ h1, h2, h3, h4, h5 {
   
   .music-cards {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px; /* Further reduced gap */
+  }
+  
+  /* Ensure navigation tabs fit on smaller screens */
+  .nav-tab {
+    padding: 10px;
+  }
+  
+  .nav-tab span:not(.material-icons) {
+    font-size: 0.8rem;
+  }
+  
+  /* Ensure proper page container padding */
+  .page-container {
+    padding: 10px;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+  }
+}
+
+/* iPhone-specific adjustments */
+@media screen and (max-width: 390px) {
+  .site-title {
+    font-size: 2.5rem; /* Smaller title for iPhone */
+  }
+  
+  .site-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .story-card {
+    width: 140px; /* Smaller cards */
+  }
+  
+  .story-card .story-title {
+    font-size: 1rem;
+    padding: 10px;
+  }
+  
+  .nav-tab {
+    padding: 8px;
+  }
+  
+  .nav-tab .material-icons {
+    font-size: 18px;
+  }
+  
+  .nav-tab span:not(.material-icons) {
+    font-size: 0.7rem;
+  }
+  
+  #gallery h1 {
+    font-size: 1.6rem;
+  }
+  
+  #gallery .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .scene-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  /* Ensure all containers have proper padding */
+  .memories-container, 
+  .music-gallery,
+  .page-container {
+    padding: 10px;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+  }
+  
+  /* Ensure buttons don't overflow */
+  .nav-buttons button {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust audio controls for smaller screens */
+  #audioControls {
+    gap: 10px;
+  }
+  
+  #audioControls button {
+    padding: 8px;
+  }
+  
+  /* Ensure proper spacing for timeline */
+  .timeline-entry-content {
+    padding: 12px;
   }
 }
 
@@ -996,12 +1161,18 @@ h1, h2, h3, h4, h5 {
 .navigation-tabs {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin: 0 auto 40px;
-  max-width: 800px;
+  gap: 10px;
+  margin: 0 auto 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 5px;
+  width: fit-content;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   position: relative;
-  z-index: 100;
-  padding: 0 20px;
+  z-index: 10;
+  max-width: 90%; /* Ensure it doesn't overflow on mobile */
+  box-sizing: border-box;
   opacity: 0;
   animation: fadeIn 1s ease forwards 0.8s;
 }
@@ -1012,42 +1183,96 @@ h1, h2, h3, h4, h5 {
 
 .nav-tab {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 15px 25px;
-  border-radius: 15px;
-  background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
+  gap: 8px;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  flex: 1;
-  min-width: 100px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .nav-tab:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  color: #fff;
 }
 
 .nav-tab.active {
-  background-color: rgba(255, 182, 193, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+  background: rgba(255, 182, 193, 0.4);
+  color: #fff;
+  font-weight: 500;
 }
 
 .nav-tab span {
-  margin-top: 5px;
-  font-weight: 500;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 0.95rem;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .nav-tab .material-icons {
-  font-size: 24px;
-  margin-bottom: 5px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* iPhone 13 specific fixes */
+@media screen and (device-width: 390px) and (device-height: 844px), 
+       screen and (device-width: 428px) and (device-height: 926px) {
+  .navigation-tabs {
+    width: calc(100% - 30px);
+    max-width: 360px;
+    padding: 5px;
+    gap: 5px;
+  }
+  
+  .nav-tab {
+    padding: 10px;
+    gap: 5px;
+  }
+  
+  .nav-tab span:not(.material-icons) {
+    font-size: 0.8rem;
+  }
+  
+  .nav-tab .material-icons {
+    font-size: 18px;
+  }
+  
+  /* Ensure content has proper padding */
+  .page-container {
+    padding: 10px;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+  }
+  
+  /* Adjust story cards for iPhone 13 */
+  .story-card {
+    width: 150px;
+  }
+  
+  /* Ensure proper spacing for all containers */
+  .memories-container, 
+  .music-gallery {
+    padding: 15px;
+    width: calc(100% - 30px);
+  }
+  
+  /* Ensure proper spacing for scene content */
+  .scene {
+    padding: 15px;
+    margin: 10px;
+    width: calc(100% - 20px);
+  }
+  
+  /* Ensure proper spacing for audio player */
+  #audioPlayer {
+    width: calc(100% - 30px);
+  }
 }
 
 /* Page-specific visibility controls */
@@ -1065,12 +1290,16 @@ h1, h2, h3, h4, h5 {
 
 /* Page Containers */
 .page-container {
+  position: relative;
+  min-height: 60vh;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px 100px;
+  padding: 20px 20px 100px; /* Restore bottom padding */
+  box-sizing: border-box;
+  transition: opacity 0.5s ease;
   opacity: 0;
   animation: fadeIn 1s ease forwards 1s;
-  position: relative;
 }
 
 .page-container.hidden {
@@ -1756,4 +1985,352 @@ h1, h2, h3, h4, h5 {
   padding: 0 20px;
   box-sizing: border-box;
   position: relative;
+}
+
+/* Android-specific adjustments */
+@media screen and (max-width: 420px) {
+  /* Fix for Android Chrome address bar issues */
+  html, body {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Improve touch targets for Android */
+  .nav-tab, 
+  .story-card,
+  #settingsIcon,
+  #loveNoteButton,
+  .nav-buttons button,
+  #audioControls button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Fix for Android input elements */
+  input[type="range"] {
+    height: 24px; /* Larger touch target */
+    margin: 8px 0;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Ensure proper scrolling on Android */
+  .scene,
+  .timeline,
+  #loveNote,
+  #settingsPanel {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Fix for Android Chrome bottom nav bar */
+  .page-container {
+    padding-bottom: 120px; /* Extra padding to account for Chrome's navigation bar */
+  }
+  
+  /* Ensure proper sizing for story cards on Android */
+  .story-card {
+    width: 160px;
+    height: 240px; /* Slightly shorter for better fit */
+  }
+  
+  /* Improve performance on Android */
+  #globalBackground,
+  #globalNoise {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  
+  /* Fix for Android font rendering */
+  .site-title,
+  .site-subtitle,
+  h1, h2, h3 {
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Ensure buttons are easily tappable on Android */
+  button, 
+  .nav-tab,
+  .story-card,
+  #settingsIcon,
+  #loveNoteButton {
+    min-height: 48px; /* Google's recommended minimum touch target size */
+  }
+  
+  /* Fix for Android landscape mode */
+  @media (orientation: landscape) {
+    .site-header {
+      padding: 20px 10px 10px;
+    }
+    
+    .site-title {
+      font-size: 2.2rem;
+    }
+    
+    .site-subtitle {
+      font-size: 0.8rem;
+      margin: 5px 0 10px;
+    }
+    
+    .navigation-tabs {
+      margin: 0 auto 20px;
+    }
+    
+    /* Adjust story cards for landscape */
+    .story-card {
+      width: 140px;
+      height: 200px;
+    }
+    
+    /* Ensure scene content is readable in landscape */
+    .scene {
+      min-height: auto;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+  }
+}
+
+/* Fix for specific Android devices with notches */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .site-header {
+    padding-top: calc(40px + env(safe-area-inset-top));
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .page-container {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+  }
+  
+  #settingsIcon {
+    top: calc(15px + env(safe-area-inset-top));
+    right: calc(15px + env(safe-area-inset-right));
+  }
+  
+  #loveNoteButton {
+    bottom: calc(15px + env(safe-area-inset-bottom));
+    right: calc(15px + env(safe-area-inset-right));
+  }
+}
+
+/* Fix for Android WebView issues */
+@media screen and (max-width: 420px) {
+  /* Improve performance for animations on Android */
+  .heart,
+  .nav-tab,
+  .story-card,
+  .scene-img,
+  .timeline-entry-content {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  /* Fix for Android keyboard issues */
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on focus */
+  }
+  
+  /* Fix for Android Chrome pull-to-refresh */
+  body {
+    overscroll-behavior-y: contain;
+  }
+  
+  /* Ensure proper backdrop-filter support */
+  @supports not (backdrop-filter: blur(10px)) {
+    .navigation-tabs,
+    .scene,
+    #settingsPanel,
+    #loveNote,
+    #audioPlayer {
+      background-color: rgba(255, 182, 193, 0.85); /* Fallback for devices without backdrop-filter support */
+    }
+  }
+}
+
+/* Specific fixes for Samsung Galaxy devices */
+@media screen and (max-width: 360px) {
+  /* Galaxy S8, S9, S10e */
+  .site-title {
+    font-size: 2.2rem;
+  }
+  
+  .story-card {
+    width: 140px;
+    height: 220px;
+  }
+  
+  .nav-tab {
+    padding: 8px 5px;
+  }
+  
+  .nav-tab span:not(.material-icons) {
+    font-size: 0.7rem;
+  }
+}
+
+/* Specific fixes for Google Pixel devices */
+@media screen and (max-width: 412px) and (max-height: 915px) {
+  /* Pixel 4, 5, 6 */
+  .navigation-tabs {
+    max-width: 380px;
+  }
+  
+  /* Fix for Pixel notch */
+  .site-header {
+    padding-top: 45px;
+  }
+  
+  /* Ensure proper spacing for audio controls */
+  #audioControls {
+    gap: 10px;
+  }
+}
+
+/* Fix for Android Firefox */
+@-moz-document url-prefix() {
+  @media screen and (max-width: 420px) {
+    /* Fix for backdrop-filter not fully supported in Firefox Android */
+    .navigation-tabs,
+    .scene,
+    #settingsPanel,
+    #loveNote,
+    #audioPlayer {
+      background-color: rgba(255, 182, 193, 0.85);
+    }
+    
+    /* Fix for range inputs in Firefox Android */
+    input[type="range"] {
+      height: 6px;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+/* Fix for older Android browsers */
+@supports not (display: grid) {
+  .music-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .music-card {
+    margin: 10px;
+  }
+}
+
+/* Fix for Android Chrome 86+ */
+@media screen and (max-width: 420px) {
+  @supports (height: 100dvh) {
+    .scene {
+      max-height: 85dvh; /* Use dynamic viewport height */
+    }
+    
+    #gameContainer {
+      height: 100dvh;
+    }
+  }
+}
+
+/* Performance optimizations for mobile devices */
+@media screen and (max-width: 768px) {
+  /* Reduce animation complexity on mobile */
+  .heart {
+    animation-duration: 30s; /* Slower animations to reduce CPU usage */
+  }
+  
+  /* Optimize background for performance */
+  #globalBackground {
+    background-attachment: scroll; /* Fixed attachment can cause performance issues */
+    background-size: cover;
+    transform: translateZ(0); /* Force GPU acceleration */
+  }
+  
+  /* Reduce shadow complexity for better performance */
+  .story-card,
+  .scene,
+  #settingsPanel,
+  #loveNote,
+  .timeline-entry-content {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Simpler shadow */
+  }
+  
+  /* Optimize animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeInDown {
+    from { 
+      opacity: 0;
+      transform: translateY(-10px); /* Reduced movement */
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Reduce or eliminate animations on low-end devices */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    .heart {
+      animation: none !important;
+    }
+    
+    .floating-hearts {
+      display: none;
+    }
+  }
+}
+
+/* Additional Android optimizations */
+@media screen and (max-width: 420px) {
+  /* Use lighter weight fonts on Android for better rendering */
+  body {
+    font-weight: 400;
+  }
+  
+  h1, h2, h3 {
+    font-weight: 500;
+  }
+  
+  /* Optimize image loading */
+  .story-card img,
+  .scene-img,
+  .album-cover img {
+    content-visibility: auto; /* Modern browsers will lazy load these */
+  }
+  
+  /* Improve scrolling performance */
+  .scene-content,
+  .timeline {
+    contain: content; /* Improves rendering performance */
+  }
+  
+  /* Reduce paint complexity */
+  .nav-tab:hover,
+  .story-card:hover,
+  .nav-buttons button:hover {
+    transform: none; /* Remove hover transforms on touch devices */
+  }
 }
