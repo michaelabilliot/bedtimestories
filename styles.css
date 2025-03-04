@@ -402,8 +402,8 @@ h1, h2, h3, h4, h5 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 30px;
-  margin-top: 20px;
+  gap: 20px; /* Reduced from 30px */
+  margin-top: 15px; /* Reduced from 20px */
   width: 100%;
 }
 
@@ -446,7 +446,7 @@ h1, h2, h3, h4, h5 {
 #storyCards {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Reduced gap between sections */
+  gap: 15px; /* Reduced from 20px */
   align-items: center;
   width: 100%;
   max-width: 1200px;
@@ -459,22 +459,22 @@ h1, h2, h3, h4, h5 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px; /* Reduced bottom margin */
+  margin-bottom: 15px; /* Reduced from 20px */
 }
 .todays-story-section h2,
 .other-stories-section h2 {
-  font-size: 2rem;
+  font-size: 1.8rem; /* Reduced from 2rem */
   color: #fff;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  margin-bottom: 25px;
+  margin-bottom: 20px; /* Reduced from 25px */
   font-weight: normal;
   letter-spacing: 0.5px;
   text-align: center; /* Ensure heading is centered */
 }
 .story-card {
   position: relative;
-  width: 220px;
-  height: 320px;
+  width: 200px; /* Reduced from 220px */
+  height: 290px; /* Reduced from 320px */
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -482,7 +482,7 @@ h1, h2, h3, h4, h5 {
   cursor: pointer;
   transform-style: preserve-3d;
   perspective: 1000px;
-  margin: 10px;
+  margin: 5px; /* Reduced from 10px */
   box-sizing: border-box; /* Ensure padding and border are included in width */
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(10px);
@@ -780,6 +780,14 @@ h1, h2, h3, h4, h5 {
   background: #fff;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   cursor: pointer;
+}
+#volumeSlider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  border: none;
 }
 
 /* Utility class */
@@ -1591,16 +1599,20 @@ h1, h2, h3, h4, h5 {
 
 .music-card-image {
   width: 100%;
-  height: 150px;
-  overflow: hidden;
+  padding-top: 100%; /* Creates a perfect square */
   position: relative;
+  overflow: hidden;
 }
 
 .music-card-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  aspect-ratio: 1 / 1; /* Ensure perfect square aspect ratio */
 }
 
 .music-card:hover .music-card-image img {
@@ -1716,6 +1728,7 @@ h1, h2, h3, h4, h5 {
   height: 100%;
   object-fit: cover;
   display: block;
+  aspect-ratio: 1 / 1; /* Ensure perfect square aspect ratio */
 }
 
 .track-info {

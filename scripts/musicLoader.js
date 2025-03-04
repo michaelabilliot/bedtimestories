@@ -63,7 +63,6 @@ function setupMusicGallery() {
   header.className = 'music-header';
   header.innerHTML = `
     <h1>Music Collection</h1>
-    <p class="subtitle">Relax and enjoy these special tunes</p>
   `;
   musicGalleryContainer.appendChild(header);
   
