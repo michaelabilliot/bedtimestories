@@ -1,0 +1,609 @@
+/* storyGallery.css */
+/* Contains styles specific to the stories page */
+
+/* Gallery container */
+#gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeIn 0.4s ease;
+}
+
+#gallery h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 3rem;
+  margin-bottom: 10px;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+#gallery .subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  font-weight: 300;
+  max-width: 800px;
+}
+
+/* Story description */
+.story-description {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+/* Story cards row */
+.story-cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+/* Special message */
+.special-message {
+  background: rgba(255, 182, 193, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+/* Content frame */
+.content-frame {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 30px;
+  margin: 20px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+/* Ending message */
+.ending-message {
+  background: rgba(255, 182, 193, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 30px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+/* Story cards container */
+#storyCards {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 40px;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Story sections */
+.todays-story-section, .other-stories-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.todays-story-section h2,
+.other-stories-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+}
+
+/* Story card */
+.story-card {
+  width: 280px;
+  height: 380px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.4s ease;
+}
+
+.story-card:hover {
+  transform: translateY(-10px);
+}
+
+.story-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  z-index: 1;
+}
+
+.story-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.story-card:hover img {
+  transform: scale(1.05);
+}
+
+.story-card .story-title {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  color: #fff;
+  font-size: 1.5rem;
+  text-align: center;
+  z-index: 2;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Game container */
+#gameContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+#game {
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  max-height: 800px;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Scene */
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background: #000;
+}
+
+.scene-content {
+  position: relative;
+  z-index: 2;
+  padding: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.scene-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.scene-content p {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.scene-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0.8;
+  transition: transform 10s ease;
+  transform-origin: center center;
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Navigation buttons */
+.nav-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.nav-buttons button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin: 0 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.nav-buttons button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.nav-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-buttons svg {
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Audio player */
+#audioPlayer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 10px 0;
+  z-index: 1001;
+  transition: transform 0.3s ease;
+}
+
+#audioProgress {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  position: relative;
+  cursor: pointer;
+}
+
+#audioProgressBar {
+  height: 100%;
+  background: #ff6b8b;
+  width: 0;
+  transition: width 0.1s linear;
+}
+
+#sceneIndicators {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.scene-indicator {
+  flex: 1;
+  height: 100%;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.scene-indicator:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.scene-indicator svg {
+  display: none;
+}
+
+#audioControls {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+#audioControls button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#audioControls button:hover {
+  color: #ff6b8b;
+}
+
+#audioControls .material-icons {
+  font-size: 28px;
+}
+
+#volumeControl {
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  transform-origin: bottom right;
+  transform: scale(0);
+  opacity: 0;
+}
+
+#volumeControl.hidden {
+  display: none;
+}
+
+#volumeSlider {
+  width: 100px;
+  height: 5px;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+#volumeSlider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Today's story highlight */
+.todays-story {
+  position: relative;
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(255, 182, 193, 0.4);
+  border: 2px solid rgba(255, 182, 193, 0.5);
+}
+
+.todays-story:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 20px 50px rgba(255, 182, 193, 0.5);
+}
+
+/* Friends Tale specific styles */
+.story-card img[src*="friends-tale/cover"] {
+  object-position: center 20%;
+  object-fit: cover;
+  height: 100%;
+}
+
+.story-card[data-story="friends-tale"] {
+  background-color: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.story-card[data-story="friends-tale"] img,
+.story-card[data-story="friends-tale"] img {
+  object-position: center 20%;
+  object-fit: cover;
+  height: 100%;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+  #gallery h1 {
+    font-size: 2.5rem;
+  }
+  
+  #gallery .subtitle {
+    font-size: 1rem;
+  }
+  
+  .todays-story-section h2,
+  .other-stories-section h2 {
+    font-size: 1.8rem;
+  }
+  
+  .story-card {
+    width: 240px;
+    height: 340px;
+  }
+  
+  .story-card .story-title {
+    font-size: 1.3rem;
+  }
+  
+  .todays-story-section, .other-stories-section {
+    margin-bottom: 15px;
+  }
+  
+  #gallery #storyCards {
+    gap: 30px;
+  }
+  
+  .scene {
+    padding-bottom: 60px;
+  }
+  
+  .scene-img {
+    object-position: center center;
+  }
+  
+  .scene-content {
+    padding: 20px;
+  }
+  
+  .scene-content h1 {
+    font-size: 2rem;
+  }
+  
+  .nav-buttons button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  #audioPlayer {
+    padding: 5px 0;
+  }
+  
+  #audioControls {
+    padding: 5px 0;
+  }
+  
+  #audioControls button {
+    margin: 0 10px;
+  }
+  
+  #audioControls .material-icons {
+    font-size: 24px;
+  }
+  
+  .todays-story {
+    transform: scale(1.03);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #gallery h1 {
+    font-size: 2.2rem;
+  }
+  
+  .story-card {
+    width: 220px;
+    height: 320px;
+  }
+  
+  .scene-content {
+    padding: 15px;
+  }
+  
+  .scene {
+    padding-bottom: 70px;
+  }
+  
+  .story-description {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .story-cards-row {
+    gap: 20px;
+  }
+  
+  .content-frame {
+    padding: 20px;
+    margin: 15px 0;
+  }
+  
+  .ending-message {
+    padding: 15px;
+    margin: 20px 0;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  #gallery h1 {
+    font-size: 2rem;
+  }
+  
+  #gallery .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .scene-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+  
+  .nav-buttons button {
+    width: 36px;
+    height: 36px;
+    margin: 0 8px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .scene {
+    padding-bottom: 80px;
+  }
+  
+  #gameContainer {
+    padding: 0;
+  }
+} 
