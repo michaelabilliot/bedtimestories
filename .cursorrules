@@ -9,27 +9,14 @@
     "printWidth": 100,
     "tabWidth": 2,
     "useTabs": false,
-    "singleQuote": true,
-    "jsxSingleQuote": false,
-    "endOfLine": "lf",
-    "max-len": 100,
-    "no-console": ["warn", { "allow": ["warn", "error"] }],
-    "no-unused-vars": "warn",
-    "prefer-const": "error",
-    "no-var": "error"
+    "singleQuote": true
   },
   "css": {
     "indent": 2,
     "max-empty-lines": 1,
     "color-hex-case": "lower",
     "color-hex-length": "short",
-    "block-no-empty": true,
-    "declaration-colon-space-after": "always",
-    "declaration-block-semicolon-newline-after": "always",
-    "property-no-vendor-prefix": true,
-    "value-no-vendor-prefix": true,
-    "selector-no-vendor-prefix": true,
-    "media-feature-name-no-vendor-prefix": true
+    "block-no-empty": true
   },
   "html": {
     "indent": 2,
@@ -38,11 +25,7 @@
     "tag-name-lowercase": true,
     "attr-name-lowercase": true,
     "attr-value-double-quotes": true,
-    "doctype-html5": true,
-    "id-unique": true,
-    "head-script-disabled": true,
-    "style-disabled": true,
-    "title-require": true
+    "id-unique": true
   },
   "general": {
     "max-file-size": "500kb",
@@ -51,27 +34,15 @@
     "insert-final-newline": true,
     "max-line-length": 100
   },
-  "git": {
-    "ignore": [
-      "node_modules",
-      ".DS_Store",
-      "*.log",
-      "dist",
-      "build",
-      ".env",
-      ".env.local",
-      ".env.development.local",
-      ".env.test.local",
-      ".env.production.local"
-    ]
-  },
-  "folders": {
+  "project": {
+    "name": "Bedtime Stories",
+    "description": "A web application for interactive bedtime stories",
     "structure": {
-      "scripts": "JavaScript files",
-      "styles": "CSS files",
-      "images": "Image assets",
-      "stories": "Story JSON files",
-      "audio": "Audio files"
+      "scripts": "JavaScript files for story loading and interaction",
+      "styles": "CSS styling for the application",
+      "images": "Story images and background assets",
+      "stories": "JSON files containing story content",
+      "audio": "Background music and narration files"
     }
   }
 } 
