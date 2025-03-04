@@ -65,24 +65,30 @@ function setupGallery() {
     return;
   }
   
+  // Clear any existing content
   storyCardsContainer.innerHTML = "";
   
   // Create container for Today's Story (if any)
   const todaysStories = availableStories.filter(story => story.today);
   const otherStories = availableStories.filter(story => !story.today);
   
+  // Today's Story section (left side)
   if (todaysStories.length > 0) {
     const todaysSection = document.createElement("div");
     todaysSection.className = "todays-story-section";
     todaysSection.innerHTML = "<h2>Tonight's Special</h2>";
+    
     todaysStories.forEach(story => {
       const card = document.createElement("div");
       card.className = "story-card todays-story";
       card.setAttribute("data-story", story.file);
+      
+      // Create wrapper div for proper aspect ratio
       card.innerHTML = `
         <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
+      
       card.addEventListener("click", () => {
         // Add fade-out class to gallery
         document.getElementById('gallery').classList.add('fade-out');
@@ -99,6 +105,7 @@ function setupGallery() {
             });
         }, 500); // Match this with the CSS transition duration
       });
+      
       todaysSection.appendChild(card);
       
       // Add description below the card
@@ -109,9 +116,11 @@ function setupGallery() {
         todaysSection.appendChild(descriptionEl);
       }
     });
+    
     storyCardsContainer.appendChild(todaysSection);
   }
   
+  // Other Stories section (right side - 4x4 grid)
   if (otherStories.length > 0) {
     const otherSection = document.createElement("div");
     otherSection.className = "other-stories-section";
@@ -121,14 +130,19 @@ function setupGallery() {
     const cardsContainer = document.createElement("div");
     cardsContainer.className = "story-cards-row";
     
-    otherStories.forEach(story => {
+    // Only show the first 16 stories (4x4 grid)
+    const displayedStories = otherStories.slice(0, 16);
+    
+    displayedStories.forEach(story => {
       const card = document.createElement("div");
       card.className = "story-card";
       card.setAttribute("data-story", story.file);
+      
       card.innerHTML = `
         <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
       `;
+      
       card.addEventListener("click", () => {
         // Add fade-out class to gallery
         document.getElementById('gallery').classList.add('fade-out');
@@ -145,6 +159,7 @@ function setupGallery() {
             });
         }, 500); // Match this with the CSS transition duration
       });
+      
       cardsContainer.appendChild(card);
     });
     

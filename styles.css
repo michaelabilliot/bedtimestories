@@ -361,6 +361,7 @@ h1, h2, h3, h4, h5 {
   max-width: 1400px;
   margin: 0 auto;
   position: relative;
+  align-items: flex-start;
 }
 
 /* Add separator line between Today's Story and Other Stories */
@@ -370,9 +371,9 @@ h1, h2, h3, h4, h5 {
   top: 0;
   left: 33%; /* Position after Today's Story section */
   height: 100%;
-  width: 1px;
-  background-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  width: 2px; /* Make line thicker and more visible */
+  background-color: rgba(255, 255, 255, 0.8); /* More visible white line */
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
 }
 
 .todays-story-section, .other-stories-section {
@@ -386,12 +387,14 @@ h1, h2, h3, h4, h5 {
 .todays-story-section {
   width: 33%;
   box-sizing: border-box;
+  padding-right: 30px; /* Add space before the separator */
 }
 
 /* Other Stories section - 67% width on the right */
 .other-stories-section {
   width: 67%;
   box-sizing: border-box;
+  padding-left: 30px; /* Add space after the separator */
 }
 
 .todays-story-section h2,
@@ -403,13 +406,15 @@ h1, h2, h3, h4, h5 {
   color: #fff;
   text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
   align-self: center;
+  width: 100%;
+  text-align: center;
 }
 
 /* Updated Story Cards Grid */
 .story-cards-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 columns */
-  grid-template-rows: repeat(4, 1fr); /* 4 rows */
+  grid-auto-rows: 1fr; /* Auto-adjust row height */
   gap: 15px;
   width: 100%;
 }
@@ -424,6 +429,8 @@ h1, h2, h3, h4, h5 {
   transition: all 0.3s ease;
   aspect-ratio: 3/4; /* 3:4 aspect ratio */
   margin-bottom: 15px;
+  height: 0;
+  padding-bottom: 133.33%; /* 4:3 ratio in percentage form */
 }
 
 .story-card:hover {
@@ -446,6 +453,9 @@ h1, h2, h3, h4, h5 {
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .story-card:hover img {
@@ -471,6 +481,64 @@ h1, h2, h3, h4, h5 {
   max-width: 400px;
   aspect-ratio: 3/4;
   margin-bottom: 20px;
+  padding-bottom: 133.33%; /* 4:3 ratio */
+  position: relative;
+  height: 0;
+}
+
+/* Story description for today's story */
+.story-description {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: white;
+  max-width: 400px;
+  line-height: 1.4;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1200px) {
+  #storyCards {
+    flex-direction: column;
+  }
+  
+  #storyCards::after {
+    left: 0;
+    top: calc(33% + 30px);
+    height: 2px;
+    width: 100%;
+  }
+  
+  .todays-story-section, .other-stories-section {
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .todays-story-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+  }
+  
+  .story-cards-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .story-cards-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  #settingsIcon {
+    margin-bottom: 5px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .story-cards-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Game Container and transition effects */

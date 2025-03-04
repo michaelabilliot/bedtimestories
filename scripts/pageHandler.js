@@ -6,12 +6,13 @@
 
 // Track the current active page
 let currentPage = 'stories'; // Default to stories page
+let isTransitioning = false; // Flag to prevent multiple transitions
 
 // Initialize the page handler when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   setupNavigation();
   // Default to showing the stories page on initial load
-  showPage('stories');
+  showPage('stories', true); // true = initial load (no transition)
 });
 
 /**
@@ -29,7 +30,7 @@ function setupNavigation() {
   navTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const targetPage = tab.getAttribute('data-page');
-      if (targetPage) {
+      if (targetPage && !isTransitioning) {
         showPage(targetPage);
       }
     });
@@ -39,10 +40,14 @@ function setupNavigation() {
 /**
  * Show the specified page and hide all others with fade transitions
  * @param {string} pageName - The name of the page to show ('stories', 'music', 'memories', etc.)
+ * @param {boolean} isInitialLoad - Whether this is the initial page load (skip animations)
  */
-function showPage(pageName) {
-  // If we're already on this page, do nothing
-  if (currentPage === pageName) return;
+function showPage(pageName, isInitialLoad = false) {
+  // If we're already on this page or in the middle of a transition, do nothing
+  if (currentPage === pageName || isTransitioning) return;
+  
+  // Set transitioning flag
+  isTransitioning = true;
   
   // Update the current page tracker
   const previousPage = currentPage;
@@ -57,6 +62,25 @@ function showPage(pageName) {
       tab.classList.remove('active');
     }
   });
+
+  // For initial load, just show the page directly without transition
+  if (isInitialLoad) {
+    const selectedContainer = document.getElementById(`${pageName}Page`);
+    if (selectedContainer) {
+      // Use display:block for memories page, display:flex for others
+      if (pageName === 'memories') {
+        selectedContainer.style.display = 'block';
+      } else {
+        selectedContainer.style.display = 'flex';
+      }
+      selectedContainer.classList.remove('hidden');
+      
+      // Call appropriate setup function
+      setupPageContent(pageName);
+      isTransitioning = false;
+    }
+    return;
+  }
 
   // Fade out the current page
   const currentContainer = document.getElementById(`${previousPage}Page`);
@@ -101,58 +125,72 @@ function showNewPage(pageName) {
     // Remove the hidden class after a short delay to trigger the fade-in
     setTimeout(() => {
       selectedContainer.classList.remove('hidden');
+      
+      // Call the appropriate setup function for the page
+      setupPageContent(pageName);
+      
+      // Reset transitioning flag after animation completes
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 500);
     }, 50);
-    
-    // Call the appropriate setup function based on the page
-    if (pageName === 'stories') {
-      // If we're showing the stories page, make sure the gallery is visible
-      const gallery = document.getElementById('gallery');
-      if (gallery) {
-        gallery.classList.remove('hidden');
-        gallery.style.display = 'flex';
-      }
-      
-      // Hide the game container if it's visible
-      const gameContainer = document.getElementById('gameContainer');
-      if (gameContainer) {
-        gameContainer.classList.add('hidden');
-        gameContainer.style.display = 'none';
-      }
-      
-      // Set the background to the gallery image
-      document.getElementById('globalBackground').style.backgroundImage = 
-        "linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/gallery.jpg')";
-      
-      // Call the setupGallery function from storyLoader.js
-      if (typeof setupGallery === 'function') {
-        setupGallery();
-      }
-    } else if (pageName === 'music') {
-      // If we're showing the music page, call the setupMusicGallery function
-      if (typeof setupMusicGallery === 'function') {
-        setupMusicGallery();
-      }
-      
-      // Set a romantic background for the music page
-      document.getElementById('globalBackground').style.backgroundImage = 
-        "linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/music-bg.jpg')";
-    } else if (pageName === 'memories') {
-      // Set up memories page using the function from memoryLoader.js
-      if (typeof setupMemoriesPage === 'function') {
-        setupMemoriesPage();
-      }
-      
-      // Set a warm, romantic background for the memories page
-      document.getElementById('globalBackground').style.backgroundImage = 
-        "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/memories-bg.jpg')";
-    }
-    
-    // Apply background effects
-    if (typeof updateBackgroundEffects === 'function') {
-      updateBackgroundEffects();
-    }
   } else {
     console.error(`Page container for "${pageName}" not found`);
+    isTransitioning = false;
+  }
+}
+
+/**
+ * Setup page content based on page name
+ * @param {string} pageName - The name of the page
+ */
+function setupPageContent(pageName) {
+  if (pageName === 'stories') {
+    // If we're showing the stories page, make sure the gallery is visible
+    const gallery = document.getElementById('gallery');
+    if (gallery) {
+      gallery.classList.remove('hidden');
+      gallery.style.display = 'flex';
+    }
+    
+    // Hide the game container if it's visible
+    const gameContainer = document.getElementById('gameContainer');
+    if (gameContainer) {
+      gameContainer.classList.add('hidden');
+      gameContainer.style.display = 'none';
+    }
+    
+    // Set the background to the gallery image
+    document.getElementById('globalBackground').style.backgroundImage = 
+      "linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/gallery.jpg')";
+    
+    // Call the setupGallery function from storyLoader.js
+    if (typeof setupGallery === 'function') {
+      setupGallery();
+    }
+  } else if (pageName === 'music') {
+    // If we're showing the music page, call the setupMusicGallery function
+    if (typeof setupMusicGallery === 'function') {
+      setupMusicGallery();
+    }
+    
+    // Set a romantic background for the music page
+    document.getElementById('globalBackground').style.backgroundImage = 
+      "linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/music-bg.jpg')";
+  } else if (pageName === 'memories') {
+    // Set up memories page using the function from memoryLoader.js
+    if (typeof setupMemoriesPage === 'function') {
+      setupMemoriesPage();
+    }
+    
+    // Set a warm, romantic background for the memories page
+    document.getElementById('globalBackground').style.backgroundImage = 
+      "linear-gradient(to bottom right, rgba(255,180,190,0.4), rgba(180,144,202,0.4)), url('images/memories-bg.jpg')";
+  }
+  
+  // Apply background effects
+  if (typeof updateBackgroundEffects === 'function') {
+    updateBackgroundEffects();
   }
 }
 
