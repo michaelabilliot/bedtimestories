@@ -1,6 +1,6 @@
 /**
- * Memory Timeline Loader JavaScript for Bedtime Stories App
- * Handles loading and displaying memory timeline entries
+ * Memory Loader JavaScript for Bedtime Stories App
+ * Handles loading and displaying memories in the timeline
  */
 
 /**
@@ -10,9 +10,16 @@
 function setupMemoriesPage() {
   console.log('Initializing memories page...');
   
-  // Check if we're actually on the memories page
+  // Check if we're actually on the memories page to prevent memories from showing on other pages
   if (window.getCurrentPage && window.getCurrentPage() !== 'memories') {
-    console.log('Not on memories page, skipping memories setup');
+    console.log('Not on memories page, skipping memory setup');
+    
+    // Clean up any stray memory elements on other pages
+    document.querySelectorAll('.page-container:not(#memoriesPage) .timeline-entry').forEach(el => {
+      console.log('Removing stray memory element', el);
+      el.remove();
+    });
+    
     return;
   }
   
@@ -23,20 +30,23 @@ function setupMemoriesPage() {
   }
   
   // Get the timeline container
-  const timeline = document.getElementById('memoriesTimeline');
-  if (!timeline) return;
+  const timelineContainer = document.getElementById('memoriesTimeline');
+  if (!timelineContainer) return;
   
-  // Clear any existing entries except the placeholder
-  const placeholder = timeline.querySelector('.timeline-placeholder');
-  timeline.innerHTML = '';
-  if (placeholder) {
-    timeline.appendChild(placeholder);
+  // Make sure timeline container is only in the memories page
+  if (!timelineContainer.closest('#memoriesPage')) {
+    console.error('Timeline container found outside memories page, skipping setup');
+    return;
   }
   
-  // Add the center line first with a fast animation
-  const centerLine = document.createElement('div');
-  centerLine.className = 'timeline-center-line';
-  timeline.appendChild(centerLine);
+  // Get the placeholder element
+  const placeholder = timelineContainer.querySelector('.timeline-placeholder');
+  
+  // Clear any existing entries before fetching new ones
+  const existingEntries = timelineContainer.querySelectorAll('.timeline-entry');
+  existingEntries.forEach(entry => {
+    timelineContainer.removeChild(entry);
+  });
   
   // Load the memories data
   fetch('scripts/memories.json?v=' + new Date().getTime())
@@ -52,92 +62,46 @@ function setupMemoriesPage() {
       // Sort memories by order if needed
       memories.sort((a, b) => a.order - b.order);
       
-      // Add each memory to the timeline with staggered animations
-      memories.forEach((memory, index) => {
-        // Create the timeline entry
+      // Add each memory to the timeline
+      memories.forEach(memory => {
         const entryElement = document.createElement('div');
         entryElement.className = 'timeline-entry';
-        entryElement.setAttribute('data-aos', 'fade-up');
         
-        // Create the dot element with a staggered delay
+        // Add the dot
         const dotElement = document.createElement('div');
         dotElement.className = 'timeline-dot';
-        // Make dots appear faster with a small stagger
-        dotElement.style.animationDelay = `${0.3 + (index * 0.1)}s`;
-        entryElement.appendChild(dotElement);
         
-        // Create the content element
+        // Create the content
         const contentElement = document.createElement('div');
-        contentElement.className = `timeline-entry-content ${index % 2 === 0 ? 'timeline-entry-left' : 'timeline-entry-right'}`;
+        contentElement.className = 'timeline-entry-content';
+        contentElement.style.animationDelay = `${0.1 + (memory.order * 0.05)}s`;
         
-        // Set the animation for the content based on its position
-        if (index % 2 === 0) {
-          contentElement.style.animation = 'slideInRight 0.3s ease-in-out forwards';
-        } else {
-          contentElement.style.animation = 'slideInLeft 0.3s ease-in-out forwards';
-        }
+        // Add date, title, and description
+        const dateElement = document.createElement('span');
+        dateElement.className = 'timeline-entry-date';
+        dateElement.textContent = memory.date;
         
-        // Make content appear right after its dot
-        const dotDelay = 0.3 + (index * 0.1);
-        contentElement.style.animationDelay = `${dotDelay + 0.1}s`;
+        const titleElement = document.createElement('h3');
+        titleElement.textContent = memory.title;
         
-        // Add the memory content
-        contentElement.innerHTML = `
-          <h3>${memory.title}</h3>
-          <div class="timeline-entry-date">${memory.date}</div>
-          <p>${memory.description}</p>
-        `;
+        const descriptionElement = document.createElement('p');
+        descriptionElement.textContent = memory.description;
         
+        // Add all elements to the content
+        contentElement.appendChild(dateElement);
+        contentElement.appendChild(titleElement);
+        contentElement.appendChild(descriptionElement);
+        
+        // Add all elements to the entry
+        entryElement.appendChild(dotElement);
         entryElement.appendChild(contentElement);
-        timeline.appendChild(entryElement);
         
-        // Add click event to highlight the memory when clicked
-        contentElement.addEventListener('click', () => {
-          // Remove active class from all entries
-          document.querySelectorAll('.timeline-entry-content').forEach(entry => {
-            entry.classList.remove('active');
-          });
-          
-          // Add active class to this entry
-          contentElement.classList.add('active');
-        });
+        // Insert the entry before the placeholder
+        timelineContainer.insertBefore(entryElement, placeholder);
       });
       
-      // Add the placeholder back at the end
-      if (placeholder) {
-        timeline.appendChild(placeholder);
-      }
-      
-      // Add scroll animations after a short delay to allow initial animations to complete
-      setTimeout(() => {
-        const timelineEntries = document.querySelectorAll('.timeline-entry-content');
-        
-        // Function to check if an element is in the viewport
-        function isInViewport(element) {
-          const rect = element.getBoundingClientRect();
-          return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-          );
-        }
-        
-        // Function to handle scroll events
-        function handleScroll() {
-          timelineEntries.forEach(entry => {
-            if (isInViewport(entry) && !entry.classList.contains('highlight')) {
-              entry.classList.add('highlight');
-            }
-          });
-        }
-        
-        // Add scroll event listener
-        window.addEventListener('scroll', handleScroll);
-        
-        // Trigger once on load
-        handleScroll();
-      }, memories.length * 100 + 500); // Shorter delay based on number of memories
+      // Add entry animation when scrolling
+      addScrollAnimation();
     })
     .catch(error => {
       console.error('Error loading memories:', error);
@@ -145,9 +109,42 @@ function setupMemoriesPage() {
       const errorElement = document.createElement('div');
       errorElement.className = 'timeline-entry-content';
       errorElement.innerHTML = '<h3>Our Story</h3><p>Every day with you is a new chapter in our beautiful story.</p>';
-      timeline.insertBefore(errorElement, placeholder);
+      timelineContainer.insertBefore(errorElement, placeholder);
     });
 }
 
-// Export the function for use in pageHandler.js
+/**
+ * Add scroll animation to timeline entries
+ */
+function addScrollAnimation() {
+  const timelineEntries = document.querySelectorAll('.timeline-entry-content');
+  
+  // Check if IntersectionObserver is supported
+  if ('IntersectionObserver' in window) {
+    const appearOptions = {
+      threshold: 0.25,
+      rootMargin: "0px 0px -100px 0px"
+    };
+    
+    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          observer.unobserve(entry.target);
+        }
+      });
+    }, appearOptions);
+    
+    timelineEntries.forEach(entry => {
+      appearOnScroll.observe(entry);
+    });
+  } else {
+    // Fallback for browsers that don't support IntersectionObserver
+    timelineEntries.forEach(entry => {
+      entry.style.opacity = 1;
+    });
+  }
+}
+
+// Export functions for use in pageHandler.js
 window.setupMemoriesPage = setupMemoriesPage; 
