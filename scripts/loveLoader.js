@@ -5,11 +5,6 @@
 
 // Store the love notes data
 let loveNotes = [];
-// Track the current month and year being displayed
-let currentMonth;
-let currentYear;
-// Store the currently selected note
-let selectedNote = null;
 
 /**
  * Set up the Daily Love page with calendar and love notes
@@ -40,6 +35,7 @@ function setupLovePage() {
   const loveNoteDisplay = document.createElement('div');
   loveNoteDisplay.className = 'love-note-display';
   loveNoteDisplay.id = 'loveNoteDisplay';
+  loveNoteDisplay.innerHTML = '<div class="love-note-content">Select a day to view your love note</div>';
   loveContainer.appendChild(loveNoteDisplay);
   
   // Load the love notes data
@@ -54,119 +50,112 @@ function setupLovePage() {
       console.log('Loaded love notes:', notes);
       loveNotes = notes;
       
-      // Initialize the calendar with the current month
+      // Create the calendar container
+      const calendarContainer = document.createElement('div');
+      calendarContainer.className = 'calendar-container';
+      loveContainer.appendChild(calendarContainer);
+      
+      // Create the current month display
       const today = new Date();
-      currentMonth = today.getMonth();
-      currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
       
-      // Create the calendar UI
-      createCalendarUI(loveContainer);
+      // Create the calendar header
+      const calendarHeader = document.createElement('div');
+      calendarHeader.className = 'calendar-header';
       
-      // Render the calendar with the current month
-      renderCalendar(currentMonth, currentYear);
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       
-      // Check if there's a note for today and show it automatically
-      const todayNote = loveNotes.find(note => {
-        const noteDate = new Date(note.date);
-        return noteDate.getDate() === today.getDate() && 
-               noteDate.getMonth() === today.getMonth() && 
-               noteDate.getFullYear() === today.getFullYear();
+      // Create month navigation
+      const prevMonthBtn = document.createElement('button');
+      prevMonthBtn.className = 'month-nav-btn';
+      prevMonthBtn.innerHTML = '<span class="material-icons">chevron_left</span>';
+      
+      const monthTitle = document.createElement('div');
+      monthTitle.className = 'month-title';
+      monthTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+      
+      const nextMonthBtn = document.createElement('button');
+      nextMonthBtn.className = 'month-nav-btn';
+      nextMonthBtn.innerHTML = '<span class="material-icons">chevron_right</span>';
+      
+      calendarHeader.appendChild(prevMonthBtn);
+      calendarHeader.appendChild(monthTitle);
+      calendarHeader.appendChild(nextMonthBtn);
+      calendarContainer.appendChild(calendarHeader);
+      
+      // Create the days of week header
+      const daysHeader = document.createElement('div');
+      daysHeader.className = 'days-header';
+      
+      const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      daysOfWeek.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'day-header';
+        dayHeader.textContent = day;
+        daysHeader.appendChild(dayHeader);
       });
       
+      calendarContainer.appendChild(daysHeader);
+      
+      // Create the days grid
+      const daysGrid = document.createElement('div');
+      daysGrid.className = 'days-grid';
+      calendarContainer.appendChild(daysGrid);
+      
+      // Render the current month
+      renderMonth(currentMonth, currentYear, daysGrid);
+      
+      // Add event listeners for month navigation
+      prevMonthBtn.addEventListener('click', () => {
+        let newMonth = currentMonth - 1;
+        let newYear = currentYear;
+        
+        if (newMonth < 0) {
+          newMonth = 11;
+          newYear--;
+        }
+        
+        monthTitle.textContent = `${monthNames[newMonth]} ${newYear}`;
+        renderMonth(newMonth, newYear, daysGrid);
+      });
+      
+      nextMonthBtn.addEventListener('click', () => {
+        let newMonth = currentMonth + 1;
+        let newYear = currentYear;
+        
+        if (newMonth > 11) {
+          newMonth = 0;
+          newYear++;
+        }
+        
+        monthTitle.textContent = `${monthNames[newMonth]} ${newYear}`;
+        renderMonth(newMonth, newYear, daysGrid);
+      });
+      
+      // Show today's note if available
+      const todayNote = findNoteForDate(today);
       if (todayNote) {
-        showLoveNote(today.getDate(), today.getMonth(), today.getFullYear());
+        displayNote(todayNote);
+        loveNoteDisplay.classList.add('visible');
       }
     })
     .catch(error => {
       console.error('Error loading love notes:', error);
       // Create a fallback message if loading fails
-      const errorElement = document.createElement('div');
-      errorElement.className = 'love-note-error';
-      errorElement.innerHTML = '<h3>My Love Notes</h3><p>Every day brings a new reason to love you more.</p>';
-      loveContainer.appendChild(errorElement);
+      loveContainer.innerHTML = '<div class="error-message">Failed to load love notes. Please try again later.</div>';
     });
 }
 
 /**
- * Create the calendar UI elements
- * @param {HTMLElement} container - The container to append the calendar to
- */
-function createCalendarUI(container) {
-  // Create the calendar container
-  const calendarContainer = document.createElement('div');
-  calendarContainer.className = 'calendar-container';
-  
-  // Create the calendar header
-  const calendarHeader = document.createElement('div');
-  calendarHeader.className = 'calendar-header';
-  
-  // Create the month/year title
-  const calendarTitle = document.createElement('div');
-  calendarTitle.className = 'calendar-title';
-  calendarTitle.id = 'calendarTitle';
-  
-  // Create the navigation buttons
-  const calendarNav = document.createElement('div');
-  calendarNav.className = 'calendar-nav';
-  
-  const prevButton = document.createElement('button');
-  prevButton.innerHTML = '<span class="material-icons">chevron_left</span>';
-  prevButton.addEventListener('click', () => navigateMonth(-1));
-  
-  const nextButton = document.createElement('button');
-  nextButton.innerHTML = '<span class="material-icons">chevron_right</span>';
-  nextButton.addEventListener('click', () => navigateMonth(1));
-  
-  // Append navigation elements
-  calendarNav.appendChild(prevButton);
-  calendarNav.appendChild(nextButton);
-  calendarHeader.appendChild(calendarTitle);
-  calendarHeader.appendChild(calendarNav);
-  
-  // Create the calendar grid
-  const calendarGrid = document.createElement('div');
-  calendarGrid.className = 'calendar-grid';
-  calendarGrid.id = 'calendarGrid';
-  
-  // Add day headers
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  daysOfWeek.forEach(day => {
-    const dayHeader = document.createElement('div');
-    dayHeader.className = 'calendar-day-header';
-    dayHeader.textContent = day;
-    calendarGrid.appendChild(dayHeader);
-  });
-  
-  // Append all elements to the calendar container
-  calendarContainer.appendChild(calendarHeader);
-  calendarContainer.appendChild(calendarGrid);
-  
-  // Append the calendar to the main container
-  container.appendChild(calendarContainer);
-}
-
-/**
- * Render the calendar for a specific month and year
+ * Render a month in the calendar
  * @param {number} month - The month to render (0-11)
  * @param {number} year - The year to render
+ * @param {HTMLElement} container - The container to render the days in
  */
-function renderCalendar(month, year) {
-  // Update the calendar title
-  const calendarTitle = document.getElementById('calendarTitle');
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  calendarTitle.textContent = `${monthNames[month]} ${year}`;
-  
-  // Get the calendar grid
-  const calendarGrid = document.getElementById('calendarGrid');
-  
-  // Clear existing day cells (except headers)
-  const dayHeaders = Array.from(calendarGrid.querySelectorAll('.calendar-day-header'));
-  calendarGrid.innerHTML = '';
-  
-  // Re-add the day headers
-  dayHeaders.forEach(header => {
-    calendarGrid.appendChild(header);
-  });
+function renderMonth(month, year, container) {
+  // Clear the container
+  container.innerHTML = '';
   
   // Get the first day of the month
   const firstDay = new Date(year, month, 1);
@@ -185,25 +174,23 @@ function renderCalendar(month, year) {
   // Add empty cells for days before the first day of the month
   for (let i = 0; i < firstDayOfWeek; i++) {
     const emptyCell = document.createElement('div');
-    emptyCell.className = 'calendar-day empty';
-    calendarGrid.appendChild(emptyCell);
+    emptyCell.className = 'day-cell empty';
+    container.appendChild(emptyCell);
   }
   
   // Add cells for each day of the month
   for (let day = 1; day <= lastDay.getDate(); day++) {
     const dayCell = document.createElement('div');
-    dayCell.className = 'calendar-day';
+    dayCell.className = 'day-cell';
     dayCell.textContent = day;
     
-    // Check if this day has a love note
-    const hasNote = loveNotes.some(note => {
-      const noteDate = new Date(note.date);
-      return noteDate.getDate() === day && 
-             noteDate.getMonth() === month && 
-             noteDate.getFullYear() === year;
-    });
+    // Create a date object for this day
+    const cellDate = new Date(year, month, day);
     
-    if (hasNote) {
+    // Check if this day has a love note
+    const note = findNoteForDate(cellDate);
+    
+    if (note) {
       dayCell.classList.add('has-note');
     }
     
@@ -213,7 +200,6 @@ function renderCalendar(month, year) {
     }
     
     // Check if this is a past day
-    const cellDate = new Date(year, month, day);
     if (cellDate < new Date(currentYear, currentMonth, currentDay)) {
       dayCell.classList.add('past');
     }
@@ -221,68 +207,56 @@ function renderCalendar(month, year) {
     // Check if this is a future day
     if (cellDate > today) {
       dayCell.classList.add('disabled');
-      // Don't add click event for future days
-    } else {
-      // Add click event for current and past days
+    } else if (note) {
+      // Add click event for days with notes (only for current or past days)
       dayCell.addEventListener('click', () => {
-        if (hasNote) {
-          showLoveNote(day, month, year);
+        displayNote(note);
+        
+        // Show the note display
+        const loveNoteDisplay = document.getElementById('loveNoteDisplay');
+        if (loveNoteDisplay) {
+          loveNoteDisplay.classList.add('visible');
         }
+        
+        // Highlight the selected day
+        const selectedDay = document.querySelector('.day-cell.selected');
+        if (selectedDay) {
+          selectedDay.classList.remove('selected');
+        }
+        dayCell.classList.add('selected');
       });
     }
     
-    calendarGrid.appendChild(dayCell);
+    container.appendChild(dayCell);
   }
 }
 
 /**
- * Navigate to the previous or next month
- * @param {number} direction - The direction to navigate (-1 for previous, 1 for next)
+ * Find a note for a specific date
+ * @param {Date} date - The date to find a note for
+ * @returns {Object|null} The note object or null if not found
  */
-function navigateMonth(direction) {
-  // Update the current month and year
-  currentMonth += direction;
-  
-  // Handle year change
-  if (currentMonth < 0) {
-    currentMonth = 11;
-    currentYear--;
-  } else if (currentMonth > 11) {
-    currentMonth = 0;
-    currentYear++;
-  }
-  
-  // Re-render the calendar
-  renderCalendar(currentMonth, currentYear);
-  
-  // Hide any displayed note when changing months
-  const loveNoteDisplay = document.getElementById('loveNoteDisplay');
-  loveNoteDisplay.classList.remove('visible');
-}
-
-/**
- * Show a love note for a specific date
- * @param {number} day - The day of the note
- * @param {number} month - The month of the note (0-11)
- * @param {number} year - The year of the note
- */
-function showLoveNote(day, month, year) {
-  // Find the note for this date
-  const note = loveNotes.find(note => {
+function findNoteForDate(date) {
+  return loveNotes.find(note => {
     const noteDate = new Date(note.date);
-    return noteDate.getDate() === day && 
-           noteDate.getMonth() === month && 
-           noteDate.getFullYear() === year;
-  });
-  
-  if (!note) return;
-  
-  // Get the love note display
+    return noteDate.getDate() === date.getDate() && 
+           noteDate.getMonth() === date.getMonth() && 
+           noteDate.getFullYear() === date.getFullYear();
+  }) || null;
+}
+
+/**
+ * Display a note in the love note display area
+ * @param {Object} note - The note object to display
+ */
+function displayNote(note) {
   const loveNoteDisplay = document.getElementById('loveNoteDisplay');
+  if (!loveNoteDisplay) return;
   
   // Format the date
+  const noteDate = new Date(note.date);
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const formattedDate = new Date(year, month, day).toLocaleDateString(undefined, options);
+  const formattedDate = noteDate.toLocaleDateString(undefined, options);
   
   // Update the love note display
   loveNoteDisplay.innerHTML = `
@@ -298,12 +272,16 @@ function showLoveNote(day, month, year) {
   const closeBtn = document.getElementById('closeNoteBtn');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
+      // Hide the note display
       loveNoteDisplay.classList.remove('visible');
+      
+      // Remove selected class from the day
+      const selectedDay = document.querySelector('.day-cell.selected');
+      if (selectedDay) {
+        selectedDay.classList.remove('selected');
+      }
     });
   }
-  
-  // Show the love note display
-  loveNoteDisplay.classList.add('visible');
 }
 
 // Export functions for use in pageHandler.js

@@ -2645,3 +2645,281 @@ h1, h2, h3, h4, h5 {
   flex-direction: column;
   gap: 20px;
 }
+
+/* Love Notes Calendar Styles */
+.calendar-container {
+  max-width: 900px;
+  margin: 20px auto 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.month-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #ff6b95;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.month-nav-btn {
+  background: none;
+  border: none;
+  color: #ff6b95;
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.month-nav-btn:hover {
+  background-color: rgba(255, 107, 149, 0.1);
+}
+
+.days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.day-header {
+  text-align: center;
+  font-weight: 600;
+  color: #666;
+  padding: 5px;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day-cell {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  font-weight: 500;
+}
+
+.day-cell.empty {
+  cursor: default;
+}
+
+.day-cell:hover:not(.empty):not(.disabled) {
+  background-color: rgba(255, 107, 149, 0.1);
+}
+
+.day-cell.today {
+  background-color: #ff6b95;
+  color: white;
+  font-weight: 700;
+}
+
+.day-cell.selected {
+  background-color: #9c27b0;
+  color: white;
+  font-weight: 700;
+}
+
+.day-cell.has-note:after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #ff6b95;
+}
+
+.day-cell.today.has-note:after {
+  background-color: white;
+}
+
+.day-cell.selected.has-note:after {
+  background-color: white;
+}
+
+.day-cell.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.love-note-display {
+  max-width: 900px;
+  margin: 0 auto 20px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: relative;
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.love-note-display.visible {
+  display: block;
+}
+
+.love-note-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #ff6b95;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  z-index: 2;
+}
+
+.love-note-close:hover {
+  background-color: rgba(255, 107, 149, 0.1);
+}
+
+.love-note-date {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+  padding-right: 30px; /* Space for close button */
+}
+
+.love-note-content {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 15px;
+  white-space: pre-line;
+}
+
+.love-note-signature {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.5rem;
+  color: #ff6b95;
+  text-align: right;
+  margin-top: 10px;
+}
+
+/* Mobile Styles for Love Notes */
+@media screen and (max-width: 768px) {
+  .days-grid {
+    gap: 2px;
+  }
+  
+  .day-cell {
+    height: 35px;
+    font-size: 0.9rem;
+  }
+  
+  .day-cell.has-note:after {
+    width: 4px;
+    height: 4px;
+    bottom: 3px;
+  }
+  
+  .month-title {
+    font-size: 1.5rem;
+  }
+  
+  .month-nav-btn {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .days-header {
+    font-size: 0.8rem;
+  }
+  
+  .day-cell {
+    height: 30px;
+    font-size: 0.8rem;
+  }
+  
+  .calendar-container {
+    padding: 10px;
+  }
+  
+  .love-note-content {
+    font-size: 1rem;
+  }
+  
+  .love-note-signature {
+    font-size: 1.3rem;
+  }
+}
+
+#lovePage .memories-container {
+  padding-top: 20px;
+}
+
+#lovePage .memories-title {
+  margin-bottom: 10px;
+}
+
+#lovePage .subtitle {
+  margin-bottom: 20px;
+}
+
+#loveNotesContainer {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Make memory timeline animations much faster */
+.timeline::before {
+  animation: fadeInLine 0.3s ease-in-out forwards;
+}
+
+.timeline-dot {
+  animation: fadeIn 0.3s ease-in-out forwards;
+  animation-delay: 0.3s; /* Base delay for first dot */
+}
+
+.timeline-entry-content {
+  animation-duration: 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInLine {
+  from { height: 0; }
+  to { height: 100%; }
+}
