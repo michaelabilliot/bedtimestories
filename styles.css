@@ -508,6 +508,7 @@ h1, h2, h3, h4, h5 {
   object-fit: cover;
   display: block;
   transition: transform 0.5s ease;
+  object-position: center; /* Ensure image is centered */
 }
 .story-card:hover img {
   transform: scale(1.1);
@@ -919,6 +920,13 @@ h1, h2, h3, h4, h5 {
   .todays-story {
     width: 90%;
     max-width: 300px; /* Limit width */
+    height: auto; /* Allow height to adjust based on aspect ratio */
+  }
+  
+  /* Ensure Friends Tale cover image is properly positioned on mobile */
+  .story-card[data-story="friends-tale"] img,
+  .story-card img[src*="friends-tale/cover"] {
+    object-position: center 20%; /* Position slightly from the top of the image for better framing */
   }
   #loveNote {
     bottom: 70px;
@@ -2333,4 +2341,24 @@ h1, h2, h3, h4, h5 {
   .nav-buttons button:hover {
     transform: none; /* Remove hover transforms on touch devices */
   }
+}
+
+/* Specific fix for Friends Tale cover image */
+.story-card img[src*="friends-tale/cover"] {
+  object-position: center top; /* Position from the top of the image */
+  object-fit: cover; /* Ensure the image covers the container */
+  height: 100%; /* Make sure the image fills the height of the container */
+}
+
+/* Ensure the story card for Friends Tale has proper dimensions */
+.story-card[data-story="friends-tale"] {
+  overflow: hidden; /* Ensure the image doesn't overflow */
+}
+
+/* Specific fix for Friends Tale cover image */
+.story-card[data-story="friends-tale"] img,
+.story-card img[src*="friends-tale/cover"] {
+  object-position: center 20%; /* Position slightly from the top of the image for better framing */
+  object-fit: cover; /* Ensure the image covers the container */
+  height: 100%; /* Make sure the image fills the height of the container */
 }

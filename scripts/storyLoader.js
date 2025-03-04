@@ -62,6 +62,7 @@ function setupGallery() {
     todaysStories.forEach(story => {
       const card = document.createElement("div");
       card.className = "story-card todays-story";
+      card.setAttribute("data-story", story.file);
       card.innerHTML = `
         <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
@@ -99,6 +100,7 @@ function setupGallery() {
     otherStories.forEach(story => {
       const card = document.createElement("div");
       card.className = "story-card";
+      card.setAttribute("data-story", story.file);
       card.innerHTML = `
         <img src="${story.cover ? story.cover : 'images/' + story.file + '/scene0.jpg'}" alt="${story.title} Cover">
         <div class="story-title">${story.title}</div>
