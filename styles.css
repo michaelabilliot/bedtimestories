@@ -816,11 +816,11 @@ h1, h2, h3, h4, h5 {
 }
 
 @keyframes fadeInDown {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(-20px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0);
   }
@@ -830,6 +830,11 @@ h1, h2, h3, h4, h5 {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
   100% { transform: scale(1); }
+}
+
+@keyframes fadeInLine {
+  from { height: 0; opacity: 0; }
+  to { height: 100%; opacity: 1; }
 }
 
 /* New animation for timeline center line */
@@ -1406,12 +1411,11 @@ h1, h2, h3, h4, h5 {
   top: 0;
   bottom: 0;
   left: 50%;
-  width: 3px;
+  width: 4px;
   background: rgba(255, 255, 255, 0.7);
   transform: translateX(-50%);
-  box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
-  animation: fadeInLine 1.5s ease forwards; /* New animation for the timeline line */
-  transform-origin: top center;
+  border-radius: 2px;
+  animation: fadeInLine 0.8s ease forwards;
 }
 
 .timeline-entry {
@@ -2407,8 +2411,8 @@ h1, h2, h3, h4, h5 {
 /* Calendar styles for Daily Love */
 .calendar-container {
   max-width: 900px;
-  margin: 30px auto;
-  background: rgba(255, 255, 255, 0.15);
+  margin: 20px auto;
+  background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 25px;
@@ -2514,19 +2518,26 @@ h1, h2, h3, h4, h5 {
 }
 
 .love-note-display {
-  margin-top: 30px;
-  background: rgba(255, 255, 255, 0.2);
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 25px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  max-width: 90%;
+  width: 500px;
   display: none;
 }
 
 .love-note-display.visible {
   display: block;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 .love-note-date {
@@ -2599,4 +2610,35 @@ h1, h2, h3, h4, h5 {
   .love-note-signature {
     font-size: 1.3rem;
   }
+}
+
+/* Adjust the memories container spacing for the love page */
+#lovePage .memories-container {
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+#lovePage .memories-title {
+  margin-bottom: 10px;
+}
+
+#lovePage .subtitle {
+  margin-bottom: 15px;
+}
+
+/* Add overlay for clicking outside the note */
+.note-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+.note-overlay.visible {
+  display: block;
+  animation: fadeIn 0.2s ease;
 }
