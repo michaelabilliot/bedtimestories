@@ -33,6 +33,15 @@ function setupLovePage() {
   const loveContainer = document.getElementById('loveNotesContainer');
   if (!loveContainer) return;
   
+  // Clear any existing content (in case this function is called multiple times)
+  loveContainer.innerHTML = '';
+  
+  // Remove any existing note displays and overlays from previous setups
+  const existingNoteDisplay = document.getElementById('loveNoteDisplay');
+  const existingOverlay = document.getElementById('noteOverlay');
+  if (existingNoteDisplay) existingNoteDisplay.remove();
+  if (existingOverlay) existingOverlay.remove();
+  
   // Load the love notes data
   fetch('scripts/loveNotes.json?v=' + new Date().getTime())
     .then(response => {
@@ -120,12 +129,7 @@ function createCalendarUI(container) {
   calendarContainer.appendChild(calendarHeader);
   calendarContainer.appendChild(calendarGrid);
   
-  // Create the love note display area
-  const loveNoteDisplay = document.createElement('div');
-  loveNoteDisplay.className = 'love-note-display';
-  loveNoteDisplay.id = 'loveNoteDisplay';
-  
-  // Create overlay for clicking outside to close
+  // Create the note overlay for clicking outside to close
   const noteOverlay = document.createElement('div');
   noteOverlay.className = 'note-overlay';
   noteOverlay.id = 'noteOverlay';
@@ -135,10 +139,19 @@ function createCalendarUI(container) {
     closeLoveNote();
   });
   
-  // Append the calendar and love note elements to the main container
+  // Create the love note display area
+  const loveNoteDisplay = document.createElement('div');
+  loveNoteDisplay.className = 'love-note-display';
+  loveNoteDisplay.id = 'loveNoteDisplay';
+  
+  // Append the calendar to the main container
   container.appendChild(calendarContainer);
+  
+  // Append the overlay and note display to the document body
   document.body.appendChild(noteOverlay);
   document.body.appendChild(loveNoteDisplay);
+  
+  console.log('Calendar UI created with overlay and note display');
 }
 
 /**
@@ -147,6 +160,8 @@ function createCalendarUI(container) {
  * @param {number} year - The year to render
  */
 function renderCalendar(month, year) {
+  console.log(`Rendering calendar for ${month+1}/${year}`);
+  
   // Update the calendar title
   const calendarTitle = document.getElementById('calendarTitle');
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -210,18 +225,22 @@ function renderCalendar(month, year) {
     
     // Check if this is a past day
     const cellDate = new Date(year, month, day);
-    if (cellDate < new Date(currentYear, currentMonth, currentDay)) {
+    const todayDate = new Date(currentYear, currentMonth, currentDay);
+    todayDate.setHours(0, 0, 0, 0); // Reset time part for accurate comparison
+    
+    if (cellDate < todayDate) {
       dayCell.classList.add('past');
     }
     
     // Check if this is a future day
-    if (cellDate > today) {
+    if (cellDate > todayDate) {
       dayCell.classList.add('disabled');
       // Don't add click event for future days
     } else {
       // Add click event for current and past days
       dayCell.addEventListener('click', () => {
         if (hasNote) {
+          console.log(`Day ${day} clicked, has note: ${hasNote}`);
           showLoveNote(day, month, year);
         }
       });
@@ -262,6 +281,8 @@ function navigateMonth(direction) {
  * @param {number} year - The year of the note
  */
 function showLoveNote(day, month, year) {
+  console.log(`Showing love note for ${month+1}/${day}/${year}`);
+  
   // Find the note for this date
   const note = loveNotes.find(note => {
     const noteDate = new Date(note.date);
@@ -270,11 +291,21 @@ function showLoveNote(day, month, year) {
            noteDate.getFullYear() === year;
   });
   
-  if (!note) return;
+  if (!note) {
+    console.log(`No note found for ${month+1}/${day}/${year}`);
+    return;
+  }
+  
+  console.log('Note found:', note);
   
   // Get the love note display and overlay
   const loveNoteDisplay = document.getElementById('loveNoteDisplay');
   const noteOverlay = document.getElementById('noteOverlay');
+  
+  if (!loveNoteDisplay || !noteOverlay) {
+    console.error('Love note display or overlay not found in the DOM');
+    return;
+  }
   
   // Format the date
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };

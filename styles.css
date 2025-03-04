@@ -11,6 +11,9 @@ html, body {
   overflow-x: hidden;
   color: #fff;
   scroll-behavior: smooth;
+  min-height: 100vh;
+  position: relative;
+  overflow-y: auto;
 }
 
 h1, h2, h3, h4, h5 {
@@ -1340,22 +1343,26 @@ h1, h2, h3, h4, h5 {
 
 /* Page Containers */
 .page-container {
-  position: relative;
-  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 20px 100px; /* Restore bottom padding */
+  min-height: calc(100vh - 200px);
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 20px 20px 60px;
   box-sizing: border-box;
-  transition: opacity 0.5s ease;
+  overflow-x: hidden;
   opacity: 0;
-  animation: fadeIn 0.3s ease forwards 0.3s; /* Faster animation */
+  animation: fadeIn 0.3s ease forwards;
 }
 
 .page-container.hidden {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
+  display: none;
+  opacity: 0;
 }
 
 /* Memories Page */
@@ -2412,7 +2419,7 @@ h1, h2, h3, h4, h5 {
 .calendar-container {
   max-width: 900px;
   margin: 20px auto;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.8); /* Make more solid */
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 25px;
@@ -2518,26 +2525,28 @@ h1, h2, h3, h4, h5 {
 }
 
 .love-note-display {
-  margin-top: 20px;
-  background: rgba(255, 255, 255, 0.7);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  opacity: 0;
+  visibility: hidden;
+  background: rgba(255, 255, 255, 0.85); /* More solid */
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 25px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 1000;
   max-width: 90%;
   width: 500px;
-  display: none;
+  transition: all 0.3s ease;
 }
 
 .love-note-display.visible {
-  display: block;
-  animation: fadeIn 0.3s ease;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .love-note-date {
@@ -2635,10 +2644,42 @@ h1, h2, h3, h4, h5 {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
 }
 
 .note-overlay.visible {
-  display: block;
-  animation: fadeIn 0.2s ease;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Fix the excessive scrolling issue */
+body {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Update the love notes container to prevent excessive height */
+#loveNotesContainer {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Calendar day hover effect */
+.calendar-day.has-note {
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(255, 192, 203, 0.4);
+  box-shadow: 0 0 8px rgba(255, 105, 180, 0.6);
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+.calendar-day.has-note:hover {
+  background: rgba(255, 192, 203, 0.6);
+  transform: scale(1.1);
 }
