@@ -1,0 +1,77 @@
+{
+  "javascript": {
+    "indent": 2,
+    "quotes": "single",
+    "semi": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "endOfLine": "lf",
+    "max-len": 100,
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-unused-vars": "warn",
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "css": {
+    "indent": 2,
+    "max-empty-lines": 1,
+    "color-hex-case": "lower",
+    "color-hex-length": "short",
+    "block-no-empty": true,
+    "declaration-colon-space-after": "always",
+    "declaration-block-semicolon-newline-after": "always",
+    "property-no-vendor-prefix": true,
+    "value-no-vendor-prefix": true,
+    "selector-no-vendor-prefix": true,
+    "media-feature-name-no-vendor-prefix": true
+  },
+  "html": {
+    "indent": 2,
+    "void-elements": true,
+    "attr-quotes": "double",
+    "tag-name-lowercase": true,
+    "attr-name-lowercase": true,
+    "attr-value-double-quotes": true,
+    "doctype-html5": true,
+    "id-unique": true,
+    "head-script-disabled": true,
+    "style-disabled": true,
+    "title-require": true
+  },
+  "general": {
+    "max-file-size": "500kb",
+    "end-of-line": "lf",
+    "trim-trailing-whitespace": true,
+    "insert-final-newline": true,
+    "max-line-length": 100
+  },
+  "git": {
+    "ignore": [
+      "node_modules",
+      ".DS_Store",
+      "*.log",
+      "dist",
+      "build",
+      ".env",
+      ".env.local",
+      ".env.development.local",
+      ".env.test.local",
+      ".env.production.local"
+    ]
+  },
+  "folders": {
+    "structure": {
+      "scripts": "JavaScript files",
+      "styles": "CSS files",
+      "images": "Image assets",
+      "stories": "Story JSON files",
+      "audio": "Audio files"
+    }
+  }
+} 
