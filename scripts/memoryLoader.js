@@ -71,18 +71,19 @@ function setupMemoriesPage() {
         const dotElement = document.createElement('div');
         dotElement.className = 'timeline-dot';
         // Set a delay for the dot to appear after the timeline line
-        const dotDelay = 1.0 + (index * 0.15);
+        // Each dot appears 0.5 seconds after the previous one
+        const dotDelay = 1.5 + (index * 0.5);
         dotElement.style.animationDelay = `${dotDelay}s`;
         
         // Create the content
         const contentElement = document.createElement('div');
         contentElement.className = 'timeline-entry-content';
         // Set animation properties for staggered appearance
-        contentElement.style.animationDuration = '0.4s';
+        contentElement.style.animationDuration = '0.6s';
         contentElement.style.animationFillMode = 'forwards';
         contentElement.style.animationTimingFunction = 'ease';
-        // Make the content appear right after its dot appears (0.1s after)
-        contentElement.style.animationDelay = `${dotDelay + 0.1}s`;
+        // Each content appears 0.2 seconds after its dot
+        contentElement.style.animationDelay = `${dotDelay + 0.2}s`;
         
         // Add date, title, and description
         const dateElement = document.createElement('span');
@@ -111,7 +112,7 @@ function setupMemoriesPage() {
       // Add entry animation when scrolling for entries that might be out of view
       setTimeout(() => {
         addScrollAnimation();
-      }, 3000); // Wait for initial animations to complete
+      }, (memories.length * 0.5 + 3) * 1000); // Wait for initial animations to complete
     })
     .catch(error => {
       console.error('Error loading memories:', error);

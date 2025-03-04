@@ -31,16 +31,16 @@ function setupLovePage() {
   
   // Get the love notes container
   const loveContainer = document.getElementById('loveNotesContainer');
-  if (!loveContainer) {
-    console.error('Love notes container not found!');
-    return;
-  }
+  if (!loveContainer) return;
   
   // Clear any existing content
   loveContainer.innerHTML = '';
   
-  // Make sure overlay and note display are removed if they exist
-  removeExistingOverlayAndDisplay();
+  // Create the love note display area first (it will appear above the calendar)
+  const loveNoteDisplay = document.createElement('div');
+  loveNoteDisplay.className = 'love-note-display';
+  loveNoteDisplay.id = 'loveNoteDisplay';
+  loveContainer.appendChild(loveNoteDisplay);
   
   // Load the love notes data
   fetch('scripts/loveNotes.json?v=' + new Date().getTime())
@@ -64,6 +64,18 @@ function setupLovePage() {
       
       // Render the calendar with the current month
       renderCalendar(currentMonth, currentYear);
+      
+      // Check if there's a note for today and show it automatically
+      const todayNote = loveNotes.find(note => {
+        const noteDate = new Date(note.date);
+        return noteDate.getDate() === today.getDate() && 
+               noteDate.getMonth() === today.getMonth() && 
+               noteDate.getFullYear() === today.getFullYear();
+      });
+      
+      if (todayNote) {
+        showLoveNote(today.getDate(), today.getMonth(), today.getFullYear());
+      }
     })
     .catch(error => {
       console.error('Error loading love notes:', error);
@@ -76,27 +88,10 @@ function setupLovePage() {
 }
 
 /**
- * Remove any existing overlay and note display elements
- */
-function removeExistingOverlayAndDisplay() {
-  const existingOverlay = document.getElementById('noteOverlay');
-  if (existingOverlay) {
-    existingOverlay.remove();
-  }
-  
-  const existingDisplay = document.getElementById('loveNoteDisplay');
-  if (existingDisplay) {
-    existingDisplay.remove();
-  }
-}
-
-/**
  * Create the calendar UI elements
  * @param {HTMLElement} container - The container to append the calendar to
  */
 function createCalendarUI(container) {
-  console.log('Creating calendar UI...');
-  
   // Create the calendar container
   const calendarContainer = document.createElement('div');
   calendarContainer.className = 'calendar-container';
@@ -146,47 +141,8 @@ function createCalendarUI(container) {
   calendarContainer.appendChild(calendarHeader);
   calendarContainer.appendChild(calendarGrid);
   
-  // Create a container for the love note display
-  const loveNoteContainer = document.createElement('div');
-  loveNoteContainer.id = 'loveNoteContainer';
-  
-  // Append the calendar and love note container to the main container
+  // Append the calendar to the main container
   container.appendChild(calendarContainer);
-  container.appendChild(loveNoteContainer);
-  
-  // Always remove any existing overlays and displays first
-  removeExistingOverlayAndDisplay();
-  
-  // Create overlay for clicking outside to close
-  const noteOverlay = document.createElement('div');
-  noteOverlay.className = 'note-overlay';
-  noteOverlay.id = 'noteOverlay';
-  
-  // Create the love note display area
-  const loveNoteDisplay = document.createElement('div');
-  loveNoteDisplay.className = 'love-note-display';
-  loveNoteDisplay.id = 'loveNoteDisplay';
-  
-  // Add click event to close when clicking outside
-  noteOverlay.addEventListener('click', () => {
-    closeLoveNote();
-  });
-  
-  // Add these elements to the document body
-  document.body.appendChild(noteOverlay);
-  document.body.appendChild(loveNoteDisplay);
-  
-  console.log('Added overlay and display elements to body:', 
-    document.getElementById('noteOverlay') ? 'Overlay exists' : 'Overlay missing',
-    document.getElementById('loveNoteDisplay') ? 'Display exists' : 'Display missing'
-  );
-  
-  // Add event listener to close note when pressing escape key
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      closeLoveNote();
-    }
-  });
 }
 
 /**
@@ -258,7 +214,7 @@ function renderCalendar(month, year) {
     
     // Check if this is a past day
     const cellDate = new Date(year, month, day);
-    if (cellDate < new Date(currentYear, currentMonth, currentDay + 1)) {
+    if (cellDate < new Date(currentYear, currentMonth, currentDay)) {
       dayCell.classList.add('past');
     }
     
@@ -300,7 +256,8 @@ function navigateMonth(direction) {
   renderCalendar(currentMonth, currentYear);
   
   // Hide any displayed note when changing months
-  closeLoveNote();
+  const loveNoteDisplay = document.getElementById('loveNoteDisplay');
+  loveNoteDisplay.classList.remove('visible');
 }
 
 /**
@@ -310,8 +267,6 @@ function navigateMonth(direction) {
  * @param {number} year - The year of the note
  */
 function showLoveNote(day, month, year) {
-  console.log(`Showing love note for ${month+1}/${day}/${year}`);
-  
   // Find the note for this date
   const note = loveNotes.find(note => {
     const noteDate = new Date(note.date);
@@ -320,31 +275,10 @@ function showLoveNote(day, month, year) {
            noteDate.getFullYear() === year;
   });
   
-  if (!note) {
-    console.error('No note found for this date');
-    return;
-  }
+  if (!note) return;
   
-  // Get or create the love note display
-  let loveNoteDisplay = document.getElementById('loveNoteDisplay');
-  if (!loveNoteDisplay) {
-    console.log('Creating new love note display');
-    loveNoteDisplay = document.createElement('div');
-    loveNoteDisplay.className = 'love-note-display';
-    loveNoteDisplay.id = 'loveNoteDisplay';
-    document.body.appendChild(loveNoteDisplay);
-  }
-  
-  // Get or create the overlay
-  let noteOverlay = document.getElementById('noteOverlay');
-  if (!noteOverlay) {
-    console.log('Creating new note overlay');
-    noteOverlay = document.createElement('div');
-    noteOverlay.className = 'note-overlay';
-    noteOverlay.id = 'noteOverlay';
-    noteOverlay.addEventListener('click', closeLoveNote);
-    document.body.appendChild(noteOverlay);
-  }
+  // Get the love note display
+  const loveNoteDisplay = document.getElementById('loveNoteDisplay');
   
   // Format the date
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -352,36 +286,24 @@ function showLoveNote(day, month, year) {
   
   // Update the love note display
   loveNoteDisplay.innerHTML = `
+    <button class="love-note-close" id="closeNoteBtn">
+      <span class="material-icons">close</span>
+    </button>
     <div class="love-note-date">${formattedDate}</div>
     <div class="love-note-content">${note.content}</div>
     <div class="love-note-signature">Love, Michael</div>
   `;
   
-  // Show the love note display and overlay
-  noteOverlay.classList.add('visible');
+  // Add event listener to close button
+  const closeBtn = document.getElementById('closeNoteBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      loveNoteDisplay.classList.remove('visible');
+    });
+  }
+  
+  // Show the love note display
   loveNoteDisplay.classList.add('visible');
-  
-  console.log('Love note display and overlay should now be visible');
-  console.log('Display visible class:', loveNoteDisplay.classList.contains('visible'));
-  console.log('Overlay visible class:', noteOverlay.classList.contains('visible'));
-}
-
-/**
- * Close the love note display
- */
-function closeLoveNote() {
-  console.log('Closing love note');
-  
-  const loveNoteDisplay = document.getElementById('loveNoteDisplay');
-  const noteOverlay = document.getElementById('noteOverlay');
-  
-  if (loveNoteDisplay) {
-    loveNoteDisplay.classList.remove('visible');
-  }
-  
-  if (noteOverlay) {
-    noteOverlay.classList.remove('visible');
-  }
 }
 
 // Export functions for use in pageHandler.js
