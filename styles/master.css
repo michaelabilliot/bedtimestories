@@ -26,11 +26,12 @@ h1, h2, h3, h4, h5 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('../images/gallery.jpg');
+  z-index: -1;
+  background-image: linear-gradient(to bottom right, rgba(255,182,193,0.4), rgba(147,112,219,0.4)), url('images/gallery.jpg');
   background-size: cover;
   background-position: center;
-  z-index: -2;
-  transition: background-image 0.5s ease;
+  transition: all 0.5s ease;
+  transform-origin: center;
 }
 
 #globalBackground::after {

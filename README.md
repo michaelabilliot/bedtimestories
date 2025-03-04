@@ -23,11 +23,18 @@ This website was created as a personal tribute, with every element carefully des
 ## Project Structure
 
 - `index.html`: Main HTML file
-- `styles.css`: All styles for the application
+- `styles/`: CSS files
+  - `master.css`: Common styles for all pages
+  - `storyGallery.css`: Styles for the stories section
+  - `musicGallery.css`: Styles for the music section
+  - `memoryGallery.css`: Styles for the memories section
+  - `loveGallery.css`: Styles for the love notes section
 - `scripts/`: JavaScript files
   - `pageHandler.js`: Manages navigation between different sections
   - `storyLoader.js`: Handles loading and displaying stories
   - `musicLoader.js`: Handles loading and playing music
+  - `memoryLoader.js`: Handles loading and displaying memories
+  - `loveLoader.js`: Handles loading and displaying love notes
   - `main.js`: Core functionality for the application
 - `images/`: Image assets
 - `stories/`: Story JSON files
@@ -102,7 +109,7 @@ The Memories section can be expanded by modifying the timeline in the memories p
 
 This website is designed to be easily customizable to reflect your unique relationship:
 
-- Change colors in `styles.css` to match your significant other's favorite colors
+- Change colors in the CSS files to match your significant other's favorite colors
 - Update text content in `index.html` to include personal messages
 - Replace background images with photos that have special meaning to both of you
 - Customize the love note content with your own heartfelt messages
