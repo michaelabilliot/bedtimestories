@@ -67,7 +67,7 @@ h1, h2, h3, h4, h5 {
 .site-header {
   width: 100%;
   text-align: center;
-  padding: 60px 20px 20px;
+  padding: 40px 20px 10px; /* Reduced top padding from 60px to 40px and bottom padding from 20px to 10px */
   position: relative;
   overflow: hidden;
 }
@@ -88,12 +88,12 @@ h1, h2, h3, h4, h5 {
   font-family: 'Lato', sans-serif;
   font-size: 1.2rem;
   font-weight: 300;
-  margin: 10px 0 30px;
+  margin: 10px 0 20px; /* Reduced bottom margin from 30px to 20px */
   color: #fff;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
   letter-spacing: 1px;
   opacity: 0;
-  animation: fadeInDown 1s ease forwards 0.5s;
+  animation: fadeIn 1s ease forwards 0.5s;
 }
 
 /* Floating Hearts Animation */
@@ -1178,7 +1178,7 @@ h1, h2, h3, h4, h5 {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin: 0 auto 30px;
+  margin: 0 auto 20px; /* Reduced bottom margin from 30px to 20px */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 15px;
@@ -1566,6 +1566,7 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 30px;
   width: 100%;
   max-width: 800px;
+  padding-top: 40px; /* Added padding to align with story gallery */
 }
 
 .music-cards {
@@ -1945,6 +1946,7 @@ h1, h2, h3, h4, h5 {
   animation: fadeInDown 1s ease;
   font-size: 2.5rem;
   margin-bottom: 10px;
+  font-family: 'Dancing Script', cursive; /* Match the font with site-title */
 }
 
 .music-header p {
